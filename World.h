@@ -13,11 +13,16 @@ class World {
     private:
         std::list<GameObject*> children;
 
+
     public:
         Vector3 gravity = Vector3(0.0f, -9.8f, 0.0f);
         World(std::list<GameObject*> children);
 
+        std::list<GameObject*> getChildren() {
+            return children;
+        };
 
+        std::list<GameObject*> getAllChildren();
 };
 
 

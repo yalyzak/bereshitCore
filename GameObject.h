@@ -16,6 +16,8 @@ class GameObject {
         GameObject* parent = nullptr;
     public:
         std::string name;
+        std::list<GameObject*> children;
+
         void setWorld(World* p) {
             if (world != nullptr) {
                 throw std::runtime_error("World already set");
@@ -35,6 +37,8 @@ class GameObject {
         void setParent(GameObject* p) {
             parent = p;
         };
+
+    std::list<GameObject*> getAllChildren();
 };
 
 
