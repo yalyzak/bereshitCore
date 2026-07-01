@@ -11,6 +11,20 @@ void GameObject::AddComponent(Component* comp) {
     comp->SetParent(this);
 }
 
+std::list<GameObject *> GameObject::getAllChildren() {
+    std::list<GameObject*> allChildren;
+
+    for (GameObject* child : children) {
+        allChildren.push_back(child);
+
+        auto descendants = child->getAllChildren();
+        allChildren.splice(allChildren.end(), descendants);
+    }
+
+    return allChildren;
+}
+
+
 
 
 

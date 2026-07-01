@@ -13,3 +13,16 @@ World::World(std::list<GameObject*> children) : children(children) {
         child->setWorld(this);
     }
 }
+
+std::list<GameObject*> World::getAllChildren() {
+    std::list<GameObject*> allChildren;
+
+    for (GameObject* child : children) {
+        allChildren.push_back(child);
+
+        auto descendants = child->getAllChildren();
+        allChildren.splice(allChildren.end(), descendants);
+    }
+
+    return allChildren;
+}
