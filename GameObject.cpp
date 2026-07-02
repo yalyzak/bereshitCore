@@ -5,8 +5,8 @@
 #include "GameObject.h"
 #include "Transform.h"
 GameObject::GameObject() : transform(Transform()) {}
-
-GameObject::GameObject(Vector3 position, Vector3 rotation, Vector3 scale, std::list<GameObject*> children) : transform(position, rotation, scale), children(children) {}
+GameObject::GameObject(Vector3 position, Vector3 rotation, Vector3 scale) : transform(position, rotation, scale) {}
+GameObject::GameObject(Vector3 position, Vector3 rotation, Vector3 scale, const std::list<GameObject*> children) : transform(position, rotation, scale), children(children) {}
 
 void GameObject::AddComponent(Component* comp) {
     components.push_back(comp);

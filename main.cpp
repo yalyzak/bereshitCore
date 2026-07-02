@@ -10,8 +10,7 @@ int main() {
     const auto lang = "C++";
     std::cout << "Hello and welcome to " << lang << "!\n";
 
-    GameObject obj;
-    obj.transform.position = Vector3(10,3,5);
+    GameObject obj(Vector3(0,0,0), Vector3(0,0,0), Vector3(0,0,0));
     obj.name = "awd";
     Rigidbody rb;
     std::list<GameObject*> scene;
