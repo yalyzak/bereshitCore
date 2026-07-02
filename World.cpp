@@ -14,6 +14,10 @@ World::World(std::list<GameObject*> children) : children(children) {
     }
 }
 
+World::World(bool *running_flag, std::list<GameObject *> children, std::list<GameObject *> gizmos, Vector3 gravity,
+    double tick, double speed, int physics_epochs) : gravity(gravity), tick(tick), physics_epochs(physics_epochs), speed(speed), gizmos(gizmos), children(children) {
+}
+
 std::list<GameObject*> World::getAllChildren() {
     std::list<GameObject*> allChildren;
 
