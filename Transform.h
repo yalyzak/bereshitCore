@@ -12,6 +12,8 @@ class Transform {
         Vector3 rotation;
         Vector3 scale;
         Transform();
+        Transform(const Vector3& vector3, const Vector3& rotation, const Vector3& scale);
+
     private:
         Vector3 local_position;
         Vector3 local_rotation;

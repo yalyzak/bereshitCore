@@ -16,4 +16,13 @@ void Rigidbody::apply_gravity(const Vector3 &gravity) {
 
 void Rigidbody::PhysicsUpdate(double dt) {
     apply_gravity(this->GetParent()->getWorld()->gravity);
+    integrate(dt);
+}
+
+void Rigidbody::integrate(double dt) {
+    acceleration = force * invMass;
+    GetParent()->transform.position += velocity * dt + acceleration * 0.5 * dt * dt;
+    velocity += acceleration * dt;
+    force.Zero();
+    torque.Zero();
 }

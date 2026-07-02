@@ -29,6 +29,7 @@ public:
     Vector3 angular_acceleration;
     Vector3 torque;
     Vector3 force;
+    int inertia[3][3];
 
     bool isKinematic = false;
     bool useGravity = true;
@@ -47,8 +48,7 @@ public:
     void apply_gravity(const Vector3& gravity);
     void PhysicsUpdate(double dt);
 
-
-
+    void integrate(double dt);
 };
 
 

@@ -10,3 +10,5 @@ Transform::Transform()
       scale(Vector3(1, 1, 1))
 {
 }
+
+Transform::Transform(const Vector3& position, const Vector3& rotation, const Vector3& scale) : position(position), rotation(rotation), scale(scale)  {}

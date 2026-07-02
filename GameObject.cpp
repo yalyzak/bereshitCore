@@ -6,6 +6,8 @@
 #include "Transform.h"
 GameObject::GameObject() : transform(Transform()) {}
 
+GameObject::GameObject(Vector3 position, Vector3 rotation, Vector3 scale) : transform(position, rotation, scale) {}
+
 void GameObject::AddComponent(Component* comp) {
     components.push_back(comp);
     comp->SetParent(this);

@@ -35,6 +35,12 @@ public:
     [[nodiscard]] double magnitude() const;
 
     std::string toString() const;
+
+    void Zero() {
+        x = 0;
+        y = 0;
+        z = 0;
+    }
 };
 
 

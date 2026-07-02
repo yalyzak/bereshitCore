@@ -23,12 +23,12 @@ int main() {
     obj.AddComponent(&rb);
     Vector3* pos  = &obj.transform.position;
     Rigidbody* rb2 = static_cast<Rigidbody*>(obj.components.front());
-    for (int i; i++, i<10;) {
-        rb2->PhysicsUpdate(1/60);
+    for (int i; i++, i<60;) {
+        rb2->PhysicsUpdate(1 / 60.0);
 
     }
     // // std::cout <<pos->toString() << std::endl;
-    std::cout <<rb2->force.toString() << std::endl;
+    std::cout <<obj.transform.position.toString() << std::endl;
 
     return 0;
     // TIP See CLion help at <a href="https://www.jetbrains.com/help/clion/">jetbrains.com/help/clion/</a>. Also, you can try interactive lessons for CLion by selecting 'Help | Learn IDE Features' from the main menu.

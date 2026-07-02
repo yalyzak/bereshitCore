@@ -15,6 +15,7 @@ class GameObject {
         World* world = nullptr;
         GameObject* parent = nullptr;
     public:
+        Transform transform;
         std::string name;
         std::list<GameObject*> children;
 
@@ -30,9 +31,10 @@ class GameObject {
         }
 
 
-        Transform transform;
         std::list<Component*> components;
         GameObject();
+        GameObject(Vector3 position, Vector3 rotation, Vector3 scale);
+
         void AddComponent(Component* comp);
         void setParent(GameObject* p) {
             parent = p;
