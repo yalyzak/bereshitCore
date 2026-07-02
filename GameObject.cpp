@@ -26,6 +26,23 @@ std::list<GameObject *> GameObject::getAllChildren() {
     return allChildren;
 }
 
+std::list<Component*> GameObject::search_by_component(std::string name) {
+    std::list<Component*> results;
+
+    for (Component* component : components) {
+        if (component->name == name) {
+            results.push_back(component);
+        }
+    }
+
+    for (GameObject* child : children) {
+        auto child_results = child->search_by_component(name);
+        results.splice(results.end(), child_results);
+    }
+
+    return results;
+}
+
 
 
 

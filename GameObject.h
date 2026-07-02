@@ -42,6 +42,7 @@ class GameObject {
         };
 
     std::list<GameObject*> getAllChildren();
+    std::list<Component*> search_by_component(std::string name);
 };
 
 
