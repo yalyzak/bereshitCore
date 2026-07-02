@@ -33,7 +33,7 @@ class GameObject {
 
         std::list<Component*> components;
         GameObject();
-        GameObject(Vector3 position, Vector3 rotation, Vector3 scale);
+        GameObject(Vector3 position, Vector3 rotation, Vector3 scale, std::list<GameObject*>);
 
         void AddComponent(Component* comp);
         void setParent(GameObject* p) {
