@@ -26,7 +26,7 @@ class GameObject {
             world = p;
         }
 
-        World* getWorld() const {
+        World* GetWorld() const {
             return world;
         }
 

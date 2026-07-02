@@ -15,7 +15,7 @@ void Rigidbody::apply_gravity(const Vector3 &gravity) {
 
 
 void Rigidbody::PhysicsUpdate(double dt) {
-    apply_gravity(this->GetParent()->getWorld()->gravity);
+    apply_gravity(this->GetParent()->GetWorld()->gravity);
     integrate(dt);
 }
 
