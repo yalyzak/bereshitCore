@@ -12,7 +12,7 @@ class GameObject;
 class World {
     private:
         std::list<GameObject*> children;
-        std::list<GameObject*> gizmos;
+        GameObject* gizmos;
         double tick;
         double speed;
         int physics_epochs;
