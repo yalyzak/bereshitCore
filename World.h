@@ -20,7 +20,7 @@ class World {
     public:
         Vector3 gravity = Vector3(0.0f, -9.8f, 0.0f);
         World(std::list<GameObject*> children);
-        World(bool* running_flag, std::list<GameObject*> children, std::list<GameObject*> gizmos, Vector3 gravity, double tick, double speed, int physics_epochs);
+        World(bool* running_flag, std::list<GameObject*> children, std::list<GameObject*> gizmos, Vector3 gravity, double tick, double speed, int physics_epochs);/
         std::list<GameObject*> getChildren() {
             return children;
         };
