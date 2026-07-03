@@ -31,7 +31,7 @@ std::list<GameObject*> World::getAllChildren() {
     return allChildren;
 }
 
-std::list<Component*> GameObject::search_by_component(std::string name) {
+std::list<Component*> World::search_by_component(std::string name) {
     std::list<Component*> results;
 
     for (GameObject* child : children) {
