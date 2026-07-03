@@ -15,11 +15,12 @@ class World {
     private:
         std::list<GameObject*> children;
         GameObject* gizmos;
+
+
+    public:
         double tick;
         double speed;
         int physics_epochs;
-
-    public:
         Vector3 gravity = Vector3(0.0f, -9.8f, 0.0f);
         World(std::list<GameObject*> children);
         World(bool* running_flag, std::list<GameObject*> children, GameObject* gizmos, Vector3 gravity, double tick, double speed, int physics_epochs);
@@ -31,6 +32,7 @@ class World {
         std::list<GameObject*> search_by_component(std::string name);
 
         void Start();
+
 
 };
 
