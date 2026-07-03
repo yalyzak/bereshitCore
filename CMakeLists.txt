@@ -16,4 +16,6 @@ add_executable(bereshitCore main.cpp
         Component.h
         World.cpp
         World.h
+        quaternion.cpp
+        quaternion.h
 )
