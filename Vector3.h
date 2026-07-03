@@ -6,6 +6,7 @@
 #define BERESHITCORE_VECTOR3_H
 
 #include <string>
+#include <array>
 #include <ostream>
 class Vector3 {
 public:
@@ -35,6 +36,7 @@ public:
     [[nodiscard]] double magnitude() const;
 
     std::string toString() const;
+    std::array<double, 3> ToArray() const;
 
     void Zero() {
         x = 0;

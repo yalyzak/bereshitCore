@@ -74,4 +74,8 @@ std::string Vector3::toString() const {
                  std::to_string(z) + ")";
 }
 
+std::array<double, 3> Vector3::ToArray() const {
+    return std::array<double, 3>{x, y, z};
+}
+
 
