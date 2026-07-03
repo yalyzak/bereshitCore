@@ -42,11 +42,11 @@ std::list<GameObject*> World::search_by_component(std::string name) {
     return results;
 }
 
-void World::Stat() {
+void World::Start() {
     auto children = getAllChildren();
     for (GameObject* child : children) {
-        for (auto component : child->getComponents()) {
-
+        for (auto component : child->GetComponents()) {
+            component->Start();
         }
     }
 }

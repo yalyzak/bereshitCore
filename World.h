@@ -30,7 +30,7 @@ class World {
         std::list<GameObject*> getAllChildren();
         std::list<GameObject*> search_by_component(std::string name);
 
-        void Stat();
+        void Start();
 
 };
 
