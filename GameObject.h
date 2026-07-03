@@ -32,9 +32,7 @@ class GameObject {
 
 
         std::list<Component*> components;
-        GameObject();
-        GameObject(Vector3 position, Vector3 rotation, Vector3 scale);
-        GameObject(Vector3 position, Vector3 rotation, Vector3 scale, const std::list<GameObject*>);
+        GameObject(const Vector3& position = Vector3(), const Vector3& rotation = Vector3(), const Vector3& scale = Vector3(), const std::list<GameObject*> children= {});
 
         GameObject* AddComponent(Component* comp);
         void setParent(GameObject* p) {
