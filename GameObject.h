@@ -43,6 +43,8 @@ class GameObject {
     std::list<GameObject*> getAllChildren();
     std::list<GameObject*> search_by_component(std::string name);
     std::shared_ptr<Component> GetComponent(const std::string& name);
+    const std::list<std::shared_ptr<Component>>& GetComponents() const;
+
 };
 
 

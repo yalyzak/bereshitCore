@@ -19,13 +19,14 @@ int main() {
 
 
     rb.drag = 10;
-    obj.AddComponent(&rb);
+    auto rb3 = std::make_shared<Rigidbody>();
+    obj.AddComponent(rb3);
     Vector3* pos  = &obj.transform.position;
-    Rigidbody* rb2 = static_cast<Rigidbody*>(obj.components.front());
-    for (int i; i++, i<60;) {
-        rb2->PhysicsUpdate(1 / 60.0);
-
-    }
+    // Rigidbody* rb2 = static_cast<Rigidbody*>(obj.components.front());
+    // for (int i; i++, i<60;) {
+    //     rb2->PhysicsUpdate(1 / 60.0);
+    //
+    // }
     // // std::cout <<pos->toString() << std::endl;
     std::cout <<obj.transform.position.toString() << std::endl;
 

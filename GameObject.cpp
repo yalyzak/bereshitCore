@@ -56,6 +56,10 @@ std::shared_ptr<Component> GameObject::GetComponent(const std::string& name) {
     return nullptr;
 }
 
+const std::list<std::shared_ptr<Component>>& GameObject::GetComponents() const {
+    return components;
+}
+
 
 
 
