@@ -8,6 +8,7 @@
 #include "Vector3.h"
 #include "Component.h"
 #include <list>
+#include <memory>
 class GameObject;
 
 class World {
@@ -27,7 +28,7 @@ class World {
         };
 
         std::list<GameObject*> getAllChildren();
-        std::list<Component*> search_by_component(std::string name);
+        std::list<std::shared_ptr<Component>> search_by_component(std::string name);
 
 };
 
