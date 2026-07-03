@@ -28,7 +28,7 @@ class World {
         };
 
         std::list<GameObject*> getAllChildren();
-        std::list<std::shared_ptr<Component>> search_by_component(std::string name);
+        std::list<GameObject*> search_by_component(std::string name);
 
 };
 

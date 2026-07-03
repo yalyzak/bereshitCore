@@ -28,12 +28,13 @@ std::list<GameObject *> GameObject::getAllChildren() {
     return allChildren;
 }
 
-std::list<std::shared_ptr<Component>> GameObject::search_by_component(std::string name) {
-    std::list<std::shared_ptr<Component>> results;
+std::list<GameObject*> GameObject::search_by_component(std::string name) {
+    std::list<GameObject*> results;
 
     for (auto& component : components) {
         if (component->name == name) {
-            results.push_back(component);
+            results.push_back(this);
+            break; // prevent duplicates
         }
     }
 

@@ -31,8 +31,8 @@ std::list<GameObject*> World::getAllChildren() {
     return allChildren;
 }
 
-std::list<std::shared_ptr<Component>>World::search_by_component(std::string name) {
-    std::list<std::shared_ptr<Component>> results;
+std::list<GameObject*> World::search_by_component(std::string name) {
+    std::list<GameObject*> results;
 
     for (GameObject* child : children) {
         auto child_results = child->search_by_component(name);
