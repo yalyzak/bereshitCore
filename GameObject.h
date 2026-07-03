@@ -19,6 +19,7 @@ class GameObject {
         Transform transform;
         std::string name;
         std::list<GameObject*> children;
+        std::list<std::shared_ptr<Component>> components;
 
         void setWorld(World* p) {
             if (world != nullptr) {
@@ -32,7 +33,6 @@ class GameObject {
         }
 
 
-        std::list<std::shared_ptr<Component>> components;
         GameObject(const Vector3& position = Vector3(), const Vector3& rotation = Vector3(), const Vector3& scale = Vector3(), const std::list<GameObject*> children= {});
 
         GameObject* AddComponent(std::shared_ptr<Component> comp);
@@ -42,6 +42,7 @@ class GameObject {
 
     std::list<GameObject*> getAllChildren();
     std::list<std::shared_ptr<Component>> search_by_component(std::string name);
+    std::shared_ptr<Component> GetComponent(const std::string& name);
 };
 
 

@@ -45,6 +45,15 @@ std::list<std::shared_ptr<Component>> GameObject::search_by_component(std::strin
     return results;
 }
 
+std::shared_ptr<Component> GameObject::GetComponent(const std::string& name) {
+    for (auto& comp : components) {
+        if (comp && comp->name == name) {
+            return comp;
+        }
+    }
+    return nullptr;
+}
+
 
 
 
