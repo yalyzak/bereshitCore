@@ -7,6 +7,7 @@
 Transform::Transform(
     const Vector3& position,
     const Vector3& rotation,
-    const Vector3& scale
-) : position(position), rotation(rotation), scale(scale) {}
+    const Vector3& scale,
+    const Quaternion& quaternion
+) : position(position), rotation(rotation), scale(scale), quaternion(quaternion) {}
 
