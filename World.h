@@ -6,6 +6,7 @@
 #define BERESHITCORE_WORLD_H
 
 #include "Vector3.h"
+#include "Component.h"
 #include <list>
 class GameObject;
 
@@ -26,6 +27,8 @@ class World {
         };
 
         std::list<GameObject*> getAllChildren();
+        std::list<Component*> search_by_component(std::string name);
+
 };
 
 
