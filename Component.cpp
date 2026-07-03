@@ -13,7 +13,8 @@ void Component::Update(double dt) {
 void Component::PhysicsUpdate(double dt) {
 }
 
-void Component::attach(GameObject *obj) {
+std::string Component::attach(GameObject *obj) {
+    return "Component";
 }
 
 

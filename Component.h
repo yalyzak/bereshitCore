@@ -19,7 +19,8 @@ public:
     virtual void Start();
     virtual void Update(double dt);
     virtual void PhysicsUpdate(double dt);
-    virtual void attach(GameObject* obj);
+    virtual std::string attach(GameObject* obj);
+
 
     void SetParent(GameObject* obj) {
         if (parent != nullptr) {
