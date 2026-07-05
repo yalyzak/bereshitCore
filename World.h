@@ -28,10 +28,19 @@ class World {
             return children;
         };
 
-        std::list<GameObject*> getAllChildren();
-        std::list<GameObject*> search_by_component(std::string name);
+        std::list<GameObject*> getAllChildren() const;
+        std::list<GameObject*> getAllChildrenPhysics() const;
+        std::list<GameObject*> search_by_component(std::string name) const;
 
         void Start();
+
+        void CallChildrenUpdate(const std::list<GameObject *> & list, double dt);
+
+        void CallChildrenPhysicsUpdate(const std::list<GameObject *> & list, double dt);
+
+
+        void Update(bool updateComponen);
+
 
 
 };

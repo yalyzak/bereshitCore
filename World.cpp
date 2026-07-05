@@ -4,6 +4,7 @@
 
 #include "World.h"
 #include "GameObject.h"
+#include "Rigidbody.h"
 
 
 
@@ -18,7 +19,7 @@ World::World(bool *running_flag, std::list<GameObject *> children, GameObject* g
     double tick, double speed, int physics_epochs) : gravity(gravity), tick(tick), physics_epochs(physics_epochs), speed(speed), gizmos(gizmos), children(children) {
 }
 
-std::list<GameObject*> World::getAllChildren() {
+std::list<GameObject*> World::getAllChildren() const {
     std::list<GameObject*> allChildren;
 
     for (GameObject* child : children) {
@@ -31,7 +32,18 @@ std::list<GameObject*> World::getAllChildren() {
     return allChildren;
 }
 
-std::list<GameObject*> World::search_by_component(std::string name) {
+std::list<GameObject *> World::getAllChildrenPhysics() const {
+    std::list<GameObject *> objects;
+    for (GameObject* child : getAllChildren()) {
+        if (child->GetComponent("Rigidbody"))
+        {
+            objects.push_back(child);
+        }
+    }
+    return objects;
+}
+
+std::list<GameObject*> World::search_by_component(std::string name) const{
     std::list<GameObject*> results;
 
     for (GameObject* child : children) {
@@ -49,4 +61,39 @@ void World::Start() {
             component->Start();
         }
     }
+}
+
+void World::CallChildrenUpdate(const std::list<GameObject *> &list, double dt) {
+    for (auto child : children) {
+        for (auto component : child->GetComponents()) {
+            component->Update(dt);
+        }
+    }
+
+}
+
+void World::CallChildrenPhysicsUpdate(const std::list<GameObject *> &list, double dt) {
+    for (auto child : children) {
+        for (auto component : child->GetComponents()) {
+            component->PhysicsUpdate(dt);
+        }
+    }
+}
+
+void World::Update(bool updateComponen) {
+    double dt = tick;
+    bool FirstIteration = true;
+    auto allchildren = getAllChildren();
+    if (updateComponen) {
+        CallChildrenUpdate(allchildren, dt);
+    }
+    CallChildrenPhysicsUpdate(allchildren, dt);
+    // auto children = getAllChildrenPhysics();
+
+
+
+
+
+
+
 }
