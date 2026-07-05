@@ -5,6 +5,7 @@
 #ifndef BERESHITCORE_QUATERNION_H
 #define BERESHITCORE_QUATERNION_H
 
+#include "Vector3.h"
 
 class Quaternion {
 public:
@@ -18,6 +19,7 @@ public:
 
     Quaternion conjugate() const;
     Quaternion inverse() const;
+    Vector3 Rotate(const Vector3& v) const;
 
     Quaternion operator+(const Quaternion& other) const;
     Quaternion operator-(const Quaternion& other) const;

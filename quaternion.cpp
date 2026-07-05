@@ -27,6 +27,30 @@ Quaternion Quaternion::inverse() const {
     };
 }
 
+Vector3 Quaternion::Rotate(const Vector3& v) const
+{
+    double qx = x;
+    double qy = y;
+    double qz = z;
+    double qw = w;
+
+    double vx = v.x;
+    double vy = v.y;
+    double vz = v.z;
+
+    // t = 2 * cross(q.xyz, v)
+    double tx = 2.0 * (qy * vz - qz * vy);
+    double ty = 2.0 * (qz * vx - qx * vz);
+    double tz = 2.0 * (qx * vy - qy * vx);
+
+    // v' = v + qw * t + cross(q.xyz, t)
+    double rx = vx + qw * tx + (qy * tz - qz * ty);
+    double ry = vy + qw * ty + (qz * tx - qx * tz);
+    double rz = vz + qw * tz + (qx * ty - qy * tx);
+
+    return Vector3(rx, ry, rz);
+}
+
 Quaternion Quaternion::operator+(const Quaternion& other) const {
     return Quaternion(
         w + other.w,
