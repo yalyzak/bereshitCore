@@ -80,7 +80,7 @@ void World::CallChildrenPhysicsUpdate(const std::list<GameObject *> &list, doubl
     }
 }
 
-void World::Update(bool updateComponen) {
+void World::Update(bool updateComponen = false) {
     double dt = tick;
     bool FirstIteration = true;
     auto allchildren = getAllChildren();
