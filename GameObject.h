@@ -36,6 +36,8 @@ class GameObject {
         GameObject(const Vector3& position = Vector3(), const Vector3& rotation = Vector3(), const Vector3& scale = Vector3(), const std::list<GameObject*> children= {});
 
         GameObject* AddComponent(std::shared_ptr<Component> comp);
+        GameObject* AddComponent(std::list<std::shared_ptr<Component>> comp);
+
         void setParent(GameObject* p) {
             parent = p;
         };
