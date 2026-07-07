@@ -5,7 +5,11 @@
 #ifndef BERESHITCORE_QUATERNION_H
 #define BERESHITCORE_QUATERNION_H
 
+#include <array>
+
 #include "Vector3.h"
+#include "Cache.h"
+
 
 class Quaternion {
 public:
@@ -20,6 +24,7 @@ public:
     Quaternion conjugate() const;
     Quaternion inverse() const;
     Vector3 Rotate(const Vector3& v) const;
+    std::array<std::array<double, 3>, 3>* ToMatrix3(Cache* cache) const;
 
     Quaternion operator+(const Quaternion& other) const;
     Quaternion operator-(const Quaternion& other) const;
@@ -35,6 +40,8 @@ public:
 
     bool operator==(const Quaternion& other) const;
     bool operator!=(const Quaternion& other) const;
+
+
 };
 
 

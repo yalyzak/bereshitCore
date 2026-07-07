@@ -5,21 +5,29 @@
 #ifndef BERESHITCORE_GAMEOBJECT_H
 #define BERESHITCORE_GAMEOBJECT_H
 
+
+#include <list>
+#include <memory>
+
+
 #include "Transform.h"
 #include "Component.h"
 #include "World.h"
-#include <list>
-#include <memory>
+#include "Cache.h"
+
 
 class GameObject {
     private:
         World* world = nullptr;
         GameObject* parent = nullptr;
+
     public:
         Transform transform;
         std::string name;
         std::list<GameObject*> children;
         std::list<std::shared_ptr<Component>> components;
+        Cache cache;
+
 
         void setWorld(World* p) {
             if (world != nullptr) {
