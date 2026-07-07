@@ -2,6 +2,9 @@
 // Created by yaly on 30/06/2026.
 //
 
+#include <iostream>
+#include <exception>
+
 #include "World.h"
 #include "GameObject.h"
 #include "Rigidbody.h"
@@ -64,12 +67,19 @@ void World::Start() {
 }
 
 void World::CallChildrenUpdate(const std::list<GameObject *> &list, double dt) {
-    for (auto child : children) {
+    for (auto child : list) {
         for (auto component : child->GetComponents()) {
-            component->Update(dt);
+            try {
+                component->Update(dt);
+            }
+            catch (const std::exception& e) {
+                std::cerr << "Error in component Update: " << e.what() << std::endl;
+            }
+            catch (...) {
+                std::cerr << "Unknown error in component Update" << std::endl;
+            }
         }
     }
-
 }
 
 void World::CallChildrenPhysicsUpdate(const std::list<GameObject *> &list, double dt) {
