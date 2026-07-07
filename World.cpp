@@ -91,6 +91,7 @@ void World::CallChildrenPhysicsUpdate(const std::list<GameObject *> &list, doubl
 }
 
 void World::Update(bool updateComponen = false) {
+    std::cout << "Hello from C++" << std::endl;
     double dt = tick;
     bool FirstIteration = true;
     auto allchildren = getAllChildren();
