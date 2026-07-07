@@ -5,10 +5,14 @@
 #ifndef BERESHITCORE_WORLD_H
 #define BERESHITCORE_WORLD_H
 
-#include "Vector3.h"
-#include "Component.h"
 #include <list>
 #include <memory>
+#include <cstdlib>
+
+#include "Vector3.h"
+#include "Component.h"
+
+
 class GameObject;
 
 class World {
@@ -32,6 +36,9 @@ class World {
         std::list<GameObject*> search_by_component(std::string name) const;
 
         void Start();
+        void Exit() {
+            std::exit(0);
+        }
 
         void CallChildrenUpdate(const std::list<GameObject *> & list, double dt);
 

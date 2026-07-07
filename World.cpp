@@ -65,6 +65,8 @@ void World::Start() {
     }
 }
 
+
+
 void World::CallChildrenUpdate(const std::list<GameObject *> &list, double dt) {
     for (auto child : list) {
         for (auto component : child->GetComponents()) {
