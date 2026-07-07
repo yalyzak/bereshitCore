@@ -11,15 +11,14 @@
 
 
 
-World::World(std::list<GameObject*> children) : children(children) {
+
+
+World::World(bool *running_flag, std::list<GameObject *> children, GameObject* gizmos, Vector3 gravity,
+    double tick, double speed, int physics_epochs) : gravity(gravity), tick(tick), physics_epochs(physics_epochs), speed(speed), gizmos(gizmos), children(children) {
     for (auto i = children.begin(); i != children.end(); ++i) {
         GameObject* child = *i;
         child->setWorld(this);
     }
-}
-
-World::World(bool *running_flag, std::list<GameObject *> children, GameObject* gizmos, Vector3 gravity,
-    double tick, double speed, int physics_epochs) : gravity(gravity), tick(tick), physics_epochs(physics_epochs), speed(speed), gizmos(gizmos), children(children) {
 }
 
 std::list<GameObject*> World::getAllChildren() const {
@@ -91,7 +90,6 @@ void World::CallChildrenPhysicsUpdate(const std::list<GameObject *> &list, doubl
 }
 
 void World::Update(bool updateComponen = false) {
-    std::cout << "Hello from C++" << std::endl;
     double dt = tick;
     bool FirstIteration = true;
     auto allchildren = getAllChildren();

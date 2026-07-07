@@ -11,23 +11,27 @@ int main() {
     std::cout << "Hello and welcome to " << lang << "!\n";
 
     GameObject obj(Vector3(0,0,0), Vector3(0,0,0), Vector3(0,0,0));
+    auto rb3 = std::make_shared<Rigidbody>();
+
+    obj.AddComponent(rb3);
+
     obj.name = "awd";
     Rigidbody rb;
     std::list<GameObject*> scene;
     scene.push_back(&obj);
-    World world(scene);
+    GameObject* gimoz{};
+    bool running = true;
+    World world(&running, scene, gimoz, Vector3(0,-9.8,0), 1/60.0, 1, 1);
 
 
     rb.drag = 10;
-    auto rb3 = std::make_shared<Rigidbody>();
-    obj.AddComponent(rb3);
     Vector3* pos  = &obj.transform.position;
     // Rigidbody* rb2 = static_cast<Rigidbody*>(obj.components.front());
-    // for (int i; i++, i<60;) {
-    //     rb2->PhysicsUpdate(1 / 60.0);
-    //
-    // }
-    // // std::cout <<pos->toString() << std::endl;
+    for (int i; i++, i<60;) {
+        world.Update(1/60.0);
+
+    }
+    std::cout <<pos->toString() << std::endl;
     std::cout <<obj.transform.position.toString() << std::endl;
 
     return 0;
