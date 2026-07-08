@@ -7,7 +7,9 @@
 #include "GameObject.h"
 #include "World.h"
 
-Rigidbody::Rigidbody() = default;
+Rigidbody::Rigidbody() {
+    SetName("Rigidbody");
+}
 
 void Rigidbody::apply_gravity(const Vector3 &gravity) {
     force += gravity;

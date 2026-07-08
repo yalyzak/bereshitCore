@@ -10,9 +10,13 @@ class GameObject;  // forward declaration
 class Component {
     private:
         GameObject* parent = nullptr;
+        std::string name = "Component";
 public:
-    virtual std::string GetName() const {
-        return "Component";
+    std::string GetName() const {
+        return name;
+    }
+    void SetName(std::string name) {
+        this->name = name;
     }
     virtual ~Component() = default;
 
