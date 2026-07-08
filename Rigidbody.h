@@ -47,7 +47,7 @@ public:
 
     void apply_gravity(const Vector3& gravity);
     void PhysicsUpdate(double dt) override;
-    void Update(double dt) override;
+    void PhysicsUpdateFirstIteration(double dt) override;
     void integrate(double dt);
 };
 

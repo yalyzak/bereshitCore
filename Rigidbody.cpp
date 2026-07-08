@@ -18,7 +18,7 @@ void Rigidbody::PhysicsUpdate(double dt) {
 
 }
 
-void Rigidbody::Update(double dt) {
+void Rigidbody::PhysicsUpdateFirstIteration(double dt) {
     apply_gravity(this->GetParent()->GetWorld()->gravity);
     integrate(dt);
 }

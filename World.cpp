@@ -67,11 +67,11 @@ void World::Start() {
 
 
 
-void World::CallChildrenUpdate(const std::list<GameObject *> &list, double dt) {
+void World::CallChildrenUpdate(const std::list<GameObject *> &list, double dt, void (Component::*func)(double)) {
     for (auto child : list) {
         for (auto component : child->GetComponents()) {
             try {
-                component->Update(dt);
+                (component.get()->*func)(dt);
             }
             catch (const std::exception& e) {
                 std::cerr << "Error in component Update: " << e.what() << std::endl;
@@ -83,13 +83,7 @@ void World::CallChildrenUpdate(const std::list<GameObject *> &list, double dt) {
     }
 }
 
-void World::CallChildrenPhysicsUpdate(const std::list<GameObject *> &PhysicsChildren, double dt) {
-    for (auto child : PhysicsChildren) {
-        for (const auto& component : child->GetComponents()) {
-            component->PhysicsUpdate(dt);
-        }
-    }
-}
+
 
 // std::list<Contact> World::SolveCollectionsFirstIteration(const std::list<GameObject *>& children, double dt) const {
 //     std::list<Contact> contacts;
@@ -106,19 +100,16 @@ void World::Update(bool updateComponen = false) {
     bool FirstIteration = true;
     auto allchildren = getAllChildren();
     if (updateComponen) {
-        CallChildrenUpdate(allchildren, dt);
+        CallChildrenUpdate(allchildren, dt, &Component::Update);
     }
     auto PhysicsChildren = getAllChildrenPhysics();
-    for (int i =0; i<= physics_epochs; i++) {
-        CallChildrenPhysicsUpdate(PhysicsChildren, dt);
+    CallChildrenUpdate(PhysicsChildren, dt, &Component::PhysicsUpdateFirstIteration);
+
+    for (int i =0; i< physics_epochs; i++) {
+        CallChildrenUpdate(PhysicsChildren, dt, &Component::PhysicsUpdate);
     }
-    // UpdatePython(&PhysicsChildren);
-
-    // auto Collections = SolveCollectionsFirstIteration(PhysicsChildren, dt);
-
 }
 
-void World::UpdatePython(const std::list<GameObject*>* PhysicsChildren) {
-}
+
 
 

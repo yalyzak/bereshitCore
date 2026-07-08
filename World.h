@@ -41,14 +41,11 @@ class World {
             std::exit(0);
         }
 
-        void CallChildrenUpdate(const std::list<GameObject *> & list, double dt);
-
-        void CallChildrenPhysicsUpdate(const std::list<GameObject *> & list, double dt);
+        void CallChildrenUpdate(const std::list<GameObject *> & list, double dt, void (Component::*func)(double));
 
         [[nodiscard]] std::list<Contact> SolveCollectionsFirstIteration(const std::list<GameObject *> & list, double dt) const;
 
         void Update(bool updateComponen);
-        virtual void UpdatePython(const std::list<GameObject*>*);
 
 
 

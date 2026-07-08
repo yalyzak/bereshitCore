@@ -18,6 +18,7 @@ public:
 
     virtual void Start();
     virtual void Update(double dt);
+    virtual void PhysicsUpdateFirstIteration(double dt);
     virtual void PhysicsUpdate(double dt);
     virtual std::string attach(GameObject* obj);
 

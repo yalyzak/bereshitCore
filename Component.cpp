@@ -10,6 +10,9 @@ void Component::Start() {
 void Component::Update(double dt) {
 }
 
+void Component::PhysicsUpdateFirstIteration(double dt) {
+}
+
 void Component::PhysicsUpdate(double dt) {
 }
 
