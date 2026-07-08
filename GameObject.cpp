@@ -39,7 +39,7 @@ std::list<GameObject*> GameObject::search_by_component(std::string name) {
     std::list<GameObject*> results;
 
     for (auto& component : components) {
-        if (component->name == name) {
+        if (component->GetName() == name) {
             results.push_back(this);
             break; // prevent duplicates
         }
@@ -55,7 +55,7 @@ std::list<GameObject*> GameObject::search_by_component(std::string name) {
 
 std::shared_ptr<Component> GameObject::GetComponent(const std::string& name) {
     for (auto& comp : components) {
-        if (comp && comp->name == name) {
+        if (comp && comp->GetName() == name) {
             return comp;
         }
     }

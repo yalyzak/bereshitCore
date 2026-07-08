@@ -11,7 +11,9 @@ class Component {
     private:
         GameObject* parent = nullptr;
 public:
-    std::string name;
+    virtual std::string GetName() const {
+        return "Component";
+    }
     virtual ~Component() = default;
 
     bool Active = false;

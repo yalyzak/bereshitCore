@@ -15,7 +15,9 @@ public:
 
     double mass = 1.0;
     double invMass = 1.0;
-    std::string name = "Rigidbody";
+    std::string GetName() const override {
+        return "Rigidbody";
+    }
 
     std::string material;
 
