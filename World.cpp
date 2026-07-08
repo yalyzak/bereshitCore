@@ -83,9 +83,9 @@ void World::CallChildrenUpdate(const std::list<GameObject *> &list, double dt) {
     }
 }
 
-void World::CallChildrenPhysicsUpdate(const std::list<GameObject *> &list, double dt) {
-    for (auto child : children) {
-        for (auto component : child->GetComponents()) {
+void World::CallChildrenPhysicsUpdate(const std::list<GameObject *> &PhysicsChildren, double dt) {
+    for (auto child : PhysicsChildren) {
+        for (const auto& component : child->GetComponents()) {
             component->PhysicsUpdate(dt);
         }
     }
@@ -109,9 +109,9 @@ void World::Update(bool updateComponen = false) {
         CallChildrenUpdate(allchildren, dt);
     }
     auto PhysicsChildren = getAllChildrenPhysics();
-    // for (int i =0; i<= physics_epochs; i++) {
-    //     CallChildrenPhysicsUpdate(PhysicsChildren, dt);
-    // }
+    for (int i =0; i<= physics_epochs; i++) {
+        CallChildrenPhysicsUpdate(PhysicsChildren, dt);
+    }
     // UpdatePython(&PhysicsChildren);
 
     // auto Collections = SolveCollectionsFirstIteration(PhysicsChildren, dt);
