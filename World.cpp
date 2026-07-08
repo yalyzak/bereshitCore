@@ -91,6 +91,16 @@ void World::CallChildrenPhysicsUpdate(const std::list<GameObject *> &list, doubl
     }
 }
 
+// std::list<Contact> World::SolveCollectionsFirstIteration(const std::list<GameObject *>& children, double dt) const {
+//     std::list<Contact> contacts;
+//     colliders = [obj.Collider for obj in children]
+//
+//     for (const auto child : children) {
+//
+//     }
+// }
+
+
 void World::Update(bool updateComponen = false) {
     double dt = tick;
     bool FirstIteration = true;
@@ -98,13 +108,15 @@ void World::Update(bool updateComponen = false) {
     if (updateComponen) {
         CallChildrenUpdate(allchildren, dt);
     }
-    CallChildrenPhysicsUpdate(allchildren, dt);
-    // auto children = getAllChildrenPhysics();
-
-
-
-
-
-
+    auto PhysicsChildren = getAllChildrenPhysics();
+    CallChildrenPhysicsUpdate(PhysicsChildren, dt);
+    UpdatePython(&PhysicsChildren);
+    
+    // auto Collections = SolveCollectionsFirstIteration(PhysicsChildren, dt);
 
 }
+
+void World::UpdatePython(const std::list<GameObject*>* game_objects) {
+}
+
+

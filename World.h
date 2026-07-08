@@ -11,6 +11,7 @@
 
 #include "Vector3.h"
 #include "Component.h"
+#include "Contact.h"
 
 
 class GameObject;
@@ -44,8 +45,10 @@ class World {
 
         void CallChildrenPhysicsUpdate(const std::list<GameObject *> & list, double dt);
 
+        [[nodiscard]] std::list<Contact> SolveCollectionsFirstIteration(const std::list<GameObject *> & list, double dt) const;
 
         void Update(bool updateComponen);
+        virtual void UpdatePython(const std::list<GameObject*>*);
 
 
 
