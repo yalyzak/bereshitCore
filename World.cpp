@@ -109,14 +109,16 @@ void World::Update(bool updateComponen = false) {
         CallChildrenUpdate(allchildren, dt);
     }
     auto PhysicsChildren = getAllChildrenPhysics();
-    CallChildrenPhysicsUpdate(PhysicsChildren, dt);
+    for (int i =0; i<= physics_epochs; i++) {
+        CallChildrenPhysicsUpdate(PhysicsChildren, dt);
+    }
     UpdatePython(&PhysicsChildren);
-    
+
     // auto Collections = SolveCollectionsFirstIteration(PhysicsChildren, dt);
 
 }
 
-void World::UpdatePython(const std::list<GameObject*>* game_objects) {
+void World::UpdatePython(const std::list<GameObject*>* PhysicsChildren) {
 }
 
 

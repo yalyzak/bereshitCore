@@ -15,9 +15,14 @@ void Rigidbody::apply_gravity(const Vector3 &gravity) {
 
 
 void Rigidbody::PhysicsUpdate(double dt) {
+
+}
+
+void Rigidbody::Update(double dt) {
     apply_gravity(this->GetParent()->GetWorld()->gravity);
     integrate(dt);
 }
+
 
 void Rigidbody::integrate(double dt) {
     acceleration = force * invMass;
