@@ -70,15 +70,15 @@ void World::Start() {
 void World::CallChildrenUpdate(const std::list<GameObject *> &list, double dt) {
     for (auto child : list) {
         for (auto component : child->GetComponents()) {
-            try {
+            // try {
                 component->Update(dt);
-            }
-            catch (const std::exception& e) {
-                std::cerr << "Error in component Update: " << e.what() << std::endl;
-            }
-            catch (...) {
-                std::cerr << "Unknown error in component Update" << std::endl;
-            }
+            // }
+            // catch (const std::exception& e) {
+            //     std::cerr << "Error in component Update: " << e.what() << std::endl;
+            // }
+            // catch (...) {
+            //     std::cerr << "Unknown error in component Update" << std::endl;
+            // }
         }
     }
 }
