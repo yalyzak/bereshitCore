@@ -112,7 +112,7 @@ void World::Update(bool updateComponen = false) {
     for (int i =0; i<= physics_epochs; i++) {
         CallChildrenPhysicsUpdate(PhysicsChildren, dt);
     }
-    UpdatePython(&PhysicsChildren);
+    // UpdatePython(&PhysicsChildren);
 
     // auto Collections = SolveCollectionsFirstIteration(PhysicsChildren, dt);
 
