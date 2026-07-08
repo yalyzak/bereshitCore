@@ -5,8 +5,10 @@
 #ifndef BERESHITCORE_CONTACT_H
 #define BERESHITCORE_CONTACT_H
 
-#include "Rigidbody.h"
-#include "Vector3.h"
+#pragma once
+
+class Rigidbody;
+class Vector3;
 
 class Contact {
     public:
