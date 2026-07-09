@@ -12,7 +12,7 @@ class Component {
         GameObject* parent = nullptr;
         std::string name = "Component";
 public:
-    std::string GetName() const {
+    virtual std::string GetName() const {
         return name;
     }
     void SetName(std::string name) {
