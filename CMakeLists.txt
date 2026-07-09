@@ -18,4 +18,10 @@ add_executable(bereshitCore main.cpp
         World.h
         quaternion.cpp
         quaternion.h
+        Cache.cpp
+        Cache.h
+        Contact.cpp
+        Contact.h
+        Collider.cpp
+        Collider.h
 )
