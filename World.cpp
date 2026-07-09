@@ -74,7 +74,7 @@ void World::CallChildrenUpdate(const std::list<GameObject *> &list, double dt, v
                 (component.get()->*func)(dt);
             }
             catch (const std::exception& e) {
-                std::cerr << "Error in component Update: " << e.what() << std::endl;
+                std::cerr << "Error in component Update: " << component->GetName() << ": " << e.what() << std::endl;
             }
             catch (...) {
                 std::cerr << "Unknown error in component Update" << std::endl;
