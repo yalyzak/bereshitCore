@@ -110,7 +110,7 @@ void World::Update(bool updateComponen = false) {
     }
 }
 
-void World::PythonUpdate(const std::list<GameObject *> &PhysicsChildren) const {
+void World::PythonUpdate(const std::list<GameObject *>& PhysicsChildren) const {
 
 }
 
