@@ -17,7 +17,8 @@ void Component::PhysicsUpdate(double dt) {
 }
 
 std::string Component::attach(GameObject *obj) {
-    return "Component";
+    SetName(typeid(*this).name());
+    return "";
 }
 
 
