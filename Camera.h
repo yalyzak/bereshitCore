@@ -7,7 +7,9 @@
 
 #include <string>
 
-class Camera {
+#include "Component.h"
+
+class Camera : public Component{
     public:
         int POV = 120;
         int width=1920;
