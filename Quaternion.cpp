@@ -83,6 +83,28 @@ std::array<std::array<double, 3>, 3> * Quaternion::ToMatrix3(Cache *cache) const
     return &cache->R;
 }
 
+Quaternion Quaternion::euler(Vector3 vec) {
+    double roll  = vec.x * M_PI / 180.0;
+    double pitch = vec.y * M_PI / 180.0;
+    double yaw   = vec.z * M_PI / 180.0;
+
+    double c1 = std::cos(yaw / 2.0);
+    double s1 = std::sin(yaw / 2.0);
+    double c2 = std::cos(pitch / 2.0);
+    double s2 = std::sin(pitch / 2.0);
+    double c3 = std::cos(roll / 2.0);
+    double s3 = std::sin(roll / 2.0);
+
+    double w = c1 * c2 * c3 + s1 * s2 * s3;
+    double x = c1 * c2 * s3 - s1 * s2 * c3;
+    double y = c1 * s2 * c3 + s1 * c2 * s3;
+    double z = s1 * c2 * c3 - c1 * s2 * s3;
+
+    return Quaternion(x, y, z, w);
+}
+
+
+
 
 Quaternion Quaternion::operator+(const Quaternion& other) const {
     return Quaternion(
