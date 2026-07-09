@@ -16,7 +16,7 @@ class Camera : public Component{
         int hight=1920;
         double VIEWER_DISTANCE=0;
         std::string shading = "wire";
-        Camera();
+        Camera() = default;
 };
 
 
