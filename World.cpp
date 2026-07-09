@@ -104,10 +104,14 @@ void World::Update(bool updateComponen = false) {
     }
     auto PhysicsChildren = getAllChildrenPhysics();
     CallChildrenUpdate(PhysicsChildren, dt, &Component::PhysicsUpdateFirstIteration);
-
+    PythonUpdate(PhysicsChildren);
     for (int i =0; i< physics_epochs; i++) {
         CallChildrenUpdate(PhysicsChildren, dt, &Component::PhysicsUpdate);
     }
+}
+
+void World::PythonUpdate(const std::list<GameObject *> &PhysicsChildren) const {
+
 }
 
 
