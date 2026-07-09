@@ -83,7 +83,7 @@ std::array<std::array<double, 3>, 3> * Quaternion::ToMatrix3(Cache *cache) const
     return &cache->R;
 }
 
-Quaternion Quaternion::euler(Vector3 vec) {
+Quaternion Quaternion::Euler(Vector3 vec) {
     double roll  = vec.x * M_PI / 180.0;
     double pitch = vec.y * M_PI / 180.0;
     double yaw   = vec.z * M_PI / 180.0;
