@@ -24,7 +24,7 @@ std::string Component::attach(GameObject* obj) {
     while (!name.empty() && std::isdigit(name[0])) {
         name.erase(name.begin());
     }
-    SetParent(obj);
+    // SetParent(obj);
     return name;
 }
 

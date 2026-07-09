@@ -41,9 +41,6 @@ public:
     Vector3 angular_velocity;
     Vector3 normal_force;
 
-    void* obj = nullptr;  // replace with actual type
-
-
     Rigidbody();
 
     void apply_gravity(const Vector3& gravity);
