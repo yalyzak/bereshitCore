@@ -6,7 +6,7 @@
 #define BERESHITCORE_TRANSFORM_H
 
 #include "Vector3.h"
-#include "quaternion.h"
+#include "Quaternion.h"
 class Transform {
     public:
         Vector3 position;
