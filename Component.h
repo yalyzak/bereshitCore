@@ -31,7 +31,7 @@ public:
 
     void SetParent(GameObject* obj) {
         if (parent != nullptr) {
-            throw std::runtime_error("World already set");
+            throw std::runtime_error("parent already set");
         }
         parent = obj;
     };
