@@ -4,6 +4,7 @@
 #include "Vector3.h"
 #include "GameObject.h"
 #include "Rigidbody.h"
+#include "Collider.h"
 // TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 
 int main() {
@@ -13,12 +14,19 @@ int main() {
     const auto lang = "C++";
     std::cout << "Hello and welcome to " << lang << "!\n";
 
-    GameObject obj(Vector3(0,1,0), Vector3(0,0,0), Vector3(0,0,0));
+    GameObject obj(Vector3(0,1,0), Vector3(0,0,0), Vector3(1,1,1));
     auto rb1 = std::make_shared<Rigidbody>();
+    auto col1 = std::make_shared<Collider>(&obj.transform);
     obj.AddComponent(rb1);
-    GameObject floor(Vector3(0,-1,0), Vector3(0,0,0), Vector3(0,0,0));
+    obj.AddComponent(col1);
+    obj.name = "obj";
+    GameObject floor(Vector3(0,-1,0), Vector3(0,0,0), Vector3(1,1,1));
     auto rb2 = std::make_shared<Rigidbody>();
-    obj.AddComponent(rb2);
+    auto col2 = std::make_shared<Collider>(&floor.transform);
+    rb2->isKinematic = true;
+    floor.AddComponent(rb2);
+    floor.AddComponent(col2);
+    floor.name = "floor";
     std::list<GameObject*> scene;
     scene.push_back(&obj);
     scene.push_back(&floor);
@@ -28,18 +36,20 @@ int main() {
 
 
     Vector3* pos  = &obj.transform.position;
-    int time = 10000;
+    Vector3* pos2  = &floor.transform.position;
+    double time = 1;
     for (int i; i++, i<60 * time;) {
+        // std::cout <<pos->toString() << std::endl;
+        std::cout << obj.GetComponent<Collider>()->GetPosition().toString() << std::endl;
+
         world.Update(1/60.0);
 
     }
-    std::cout <<pos->toString() << std::endl;
-    std::cout <<obj.transform.position.toString() << std::endl;
+
     auto end = std::chrono::high_resolution_clock::now();
 
     auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
     std::cout << std::chrono::duration<double>(elapsed).count() << " s\n";
     return 0;
-    // TIP See CLion help at <a href="https://www.jetbrains.com/help/clion/">jetbrains.com/help/clion/</a>. Also, you can try interactive lessons for CLion by selecting 'Help | Learn IDE Features' from the main menu.
 }

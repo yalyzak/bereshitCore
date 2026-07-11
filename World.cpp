@@ -95,10 +95,16 @@ std::list<Contact> World::SolveCollectionsFirstIteration(const std::list<GameObj
 
     auto candidate_pairs = Collider::SweepAndPrune(colliders);
 
+    for (const auto& [Collider1, Collider2] : candidate_pairs) {
+        auto rb1 = Collider1->GetParent()->GetComponent<Rigidbody>();
+        auto rb2 = Collider2->GetParent()->GetComponent<Rigidbody>();
 
-    for (const auto child : children) {
-
+         if (rb1->isKinematic & rb2->isKinematic) {
+             continue;
+         }
+        
     }
+
     return contacts;
 }
 

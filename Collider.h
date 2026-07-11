@@ -29,12 +29,20 @@ class Collider : public Component{
         Vector3 cachedMax;
 
 public:
-    Collider(const Transform*, bool is_trigger);
+    Collider(Transform*, bool is_trigger =false);
     std::pair<Vector3, Vector3> GetAabb();
     static std::vector<std::pair<std::shared_ptr<Collider>, std::shared_ptr<Collider>>> SweepAndPrune(const std::list<std::shared_ptr<Collider>>& colliders);
     Quaternion GetQuaternion();
     Vector3 GetPosition();
     Vector3 GetSize();
+    void attach(GameObject *obj) override;
+    struct ContactPoints {
+        std::vector<Vector3> contact_points;
+        Vector3 normal;
+        Vector3 depth;
+    };
+    virtual ContactPoints CheckCollision(std::shared_ptr<Collider> collider1, std::shared_ptr<Collider> collider2) const;
+
 
 };
 

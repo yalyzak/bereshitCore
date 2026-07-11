@@ -21,15 +21,23 @@ void Rigidbody::PhysicsUpdate(double dt) {
 }
 
 void Rigidbody::PhysicsUpdateFirstIteration(double dt) {
-    apply_gravity(this->GetParent()->GetWorld()->gravity);
+    if (!isKinematic) {
+        apply_gravity(this->GetParent()->GetWorld()->gravity);
+    }
     integrate(dt);
 }
 
 
 void Rigidbody::integrate(double dt) {
     acceleration = force * invMass;
+    Vector3 pos = velocity * dt + acceleration * 0.5 * dt * dt;
+    if (pos.magnitude() > 0) {
+        GetParent()->cache.aabbDirty = true;
+    }
+
     GetParent()->transform.position += velocity * dt + acceleration * 0.5 * dt * dt;
     velocity += acceleration * dt;
     force.Zero();
     torque.Zero();
+
 }

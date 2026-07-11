@@ -7,10 +7,10 @@
 #include "Collider.h"
 #include "Quaternion.h"
 #include "GameObject.h"
+#include <iostream>
 
 
-Collider::Collider(const Transform*, bool is_trigger) : transform(transform), isTrigger(is_trigger){
-}
+Collider::Collider(Transform* transform, bool is_trigger) : transform(transform), isTrigger(is_trigger){}
 
 std::pair<Vector3, Vector3> Collider::GetAabb() {
     if (!GetParent()->cache.aabbDirty) {
@@ -20,13 +20,15 @@ std::pair<Vector3, Vector3> Collider::GetAabb() {
         auto abs_rot = GetQuaternion().ToMatrix3Abs(&GetParent()->cache);
 
         // Compute world extents
-        auto world_half = halfSize.MatrixMultiplication(*abs_rot);
-        cachedMin, cachedMax = GetPosition() - world_half, GetPosition() + world_half;
+        auto worldHalf = halfSize.MatrixMultiplication(*abs_rot);
+        cachedMin = GetPosition() - worldHalf;
+        cachedMax = GetPosition() + worldHalf;
         // AABB min/max
         GetParent()->cache.aabbDirty = false;
-        return {GetPosition() - world_half, GetPosition() + world_half};
+        return {GetPosition() - worldHalf, GetPosition() + worldHalf};
     }
-    cachedMin, cachedMax = GetPosition() - halfSize, GetPosition() + halfSize;
+    cachedMin = GetPosition() - halfSize;
+    cachedMax = GetPosition() + halfSize;
     GetParent()->cache.aabbDirty = false;
     return {GetPosition() - halfSize, GetPosition() + halfSize};
 }
@@ -131,6 +133,14 @@ Vector3 Collider::GetPosition() {
 
 Vector3 Collider::GetSize() {
     return transform->scale + deltaTransform.scale;
+}
+
+void Collider::attach(GameObject* obj) {
+    halfSize = obj->transform.scale;
+}
+
+Collider::ContactPoints Collider::CheckCollision(std::shared_ptr<Collider> collider1, std::shared_ptr<Collider> collider2) const {
+    
 }
 
 
