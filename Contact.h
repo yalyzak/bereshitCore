@@ -6,18 +6,15 @@
 #define BERESHITCORE_CONTACT_H
 
 #pragma once
-
+#include "Vector3.h"
 class Rigidbody;
-class Vector3;
 
-class Contact {
-    public:
-        const Rigidbody* rb1;
-        const Rigidbody* rb2;
-        const Vector3* normal;
-        const Vector3* penetration;
-        const Vector3* contact_point;
-
+struct Contact {
+    const Rigidbody* rb1;
+    const Rigidbody* rb2;
+    Vector3 normal;
+    Vector3 penetration;
+    Vector3 contact_point;
 };
 
 

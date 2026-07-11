@@ -10,14 +10,14 @@ class Cache {
     public:
         std::array<std::array<double, 3>, 3> R;
         std::array<std::array<double, 3>, 3> R_abs;
-        bool rotation_dirty = true;
-        bool rotation_dirty_abs = true;
-        bool aabb_dirty = true;
+        bool rotationDirty = true;
+        bool rotationDirtyAbs = true;
+        bool aabbDirty = true;
 
         void SetDirty() {
-            rotation_dirty = true;
-            rotation_dirty_abs = true;
-            aabb_dirty = true;
+            rotationDirty = true;
+            rotationDirtyAbs = true;
+            aabbDirty = true;
         }
 };
 

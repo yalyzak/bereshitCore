@@ -67,6 +67,14 @@ Vector3 Vector3::normalized() const {
     return {x/mag, y/mag, z/mag};
 }
 
+Vector3 Vector3::MatrixMultiplication(const std::array<std::array<double, 3>, 3>& matrix) const {
+    return {
+        matrix[0][0] * x + matrix[0][1] * y + matrix[0][2] * z,
+        matrix[1][0] * x + matrix[1][1] * y + matrix[1][2] * z,
+        matrix[2][0] * x + matrix[2][1] * y + matrix[2][2] * z
+    };
+}
+
 
 std::string Vector3::toString() const {
     return "Vector3(" + std::to_string(x) + ", " +

@@ -53,8 +53,8 @@ Vector3 Quaternion::Rotate(const Vector3& v) const
     return Vector3(rx, ry, rz);
 }
 
-std::array<std::array<double, 3>, 3> * Quaternion::ToMatrix3(Cache *cache) const {
-    if (cache->rotation_dirty) {
+std::array<std::array<double, 3>, 3> * Quaternion::ToMatrix3(Cache* cache) const {
+    if (cache->rotationDirty) {
         double xx = 2.0 * x * x;
         double yy = 2.0 * y * y;
         double zz = 2.0 * z * z;
@@ -78,7 +78,37 @@ std::array<std::array<double, 3>, 3> * Quaternion::ToMatrix3(Cache *cache) const
         cache->R[2][0] = xz - wy;
         cache->R[2][1] = yz + wx;
         cache->R[2][2] = 1.0 - xx - yy;
-        cache->rotation_dirty = false;
+        cache->rotationDirty = false;
+    }
+    return &cache->R;
+}
+
+std::array<std::array<double, 3>, 3> * Quaternion::ToMatrix3Abs(Cache* cache) const {
+    if (cache->rotationDirty) {
+        double xx = 2.0 * x * x;
+        double yy = 2.0 * y * y;
+        double zz = 2.0 * z * z;
+
+        double xy = 2.0 * x * y;
+        double xz = 2.0 * x * z;
+        double yz = 2.0 * y * z;
+
+        double wx = 2.0 * w * x;
+        double wy = 2.0 * w * y;
+        double wz = 2.0 * w * z;
+
+        cache->R[0][0] = std::abs(1.0 - yy - zz);
+        cache->R[0][1] = std::abs(xy - wz);
+        cache->R[0][2] = std::abs(xz + wy);
+
+        cache->R[1][0] = std::abs(xy + wz);
+        cache->R[1][1] = std::abs(1.0 - xx - zz);
+        cache->R[1][2] = std::abs(yz - wx);
+
+        cache->R[2][0] = std::abs(xz - wy);
+        cache->R[2][1] = std::abs(yz + wx);
+        cache->R[2][2] = std::abs(1.0 - xx - yy);
+        cache->rotationDirty = false;
     }
     return &cache->R;
 }

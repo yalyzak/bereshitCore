@@ -12,7 +12,8 @@ GameObject::GameObject(const Vector3 &position, const Vector3 &rotation, const V
 GameObject* GameObject::AddComponent(std::shared_ptr<Component> comp) {
     components.push_back(comp);
     comp->SetParent(this);
-    std::string comp_name = comp->attach(this);
+    comp->attach(this);
+    std::string comp_name = comp->GetName();
     return this;
 }
 
@@ -61,6 +62,8 @@ std::shared_ptr<Component> GameObject::GetComponent(const std::string& name) {
     }
     return nullptr;
 }
+
+
 
 const std::list<std::shared_ptr<Component>>& GameObject::GetComponents() const {
     return components;

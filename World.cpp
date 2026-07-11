@@ -8,6 +8,7 @@
 #include "World.h"
 #include "GameObject.h"
 #include "Rigidbody.h"
+#include "Collider.h"
 
 
 
@@ -84,15 +85,22 @@ void World::CallChildrenUpdate(const std::list<GameObject *> &list, double dt, v
 }
 
 
+std::list<Contact> World::SolveCollectionsFirstIteration(const std::list<GameObject *>& PhysicsChildren, double dt) const {
+    std::list<Contact> contacts;
+    std::list<std::shared_ptr<Collider>> colliders;
 
-// std::list<Contact> World::SolveCollectionsFirstIteration(const std::list<GameObject *>& children, double dt) const {
-//     std::list<Contact> contacts;
-//     colliders = [obj.Collider for obj in children]
-//
-//     for (const auto child : children) {
-//
-//     }
-// }
+    for (const auto PhysicsChild : PhysicsChildren) {
+        colliders.push_back(PhysicsChild->GetComponent<Collider>());
+    }
+
+    auto candidate_pairs = Collider::SweepAndPrune(colliders);
+
+
+    for (const auto child : children) {
+
+    }
+    return contacts;
+}
 
 
 void World::Update(bool updateComponen = false) {
@@ -103,6 +111,7 @@ void World::Update(bool updateComponen = false) {
         CallChildrenUpdate(allchildren, dt, &Component::Update);
     }
     auto PhysicsChildren = getAllChildrenPhysics();
+    auto Collections = SolveCollectionsFirstIteration(PhysicsChildren, dt);
     CallChildrenUpdate(PhysicsChildren, dt, &Component::PhysicsUpdateFirstIteration);
     PythonUpdate(PhysicsChildren);
     for (int i =0; i< physics_epochs; i++) {

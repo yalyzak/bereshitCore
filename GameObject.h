@@ -53,9 +53,20 @@ class GameObject {
     std::list<GameObject*> getAllChildren();
     std::list<GameObject*> search_by_component(std::string name);
     std::shared_ptr<Component> GetComponent(const std::string& name);
+    template<typename T>
+    std::shared_ptr<T> GetComponent() const {
+        for (const auto& component : components) {
+            if (auto casted = std::dynamic_pointer_cast<T>(component)) {
+                return casted;
+            }
+        }
+        return nullptr;
+    }
     const std::list<std::shared_ptr<Component>>& GetComponents() const;
 
 };
+
+
 
 
 #endif //BERESHITCORE_GAMEOBJECT_H

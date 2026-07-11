@@ -6,6 +6,9 @@
 
 #include "Component.h"
 
+void Component::OnConstructed() {
+}
+
 void Component::Start() {
 }
 
@@ -18,14 +21,13 @@ void Component::PhysicsUpdateFirstIteration(double dt) {
 void Component::PhysicsUpdate(double dt) {
 }
 
-std::string Component::attach(GameObject* obj) {
+void Component::attach(GameObject* obj) {
     std::string name = typeid(*this).name();
 
     while (!name.empty() && std::isdigit(name[0])) {
         name.erase(name.begin());
     }
-    // SetParent(obj);
-    return name;
+    SetName(name);
 }
 
 

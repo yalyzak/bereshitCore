@@ -11,6 +11,7 @@ class Component {
     private:
         GameObject* parent = nullptr;
         std::string name = "Component";
+        void OnConstructed();
 public:
     virtual std::string GetName() const {
         return name;
@@ -26,7 +27,7 @@ public:
     virtual void Update(double dt);
     virtual void PhysicsUpdateFirstIteration(double dt);
     virtual void PhysicsUpdate(double dt);
-    virtual std::string attach(GameObject* obj);
+    virtual void attach(GameObject* obj);
 
 
     void SetParent(GameObject* obj) {

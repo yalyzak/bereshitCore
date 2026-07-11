@@ -13,23 +13,21 @@ int main() {
     const auto lang = "C++";
     std::cout << "Hello and welcome to " << lang << "!\n";
 
-    GameObject obj(Vector3(0,0,0), Vector3(0,0,0), Vector3(0,0,0));
-    auto rb3 = std::make_shared<Rigidbody>();
-
-    obj.AddComponent(rb3);
-
-    obj.name = "awd";
-    Rigidbody rb;
+    GameObject obj(Vector3(0,1,0), Vector3(0,0,0), Vector3(0,0,0));
+    auto rb1 = std::make_shared<Rigidbody>();
+    obj.AddComponent(rb1);
+    GameObject floor(Vector3(0,-1,0), Vector3(0,0,0), Vector3(0,0,0));
+    auto rb2 = std::make_shared<Rigidbody>();
+    obj.AddComponent(rb2);
     std::list<GameObject*> scene;
     scene.push_back(&obj);
+    scene.push_back(&floor);
     GameObject* gimoz{};
     bool running = true;
     World world(&running, scene, gimoz, Vector3(0,-9.8,0), 1/60.0, 1, 1);
 
 
-    rb.drag = 10;
     Vector3* pos  = &obj.transform.position;
-    // Rigidbody* rb2 = static_cast<Rigidbody*>(obj.components.front());
     int time = 10000;
     for (int i; i++, i<60 * time;) {
         world.Update(1/60.0);
