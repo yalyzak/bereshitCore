@@ -13,9 +13,8 @@
 
 
 
-
 World::World(bool *running_flag, std::list<GameObject *> children, GameObject* gizmos, Vector3 gravity,
-    double tick, double speed, int physics_epochs) : gravity(gravity), tick(tick), physics_epochs(physics_epochs), speed(speed), gizmos(gizmos), children(children) {
+             double tick, double speed, int physics_epochs) : gravity(gravity), tick(tick), physics_epochs(physics_epochs), speed(speed), gizmos(gizmos), children(children) {
     for (auto i = children.begin(); i != children.end(); ++i) {
         GameObject* child = *i;
         child->setWorld(this);
@@ -102,6 +101,17 @@ std::list<Contact> World::SolveCollectionsFirstIteration(const std::list<GameObj
          if (rb1->isKinematic & rb2->isKinematic) {
              continue;
          }
+        auto result = Collider1->CheckCollision(Collider2);
+
+        if (result.contact_points.empty()){
+            continue;
+        }
+        for (auto contact_point : result.contact_points) {
+
+            std::cout << "asdasd" << " s\n";
+
+        }
+
         
     }
 

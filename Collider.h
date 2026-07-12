@@ -41,7 +41,7 @@ public:
         Vector3 normal;
         Vector3 depth;
     };
-    virtual ContactPoints CheckCollision(std::shared_ptr<Collider> collider1, std::shared_ptr<Collider> collider2) const;
+    virtual ContactPoints CheckCollision(std::shared_ptr<Collider> collider2) const;
 
 
 };

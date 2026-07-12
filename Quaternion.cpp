@@ -53,7 +53,27 @@ Vector3 Quaternion::Rotate(const Vector3& v) const
     return Vector3(rx, ry, rz);
 }
 
-std::array<std::array<double, 3>, 3> * Quaternion::ToMatrix3(Cache* cache) const {
+Vector3 Quaternion::RotateConjugated(const Vector3 &v) const {
+    double qx = x;
+    double qy = y;
+    double qz = z;
+    double qw = w;
+    double vx = v.x;
+    double vy = v.y;
+    double vz = v.z;
+
+    double tx = 2 * (qy * vz - qz * vy);
+    double ty = 2 * (qz * vx - qx * vz);
+    double tz = 2 * (qx * vy - qy * vx);
+
+    double rx = vx - qw * tx + (qy * tz - qz * ty);
+    double ry = vy - qw * ty + (qz * tx - qx * tz);
+    double rz = vz - qw * tz + (qx * ty - qy * tx);
+
+    return {rx, ry, rz};
+}
+
+std::array<std::array<double, 3>, 3>& Quaternion::ToMatrix3(Cache* cache) const {
     if (cache->rotationDirty) {
         double xx = 2.0 * x * x;
         double yy = 2.0 * y * y;
@@ -80,10 +100,10 @@ std::array<std::array<double, 3>, 3> * Quaternion::ToMatrix3(Cache* cache) const
         cache->R[2][2] = 1.0 - xx - yy;
         cache->rotationDirty = false;
     }
-    return &cache->R;
+    return cache->R;
 }
 
-std::array<std::array<double, 3>, 3> * Quaternion::ToMatrix3Abs(Cache* cache) const {
+std::array<std::array<double, 3>, 3>& Quaternion::ToMatrix3Abs(Cache* cache) const {
     if (cache->rotationDirty) {
         double xx = 2.0 * x * x;
         double yy = 2.0 * y * y;
@@ -110,7 +130,7 @@ std::array<std::array<double, 3>, 3> * Quaternion::ToMatrix3Abs(Cache* cache) co
         cache->R[2][2] = std::abs(1.0 - xx - yy);
         cache->rotationDirty = false;
     }
-    return &cache->R;
+    return cache->R;
 }
 
 Quaternion Quaternion::Euler(Vector3 vec) {

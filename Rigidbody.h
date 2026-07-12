@@ -10,9 +10,16 @@
 #include "World.h"
 
 class Rigidbody : public Component {
+private:
+    std::array<std::array<double, 3>, 3> InvertWorld;
+    void UpdateInertiaWorld();
+    double restitution = 0.6;
 
 public:
-
+    double GetRestitution() const {
+        return restitution;
+    }
+    Vector3 invertInertia;
     double mass = 1.0;
     double invMass = 1.0;
 
@@ -21,7 +28,6 @@ public:
 
     double drag = 0.98;
     double energy = 0.0;
-    double restitution = 0.6;
     double friction_coefficient = 0.6;
 
     Vector3 center_of_mass;
@@ -47,6 +53,13 @@ public:
     void PhysicsUpdate(double dt) override;
     void PhysicsUpdateFirstIteration(double dt) override;
     void integrate(double dt);
+    static void SolveImpulse(Rigidbody& rb1, Rigidbody& rb2, const Vector3& contact_point, const Vector3& normal, const Vector3& penetration, double dt);
+    std::array<std::array<double, 3>, 3>* GetInvertWorld() {
+        return &InvertWorld;
+    }
+    static double FindRestitution(const Rigidbody& rb1, const Rigidbody& rb2);
+    static void ApplyImpulsePair(Rigidbody& rb1, Rigidbody& rb2, const Vector3& impulseVec, const Vector3& r1, const Vector3& r2);
+    void ApplyTorqueImpulse(Vector3 impulse, Vector3 r);
 };
 
 

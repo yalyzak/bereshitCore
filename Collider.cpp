@@ -20,7 +20,7 @@ std::pair<Vector3, Vector3> Collider::GetAabb() {
         auto abs_rot = GetQuaternion().ToMatrix3Abs(&GetParent()->cache);
 
         // Compute world extents
-        auto worldHalf = halfSize.MatrixMultiplication(*abs_rot);
+        auto worldHalf = halfSize.MatrixMultiplication(abs_rot);
         cachedMin = GetPosition() - worldHalf;
         cachedMax = GetPosition() + worldHalf;
         // AABB min/max
@@ -139,8 +139,10 @@ void Collider::attach(GameObject* obj) {
     halfSize = obj->transform.scale;
 }
 
-Collider::ContactPoints Collider::CheckCollision(std::shared_ptr<Collider> collider1, std::shared_ptr<Collider> collider2) const {
-    
+Collider::ContactPoints Collider::CheckCollision(std::shared_ptr<Collider> collider2) const {
+    ContactPoints contact_points;
+    // contact_points.contact_points.push_back(Vector3(1,1,1));
+    return contact_points;
 }
 
 

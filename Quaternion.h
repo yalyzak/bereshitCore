@@ -25,8 +25,9 @@ public:
     Quaternion conjugate() const;
     Quaternion inverse() const;
     Vector3 Rotate(const Vector3& v) const;
-    std::array<std::array<double, 3>, 3>* ToMatrix3(Cache* cache) const;
-    std::array<std::array<double, 3>, 3>* ToMatrix3Abs(Cache* cache) const;
+    Vector3 RotateConjugated(const Vector3& v) const;
+    std::array<std::array<double, 3>, 3>& ToMatrix3(Cache* cache) const;
+    std::array<std::array<double, 3>, 3>& ToMatrix3Abs(Cache* cache) const;
     static Quaternion Euler(Vector3 vec);
 
     Quaternion operator+(const Quaternion& other) const;
