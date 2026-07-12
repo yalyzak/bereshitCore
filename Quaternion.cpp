@@ -1,6 +1,6 @@
 #include "Quaternion.h"
 #include "Cache.h"
-
+#include <numbers>
 
 Quaternion::Quaternion()
     : w(1), x(0), y(0), z(0) {
@@ -134,9 +134,9 @@ std::array<std::array<double, 3>, 3>& Quaternion::ToMatrix3Abs(Cache* cache) con
 }
 
 Quaternion Quaternion::Euler(Vector3 vec) {
-    double roll  = vec.x * M_PI / 180.0;
-    double pitch = vec.y * M_PI / 180.0;
-    double yaw   = vec.z * M_PI / 180.0;
+    double roll  = vec.x * std::numbers::pi / 180.0;
+    double pitch = vec.y * std::numbers::pi / 180.0;
+    double yaw   = vec.z * std::numbers::pi / 180.0;
 
     double c1 = std::cos(yaw / 2.0);
     double s1 = std::sin(yaw / 2.0);
