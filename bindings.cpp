@@ -36,6 +36,7 @@ public:
         );
     }
 };
+
 class PyWorld : public World {
 public:
     using World::World;
@@ -100,7 +101,7 @@ PYBIND11_MODULE(bereshitCore, m) {
     .def("search_by_component", &GameObject::search_by_component)
     .def("search_by_component", &GameObject::search_by_component)
     .def_property_readonly("get_all_children", &GameObject::GetComponents)
-    .def("get_component", &GameObject::GetComponent)
+    .def("get_component",static_cast<std::shared_ptr<Component> (GameObject::*)(const std::string&)>(&GameObject::GetComponent))
     .def("add_component", &GameObject::AddComponent,
          py::return_value_policy::reference)
     .def_property("World", &GameObject::GetWorld, &GameObject::setWorld)
@@ -140,7 +141,9 @@ PYBIND11_MODULE(bereshitCore, m) {
     py::class_<Cache>(m, "Cache")
     .def("SetDirty", &Cache::SetDirty);
     py::class_<Rigidbody, Component, std::shared_ptr<Rigidbody>>(m, "Rigidbody")
+    .def_readwrite("isKinematic", &Rigidbody::isKinematic)
     .def(py::init<>());
+
 
 
 }
