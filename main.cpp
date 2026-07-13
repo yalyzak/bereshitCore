@@ -16,13 +16,13 @@ int main() {
 
     GameObject obj(Vector3(0,1,0), Vector3(0,0,0), Vector3(1,1,1));
     auto rb1 = std::make_shared<Rigidbody>();
-    auto col1 = std::make_shared<Collider>(&obj.transform);
+    auto col1 = std::make_shared<Collider>();
     obj.AddComponent(rb1);
     obj.AddComponent(col1);
     obj.name = "obj";
     GameObject floor(Vector3(0,-1,0), Vector3(0,0,0), Vector3(1,1,1));
     auto rb2 = std::make_shared<Rigidbody>();
-    auto col2 = std::make_shared<Collider>(&floor.transform);
+    auto col2 = std::make_shared<Collider>();
     rb2->isKinematic = true;
     floor.AddComponent(rb2);
     floor.AddComponent(col2);

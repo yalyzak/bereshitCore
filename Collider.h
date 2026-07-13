@@ -29,7 +29,7 @@ class Collider : public Component{
         Vector3 cachedMax;
 
 public:
-    Collider(Transform*, bool is_trigger =false);
+    Collider(bool is_trigger =false);
     std::pair<Vector3, Vector3> GetAabb();
     static std::vector<std::pair<std::shared_ptr<Collider>, std::shared_ptr<Collider>>> SweepAndPrune(const std::list<std::shared_ptr<Collider>>& colliders);
     Quaternion GetQuaternion();

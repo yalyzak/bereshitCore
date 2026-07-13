@@ -10,7 +10,7 @@
 #include <iostream>
 
 
-Collider::Collider(Transform* transform, bool is_trigger) : transform(transform), isTrigger(is_trigger){}
+Collider::Collider(bool is_trigger) : isTrigger(is_trigger){}
 
 std::pair<Vector3, Vector3> Collider::GetAabb() {
     if (!GetParent()->cache.aabbDirty) {
@@ -136,6 +136,7 @@ Vector3 Collider::GetSize() {
 }
 
 void Collider::attach(GameObject* obj) {
+    transform = &obj->transform;
     halfSize = obj->transform.scale;
 }
 
