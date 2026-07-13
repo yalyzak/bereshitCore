@@ -37,7 +37,7 @@ std::list<GameObject*> World::getAllChildren() const {
 std::list<GameObject *> World::getAllChildrenPhysics() const {
     std::list<GameObject *> objects;
     for (GameObject* child : getAllChildren()) {
-        if (child->GetComponent("Rigidbody"))
+        if (child->GetComponent<Rigidbody>())
         {
             objects.push_back(child);
         }
