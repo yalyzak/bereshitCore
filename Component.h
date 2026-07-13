@@ -28,7 +28,7 @@ public:
     virtual void PhysicsUpdateFirstIteration(double dt);
     virtual void PhysicsUpdate(double dt);
     virtual void attach(GameObject* obj);
-
+    virtual std::string GetTypeName() const;
 
     void SetParent(GameObject* obj) {
         if (parent != nullptr) {
