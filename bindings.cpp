@@ -11,6 +11,7 @@
 #include "Transform.h"
 #include "Cache.h"
 #include "Rigidbody.h"
+#include "Collider.h"
 
 
 namespace py = pybind11;
@@ -18,7 +19,15 @@ namespace py = pybind11;
 class PyComponent : public Component {
 public:
     using Component::Component;
+    std::string GetTypeName() const override {
+        py::gil_scoped_acquire gil;
 
+        py::object self =
+            py::cast(const_cast<PyComponent*>(this),
+                     py::return_value_policy::reference);
+
+        return py::str(self.attr("__class__").attr("__name__"));
+    }
     void Update(double dt) override {
         PYBIND11_OVERRIDE(
             void,       // Return type
@@ -143,6 +152,9 @@ PYBIND11_MODULE(bereshitCore, m) {
     py::class_<Rigidbody, Component, std::shared_ptr<Rigidbody>>(m, "Rigidbody")
     .def_readwrite("isKinematic", &Rigidbody::isKinematic)
     .def(py::init<>());
+    py::class_<Collider, Component, std::shared_ptr<Collider>>(m, "Collider")
+     .def(py::init<bool>(), py::arg("is_trigger") = false);
+
 
 
 
