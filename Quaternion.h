@@ -29,6 +29,7 @@ public:
     std::array<std::array<double, 3>, 3>& ToMatrix3(Cache* cache) const;
     std::array<std::array<double, 3>, 3>& ToMatrix3Abs(Cache* cache) const;
     static Quaternion Euler(Vector3 vec);
+    static Quaternion AxisAngle(const Vector3& axis, double angleRad);
 
     Quaternion operator+(const Quaternion& other) const;
     Quaternion operator-(const Quaternion& other) const;

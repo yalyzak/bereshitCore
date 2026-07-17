@@ -153,7 +153,20 @@ Quaternion Quaternion::Euler(Vector3 vec) {
     return Quaternion(x, y, z, w);
 }
 
+Quaternion Quaternion::AxisAngle(const Vector3& axis, double angleRad)
+{
+    double halfAngle = angleRad * 0.5;
+    double sinHalf = std::sin(halfAngle);
 
+    Vector3 axisN = axis.normalized();
+
+    return Quaternion(
+        axisN.x * sinHalf,
+        axisN.y * sinHalf,
+        axisN.z * sinHalf,
+        std::cos(halfAngle)
+    );
+}
 
 
 Quaternion Quaternion::operator+(const Quaternion& other) const {
