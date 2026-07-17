@@ -39,15 +39,16 @@ int main() {
 
     Vector3* pos  = &obj.transform.position;
     Vector3* pos2  = &floor.transform.position;
-    double time = 2;
-    for (int i; i++, i<60 * time;) {
+    double seconds = 60 * 60;
+    double dt = 1/60.0;
+    for (int i; i++, i< 1/dt * seconds;) {
         // std::cout <<pos->toString() << std::endl;
-        std::cout << obj.GetComponent<Collider>()->GetPosition().toString() << std::endl;
+        // std::cout << obj.GetComponent<Collider>()->GetPosition().toString() << std::endl;
 
-        world.Update(1/60.0);
+        world.Update();
 
     }
-
+    std::cout << obj.GetComponent<Collider>()->GetPosition().toString() << std::endl;
     auto end = std::chrono::high_resolution_clock::now();
 
     auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start);

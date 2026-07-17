@@ -3,8 +3,99 @@
 //
 
 #include "BoxCollider.h"
-
+#include <algorithm>
 #include "GameObject.h"
+
+std::pair<Vector3, Vector3> BoxCollider::GetEdgeSegment(const Vector3& center,const std::array<Vector3, 3> &axes, const Vector3& half,int axis_index,const Vector3 &normal) {
+
+
+    Vector3 axis = axes[axis_index];
+    Vector3 dir1 = axes[(axis_index + 1) % 3];
+    Vector3 dir2 = axes[(axis_index + 2) % 3];
+
+   Vector3 offset = (
+           axis * double(half[axis_index]) +
+           dir1 * double(half[(axis_index + 1) % 3]) * (dir1.dot(normal) > 0 ? 1 : -1) +
+           dir2 * double(half[(axis_index + 2) % 3]) * (dir2.dot(normal) > 0 ? 1 : -1)
+   );
+
+   Vector3 p = center + offset - axis * double(half[axis_index]);
+   Vector3 q = center + offset + axis * double(half[axis_index]);
+
+   return {p, q};
+
+}
+
+std::array<Vector3, 4> BoxCollider::
+GetFaceVertices(const Vector3 &center,const std::array<Vector3, 3> &axes, const Vector3 &half, int axis_index, const Vector3 &normal) {
+
+    Vector3 u = axes[(axis_index + 1) % 3];
+    Vector3 v = axes[(axis_index + 2) % 3];
+
+    double hu = double(half[(axis_index + 1) % 3]);
+    double hv = double(half[(axis_index + 2) % 3]);
+    double hn = double(half[axis_index]);
+
+    Vector3 face_center = center + normal * hn;
+
+    return {
+       face_center + u * hu + v * hv,
+       face_center - u * hu + v * hv,
+       face_center - u * hu - v * hv,
+       face_center + u * hu - v * hv,
+       };
+}
+
+std::array<Vector3, 4> BoxCollider::GetIncidentFace(const Vector3 &center, const std::array<Vector3, 3> &axes, const Vector3 &half_sizes, const Vector3 &collision_normal) {
+    int best_index = 0;
+    double best_dot = axes[0].dot(collision_normal);
+    double d;
+    for (int i = 1; i < 3; i++) {
+        d = axes[i].dot(collision_normal);
+        if (std::abs(d) > abs(best_dot)) {
+            best_dot = d;
+            best_index = i;
+        }
+    }
+
+
+    Vector3 face_normal = axes[best_index];
+    if (face_normal.dot(collision_normal) > 0) {
+        face_normal.NegativeSelf();
+    }
+
+    return GetFaceVertices(
+        center,
+        axes,
+        half_sizes,
+        best_index,
+        face_normal
+    );
+}
+
+
+
+std::vector<Vector3> BoxCollider::ClipPolygon(const std::vector<Vector3>& poly,const Vector3& planePoint, const Vector3& planeNormal){
+    std::vector<Vector3> result;
+
+    for (size_t i = 0; i < poly.size(); ++i) {
+        const Vector3& a = poly[i];
+        const Vector3& b = poly[(i + 1) % poly.size()];
+
+        double da = (a - planePoint).dot(planeNormal);
+        double db = (b - planePoint).dot(planeNormal);
+
+        if (da <= 0.0)
+            result.push_back(a);
+
+        if (da * db < 0.0) {
+            double t = da / (da - db);
+            result.push_back(a + (b - a) * t);
+        }
+    }
+
+    return result;
+}
 
 ContactPoints BoxCollider::CheckCollision(std::shared_ptr<Collider> collider2)  {
     ContactPoints contact_points;
@@ -117,7 +208,7 @@ std::array<Vector3, 3> BoxCollider::GetAxes(Quaternion quaternion, Cache cache) 
     };
 }
 
-std::array<double, 2> BoxCollider::ProjectBox(Vector3 center, std::array<Vector3, 3> axes, Vector3 half_sizes, Vector3 axis) {
+std::array<double, 2> BoxCollider::ProjectBox(const Vector3& center,const std::array<Vector3, 3>& axes, const Vector3& half_sizes, const Vector3& axis) {
     double c = center.x * axis.x + center.y * axis.y + center.z * axis.z;
 
     Vector3 a0 = axes[0];
@@ -134,8 +225,69 @@ std::array<double, 2> BoxCollider::ProjectBox(Vector3 center, std::array<Vector3
 
 }
 
+std::pair<Vector3, Vector3> BoxCollider::ClosestPointsBetweenSegments(const Vector3& p1,const Vector3& q1,const Vector3& p2, const Vector3& q2){
+    Vector3 d1 = q1 - p1;
+    Vector3 d2 = q2 - p2;
+    Vector3 r = p1 - p2;
+
+    double a = d1.dot(d1);
+    double e = d2.dot(d2);
+    double f = d2.dot(r);
+
+    constexpr double EPSILON = 1e-6;
+
+    if (a <= EPSILON && e <= EPSILON)
+    {
+        return {p1, p2};
+    }
+
+    if (a <= EPSILON)
+    {
+        double t = std::clamp(f / e, 0.0, 1.0);
+        return {p1, p2 + d2 * t};
+    }
+
+    double c = d1.dot(r);
+
+    if (e <= EPSILON)
+    {
+        double s = std::clamp(-c / a, 0.0, 1.0);
+        return {p1 + d1 * s, p2};
+    }
+
+    double b = d1.dot(d2);
+    double denom = a * e - b * b;
+
+    double s;
+    if (denom != 0.0)
+    {
+        s = std::clamp((b * f - c * e) / denom, 0.0, 1.0);
+    }
+    else
+    {
+        s = 0.0;
+    }
+
+    double t = (b * s + f) / e;
+
+    if (t < 0.0)
+    {
+        t = 0.0;
+        s = std::clamp(-c / a, 0.0, 1.0);
+    }
+    else if (t > 1.0)
+    {
+        t = 1.0;
+        s = std::clamp((b - c) / a, 0.0, 1.0);
+    }
+
+    return {
+        p1 + d1 * s,
+        p2 + d2 * t
+    };
+}
+
 ContactPoints BoxCollider::GenerateContacts(SatResult &sat_result) const {
-    return Collider::GenerateContacts(sat_result);
     Vector3 normal = sat_result.normal;
     double penetration = sat_result.penetration;
     Source collision_type = sat_result.type;
@@ -195,42 +347,48 @@ ContactPoints BoxCollider::GenerateContacts(SatResult &sat_result) const {
         ref_normal = -ref_normal;
     }
 
-    ref_face = BoxCollider.__get_face_vertices(ref_center, ref_axes, ref_half.to_np(), ref_axis_index,
-                                               ref_normal)  # this is ok
+    auto ref_face = GetFaceVertices(ref_center, ref_axes, ref_half, ref_axis_index,ref_normal);
 
-    # Incident face (most opposite)
-    inc_face = BoxCollider.__get_incident_face(inc_center, inc_axes, inc_half.to_np(), normal)
-    # Clip incident face against reference side planes
-    clipped = inc_face
-    for i in range(4):
-        p1 = ref_face[i]
-        p2 = ref_face[(i + 1) % 4]
+    auto inc_face = GetIncidentFace(inc_center, inc_axes, inc_half, normal);
 
-        edge = p2 - p1
-        plane_normal = edge.cross(ref_normal).normalized()
-        # Ensure it points inward
-        to_center = ref_center - p1
-        if plane_normal.dot(to_center) < 0:
-            plane_normal.NegativeSelf()
+    std::vector<Vector3> clipped(inc_face.begin(), inc_face.end());
 
-        clipped = BoxCollider.__clip_polygon(clipped, p1, -plane_normal)
+    for (int i = 0; i < 4; ++i) {
+        const Vector3& p1 = ref_face[i];
+        const Vector3& p2 = ref_face[(i + 1) % 4];
 
-        if not clipped:
-            break
+        Vector3 edge = p2 - p1;
+        Vector3 planeNormal = edge.cross(ref_normal).normalized();
 
-    # Keep only points behind reference face
-    contacts = []
-    ref_plane_d = ref_normal.dot(ref_face[0])
+        Vector3 toCenter = ref_center - p1;
 
-    for p in clipped:
-        depth = ref_plane_d - ref_normal.dot(p)
-        if depth >= 0:
-            projected_p = p + ref_normal * depth
-            contacts.append(projected_p)
-    average = ContactPoints.average_point(contacts)
-    if average:
-        contacts.insert(0, average)
-    return ContactPoints(contacts, sat_result["normal"], penetration)
+        if (planeNormal.dot(toCenter) < 0.0) {
+            planeNormal.NegativeSelf();
+        }
+
+        clipped = ClipPolygon(clipped, p1, -planeNormal);
+
+        if (clipped.empty()) {
+            break;
+        }
+    }
+
+    std::vector<Vector3> contacts;
+    double ref_plane_d = ref_normal.dot(ref_face[0]);
+
+    for (auto p : clipped) {
+        double depth = ref_plane_d - ref_normal.dot(p);
+        if (depth >= 0) {
+            Vector3 projected_p = p + ref_normal * depth;
+            contacts.push_back(projected_p);
+        }
+    }
+    if (!contacts.empty()) {
+        Vector3 average = Vector3::Average(contacts);
+            contacts.insert(contacts.end(),average);
+    }
+
+    return ContactPoints(contacts, sat_result.normal, penetration);
 
 }
 

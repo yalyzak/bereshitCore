@@ -43,6 +43,21 @@ void Rigidbody::UpdateInertiaWorld() {
     }
 }
 
+void Rigidbody::PositionalCorrection(const Rigidbody &rb1, const Rigidbody &rb2, double penetration, const Vector3 &normal, double inv_eff_mass) {
+    float percent = 0.11;
+    float slop = 0.05;
+
+    double correction_mag = std::max(penetration - slop, 0.0) / inv_eff_mass * percent;
+    Vector3 correction = normal * correction_mag;
+
+    if (!rb1.isKinematic){
+        rb1.GetParent()->transform.position -= correction * rb1.invMass;
+    }
+    if (!rb2.isKinematic){
+        rb2.GetParent()->transform.position -= correction * rb2.invMass;
+    }
+}
+
 Rigidbody::Rigidbody() {
     SetName("Rigidbody");
 }
@@ -78,8 +93,7 @@ void Rigidbody::integrate(double dt) {
 
 }
 
-void Rigidbody::SolveImpulse(Rigidbody &rb1, Rigidbody &rb2, const Vector3& contact_point, const Vector3& normal,
-    const Vector3& penetration, double dt) {
+void Rigidbody::SolveImpulse(Rigidbody &rb1, Rigidbody &rb2, const Vector3& contact_point, const Vector3& normal, double penetration, double dt) {
         if (!rb1.isKinematic) {
             rb1.velocity += (rb1.force * rb1.invMass) * dt;
 
@@ -120,11 +134,11 @@ void Rigidbody::SolveImpulse(Rigidbody &rb1, Rigidbody &rb2, const Vector3& cont
         double kAngular = normal.dot(term1 + term2);
         double inv_eff_mass = kLinear + kAngular;
 
-        // Rigidbody.positional_correction(rb1, rb2, penetration, normal, inv_eff_mass)
+        PositionalCorrection(rb1, rb2, penetration, normal, inv_eff_mass);
 
         double J = -(1 + restitution) * v_norm / inv_eff_mass;
 
-        Rigidbody::ApplyImpulsePair(rb1, rb2, normal * J, r1, r2);
+        ApplyImpulsePair(rb1, rb2, normal * J, r1, r2);
 
 
         // rb1._apply_friction_impulse(rb2, relative_vel, normal, J, r1, r2)

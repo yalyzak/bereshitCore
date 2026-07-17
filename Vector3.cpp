@@ -8,7 +8,25 @@
 #include <math.h>
 
 Vector3::Vector3() : x(0), y(0), z(0) {};
-Vector3::Vector3(double x,  double y, double z) : x(x), y(y), z(z) {};
+Vector3::Vector3(double x,  double y, double z) : x(x), y(y), z(z) {}
+
+double & Vector3::operator[](size_t index) {
+    switch (index) {
+        case 0: return x;
+        case 1: return y;
+        case 2: return z;
+        default: throw std::out_of_range("Vector3 index out of range");
+    }
+}
+
+const double & Vector3::operator[](size_t index) const {
+    switch (index) {
+        case 0: return x;
+        case 1: return y;
+        case 2: return z;
+        default: throw std::out_of_range("Vector3 index out of range");
+    }
+};
 
 
 Vector3 Vector3::operator+(const Vector3& other) const {
@@ -43,6 +61,13 @@ Vector3& Vector3::operator+=(const Vector3& other) {
     x += other.x;
     y += other.y;
     z += other.z;
+    return *this;
+}
+
+Vector3& Vector3::operator-=(const Vector3& other) {
+    x -= other.x;
+    y -= other.y;
+    z -= other.z;
     return *this;
 }
 
@@ -88,6 +113,16 @@ std::string Vector3::toString() const {
 
 std::array<double, 3> Vector3::ToArray() const {
     return std::array<double, 3>{x, y, z};
+}
+
+Vector3 Vector3::Average(const std::vector<Vector3> & Vectors) {
+    Vector3 size;
+    int len = 0;
+    for (Vector3 vector : Vectors) {
+        size += vector;
+        len += 1;
+    }
+    return size/len;
 }
 
 

@@ -47,7 +47,7 @@ class World {
 
         [[nodiscard]] std::list<Contact> SolveCollectionsFirstIteration(const std::list<GameObject *> & list, double dt) const;
 
-        void Update(bool updateComponen);
+        void Update(bool updateComponen = false);
         virtual void PythonUpdate(const std::list<GameObject *>& list) const;
 
 
