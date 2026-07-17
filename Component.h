@@ -5,6 +5,8 @@
 #ifndef BERESHITCORE_COMPONENT_H
 #define BERESHITCORE_COMPONENT_H
 #include <stdexcept>
+#include "Collision.h"
+
 class GameObject;  // forward declaration
 
 class Component {
@@ -30,13 +32,21 @@ public:
     virtual void attach(GameObject* obj);
     virtual std::string GetTypeName() const;
 
+    virtual void OnCollisionEnter(const Collision&) {}
+    virtual void OnCollisionStay(const Collision&) {}
+    virtual void OnCollisionExit(const Collision&) {}
+
+    virtual void OnTriggerEnter(const Collision&) {}
+    virtual void OnTriggerStay(const Collision&) {}
+    virtual void OnTriggerExit(const Collision&) {}
+
     void SetParent(GameObject* obj) {
         if (parent != nullptr) {
             throw std::runtime_error("parent already set");
         }
         parent = obj;
     };
-    GameObject* GetParent() {
+    GameObject* GetParent() const {
         return parent;
     }
 };

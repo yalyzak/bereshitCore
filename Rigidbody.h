@@ -14,6 +14,7 @@ private:
     std::array<std::array<double, 3>, 3> InvertWorld;
     void UpdateInertiaWorld();
     double restitution = 0.6;
+    static void PositionalCorrection(const Rigidbody&, const Rigidbody&, double,const Vector3&, double);
 
 public:
     double GetRestitution() const {
@@ -53,7 +54,7 @@ public:
     void PhysicsUpdate(double dt) override;
     void PhysicsUpdateFirstIteration(double dt) override;
     void integrate(double dt);
-    static void SolveImpulse(Rigidbody& rb1, Rigidbody& rb2, const Vector3& contact_point, const Vector3& normal, const Vector3& penetration, double dt);
+    static void SolveImpulse(Rigidbody& rb1, Rigidbody& rb2, const Vector3& contact_point, const Vector3& normal, double penetration, double dt);
     std::array<std::array<double, 3>, 3>* GetInvertWorld() {
         return &InvertWorld;
     }

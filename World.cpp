@@ -107,9 +107,7 @@ std::list<Contact> World::SolveCollectionsFirstIteration(const std::list<GameObj
             continue;
         }
         for (auto contact_point : result.contact_points) {
-
-            std::cout << "asdasd" << " s\n";
-
+            Rigidbody::SolveImpulse(*rb1, *rb2, contact_point, result.normal, result.depth, dt);
         }
 
         
@@ -119,7 +117,7 @@ std::list<Contact> World::SolveCollectionsFirstIteration(const std::list<GameObj
 }
 
 
-void World::Update(bool updateComponen = false) {
+void World::Update(bool updateComponen) {
     double dt = tick;
     bool FirstIteration = true;
     auto allchildren = getAllChildren();

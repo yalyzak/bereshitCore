@@ -5,6 +5,8 @@
 #include "GameObject.h"
 #include "Rigidbody.h"
 #include "Collider.h"
+#include "BoxCollider.h"
+
 // TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 
 int main() {
@@ -14,15 +16,15 @@ int main() {
     const auto lang = "C++";
     std::cout << "Hello and welcome to " << lang << "!\n";
 
-    GameObject obj(Vector3(0,1,0), Vector3(0,0,0), Vector3(1,1,1));
+    GameObject obj(Vector3(0,2,0), Vector3(0,0,0), Vector3(1,1,1));
     auto rb1 = std::make_shared<Rigidbody>();
-    auto col1 = std::make_shared<Collider>();
+    auto col1 = std::make_shared<BoxCollider>();
     obj.AddComponent(rb1);
     obj.AddComponent(col1);
     obj.name = "obj";
-    GameObject floor(Vector3(0,-1,0), Vector3(0,0,0), Vector3(1,1,1));
+    GameObject floor(Vector3(0,-1,0), Vector3(0,0,0), Vector3(10,1,10));
     auto rb2 = std::make_shared<Rigidbody>();
-    auto col2 = std::make_shared<Collider>();
+    auto col2 = std::make_shared<BoxCollider>();
     rb2->isKinematic = true;
     floor.AddComponent(rb2);
     floor.AddComponent(col2);
@@ -37,15 +39,16 @@ int main() {
 
     Vector3* pos  = &obj.transform.position;
     Vector3* pos2  = &floor.transform.position;
-    double time = 1;
-    for (int i; i++, i<60 * time;) {
+    double seconds = 60 * 60;
+    double dt = 1/60.0;
+    for (int i; i++, i< 1/dt * seconds;) {
         // std::cout <<pos->toString() << std::endl;
-        std::cout << obj.GetComponent<Collider>()->GetPosition().toString() << std::endl;
+        // std::cout << obj.GetComponent<Collider>()->GetPosition().toString() << std::endl;
 
-        world.Update(1/60.0);
+        world.Update();
 
     }
-
+    std::cout << obj.GetComponent<Collider>()->GetPosition().toString() << std::endl;
     auto end = std::chrono::high_resolution_clock::now();
 
     auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start);

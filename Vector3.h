@@ -8,11 +8,17 @@
 #include <string>
 #include <array>
 #include <ostream>
+#include <vector>
+
 class Vector3 {
 public:
     double x, y, z;
     Vector3();
     Vector3(double x, double y, double z);
+
+
+    double& operator[](size_t index);
+    const double& operator[](size_t index) const;
 
     [[nodiscard]] Vector3 operator+(const Vector3& other) const;
     [[nodiscard]] Vector3 operator-(const Vector3& other) const;
@@ -44,6 +50,13 @@ public:
         y = 0;
         z = 0;
     }
+    Vector3& NegativeSelf() {
+        x = -x;
+        y = -y;
+        z = -z;
+        return *this;
+    }
+    static Vector3 Average(const std::vector<Vector3>&);
 };
 
 

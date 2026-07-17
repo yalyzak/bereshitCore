@@ -13,7 +13,7 @@ class Transform {
         Vector3 rotation;
         Vector3 scale;
         Quaternion quaternion;
-        Transform(const Vector3& position = Vector3(), const Vector3& rotation = Vector3(),const Vector3& scale = Vector3(1, 1, 1), const Quaternion& quaternion = Quaternion());
+        Transform(const Vector3& position = Vector3(), const Vector3& rotation = Vector3(),const Vector3& scale = Vector3(), const Quaternion& quaternion = Quaternion());
 
     private:
         Vector3 local_position;

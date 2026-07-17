@@ -26,4 +26,8 @@ add_executable(bereshitCore main.cpp
         Collider.h
         Camera.cpp
         Camera.h
+        BoxCollider.cpp
+        BoxCollider.h
+        Collision.h
+        ContactPoints.h
 )
