@@ -20,7 +20,7 @@ Quaternion Quaternion::Inverse() const {
     if (normSq == 0)
         return {};
 
-    Quaternion c = conjugate();
+    Quaternion c = Conjugate();
     return {
         c.x / normSq,
         c.y / normSq,
