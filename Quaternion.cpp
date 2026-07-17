@@ -3,29 +3,29 @@
 #include <numbers>
 
 Quaternion::Quaternion()
-    : w(1), x(0), y(0), z(0) {
+    : x(1), y(0), z(0), w(0) {
 }
 
 Quaternion::Quaternion(double w, double x, double y, double z)
-    : w(w), x(x), y(y), z(z) {
+    : x(w), y(x), z(y), w(z) {
 }
 
 Quaternion Quaternion::conjugate() const {
-    return {w, -x, -y, -z};
+    return {x, -y, -z, -w};
 }
 
 Quaternion Quaternion::inverse() const {
-    double normSq = w * w + x * x + y * y + z * z;
+    double normSq = x * x + y * y + z * z + w * w;
 
     if (normSq == 0)
         return {};
 
     Quaternion c = conjugate();
     return {
-        c.w / normSq,
         c.x / normSq,
         c.y / normSq,
-        c.z / normSq
+        c.z / normSq,
+        c.w / normSq
     };
 }
 
