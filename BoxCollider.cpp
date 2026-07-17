@@ -335,11 +335,11 @@ ContactPoints BoxCollider::GenerateContacts(SatResult &sat_result) const {
     }
 
     Vector3 ref_center = ref->GetPosition();
-    auto ref_axes = GetAxes(ref->GetQuaternion().conjugate(), ref->GetParent()->cache);
+    auto ref_axes = GetAxes(ref->GetQuaternion().Conjugate(), ref->GetParent()->cache);
     Vector3 ref_half = ref->GetSize() * 0.5;
 
     Vector3 inc_center = inc->GetPosition();
-    auto inc_axes = GetAxes(inc->GetQuaternion().conjugate(), inc->GetParent()->cache);
+    auto inc_axes = GetAxes(inc->GetQuaternion().Conjugate(), inc->GetParent()->cache);
     Vector3 inc_half = inc->GetSize() * 0.5;
 
     Vector3 ref_normal = ref_axes[ref_axis_index];
