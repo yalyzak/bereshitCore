@@ -22,8 +22,8 @@ public:
     Quaternion();
     Quaternion(double w, double x, double y, double z);
 
-    Quaternion conjugate() const;
-    Quaternion inverse() const;
+    Quaternion Conjugate() const;
+    Quaternion Inverse() const;
     Vector3 Rotate(const Vector3& v) const;
     Vector3 RotateConjugated(const Vector3& v) const;
     std::array<std::array<double, 3>, 3>& ToMatrix3(Cache* cache) const;

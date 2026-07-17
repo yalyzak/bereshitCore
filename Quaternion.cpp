@@ -10,11 +10,11 @@ Quaternion::Quaternion(double w, double x, double y, double z)
     : x(w), y(x), z(y), w(z) {
 }
 
-Quaternion Quaternion::conjugate() const {
+Quaternion Quaternion::Conjugate() const {
     return {x, -y, -z, -w};
 }
 
-Quaternion Quaternion::inverse() const {
+Quaternion Quaternion::Inverse() const {
     double normSq = x * x + y * y + z * z + w * w;
 
     if (normSq == 0)
