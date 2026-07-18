@@ -120,7 +120,7 @@ std::array<std::array<double, 3>, 3>& Quaternion::ToMatrix3(Cache* cache) const 
     return cache->R;
 }
 
-constexpr void Quaternion::ToMatrix3(std::array<std::array<double, 3>, 3>& temp) const {
+void Quaternion::ToMatrix3(std::array<std::array<double, 3>, 3>& temp) const {
     double xx = 2.0 * x * x;
     double yy = 2.0 * y * y;
     double zz = 2.0 * z * z;

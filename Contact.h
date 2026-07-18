@@ -10,10 +10,10 @@
 class Rigidbody;
 
 struct Contact {
-    const Rigidbody* rb1;
-    const Rigidbody* rb2;
+    Rigidbody& rb1;
+    Rigidbody& rb2;
     Vector3 normal;
-    Vector3 penetration;
+    double penetration;
     Vector3 contact_point;
 };
 

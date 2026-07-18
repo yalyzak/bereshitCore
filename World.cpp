@@ -68,6 +68,12 @@ std::list<GameObject*> World::search_by_component(std::string name) const{
     return results;
 }
 
+void World::SolveCollections(const std::vector<Contact> &contacts, double dt) {\
+    for (auto contact : contacts) {
+        Rigidbody::SolveImpulse(contact.rb1, contact.rb2, contact.contact_point, contact.normal, contact.penetration, dt);
+    }
+}
+
 void World::Start() {
     auto children = getAllChildren();
     for (GameObject* child : children) {
@@ -96,8 +102,8 @@ void World::CallChildrenUpdate(const std::list<GameObject *> &list, double dt, v
 }
 
 
-std::list<Contact> World::SolveCollectionsFirstIteration(const std::list<GameObject *>& PhysicsChildren, double dt) const {
-    std::list<Contact> contacts;
+std::vector<Contact> World::SolveCollectionsFirstIteration(const std::list<GameObject *>& PhysicsChildren, double dt) const {
+    std::vector<Contact> contacts;
     std::list<std::shared_ptr<Collider>> colliders;
 
     for (const auto PhysicsChild : PhysicsChildren) {
@@ -120,6 +126,7 @@ std::list<Contact> World::SolveCollectionsFirstIteration(const std::list<GameObj
         }
         for (auto contact_point : result.contact_points) {
             Rigidbody::SolveImpulse(*rb1, *rb2, contact_point, result.normal, result.depth, dt);
+            contacts.push_back({*rb1, *rb2, result.normal, result.depth, contact_point});
         }
 
         
@@ -137,11 +144,11 @@ void World::Update(bool updateComponen) {
         CallChildrenUpdate(allchildren, dt, &Component::Update);
     }
     auto PhysicsChildren = getAllChildrenPhysics();
-    auto Collections = SolveCollectionsFirstIteration(PhysicsChildren, dt);
-    SetGizmos(Collections);
+    auto collections = SolveCollectionsFirstIteration(PhysicsChildren, dt);
     CallChildrenUpdate(PhysicsChildren, dt, &Component::PhysicsUpdateFirstIteration);
     PythonUpdate(PhysicsChildren);
     for (int i =0; i< physics_epochs; i++) {
+        SolveCollections(collections, dt);
         CallChildrenUpdate(PhysicsChildren, dt, &Component::PhysicsUpdate);
     }
 }

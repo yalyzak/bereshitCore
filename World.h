@@ -38,6 +38,7 @@ class World {
         std::list<GameObject*> getGizmos() const;
         std::list<GameObject*> getAllChildrenPhysics() const;
         std::list<GameObject*> search_by_component(std::string name) const;
+        void SolveCollections(const std::vector<Contact>&, double);
 
         void Start();
         void Exit() {
@@ -46,7 +47,7 @@ class World {
 
         void CallChildrenUpdate(const std::list<GameObject *> & list, double dt, void (Component::*func)(double));
 
-        [[nodiscard]] std::list<Contact> SolveCollectionsFirstIteration(const std::list<GameObject *> & list, double dt) const;
+        [[nodiscard]] std::vector<Contact> SolveCollectionsFirstIteration(const std::list<GameObject *> & list, double dt) const;
 
         void Update(bool updateComponen = false);
         virtual void PythonUpdate(const std::list<GameObject *>& list) const;
