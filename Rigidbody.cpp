@@ -3,7 +3,7 @@
 //
 
 #include "Rigidbody.h"
-
+#include <cmath>
 #include "GameObject.h"
 #include "World.h"
 #include "Vector3.h"
@@ -102,7 +102,6 @@ void Rigidbody::integrate(double dt) {
     angularVelocity += angularAcceleration * dt;
 
     transform->quaternion *= Quaternion::EulerRadians(angDisp);
-
     if (angDisp.magnitude() > 0) {
         UpdateInertiaWorld();
         transform->rotation = transform->quaternion.ToEuler();
@@ -220,10 +219,11 @@ void Rigidbody::attach(GameObject& obj) {
     double hz = transform->scale.z;
 
     inertia = Vector3(
-                (1 / 12) * mass * (std::pow(hy, 2) + std::pow(hz, 2)),
-                (1 / 12) * mass * (std::pow(hx, 2)+ std::pow(hz, 2)),
-                (1 / 12) * mass * (std::pow(hy, 2) + std::pow(hx, 2))
+                (1 / 12.0) * mass * (std::pow(hy, 2) + std::pow(hz, 2)),
+                (1 / 12.0) * mass * (std::pow(hx, 2)+ std::pow(hz, 2)),
+                (1 / 12.0) * mass * (std::pow(hy, 2) + std::pow(hx, 2))
             );
 }
+
 
 
