@@ -10,7 +10,7 @@ constexpr double DegToRad(double deg) {
 }
 
 Quaternion::Quaternion()
-    : x(1), y(0), z(0), w(0) {
+    : x(0), y(0), z(0), w(1) {
 }
 
 Quaternion::Quaternion(double w, double x, double y, double z)
