@@ -7,9 +7,7 @@
 
 
 GameObject::GameObject(const Vector3 &position, const Vector3 &rotation, const Vector3 &scale,
-    const std::list<GameObject *> children) : transform(position, rotation, scale), children(children) {
-
-};
+    const std::list<GameObject *> children) : transform(position, rotation, scale), children(children) {}
 
 GameObject* GameObject::AddComponent(std::shared_ptr<Component> comp) {
     components.push_back(comp);

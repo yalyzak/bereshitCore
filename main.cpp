@@ -16,7 +16,7 @@ int main() {
     const auto lang = "C++";
     std::cout << "Hello and welcome to " << lang << "!\n";
 
-    GameObject obj(Vector3(0,2,0), Vector3(0,0,0), Vector3(1,1,1));
+    GameObject obj(Vector3(0,2,0), Vector3(0,0,10), Vector3(1,1,1));
     auto rb1 = std::make_shared<Rigidbody>();
     auto col1 = std::make_shared<BoxCollider>();
     obj.AddComponent(rb1);
