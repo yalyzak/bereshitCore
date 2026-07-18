@@ -11,7 +11,8 @@
 class BoxCollider : public Collider {
     private:
 
-    static std::array<Vector3, 3> GetAxes(Quaternion, Cache);
+    static std::array<Vector3, 3> GetAxes(const Quaternion&, Cache&);
+    static std::array<Vector3, 3> GetAxes(const Quaternion&);
     static bool OverlapOnAxis(std::array<double, 2> p1, std::array<double, 2> p2){
         return !(p1[1] < p2[0] || p2[1] < p1[0]);
     }

@@ -52,7 +52,7 @@ std::array<Vector3, 4> BoxCollider::GetIncidentFace(const Vector3 &center, const
     double d;
     for (int i = 1; i < 3; i++) {
         d = axes[i].dot(collision_normal);
-        if (std::abs(d) > abs(best_dot)) {
+        if (std::abs(d) > std::abs(best_dot)) {
             best_dot = d;
             best_index = i;
         }
@@ -132,9 +132,9 @@ bool BoxCollider::AabbCollision(std::shared_ptr<Collider> collider2) {
     auto [min1, max1] = GetAabb();
     auto [min2, max2] = collider2->GetAabb();
 
-    return (min1.x <= max2.x & max1.x >= min2.x)
-            &(min1.y <= max2.y & max1.y >= min2.y)
-            &(min1.z <= max2.z & max1.z >= min2.z);
+    return (min1.x <= max2.x && max1.x >= min2.x)
+            &(min1.y <= max2.y && max1.y >= min2.y)
+            &(min1.z <= max2.z && max1.z >= min2.z);
 
 }
 
@@ -199,8 +199,18 @@ std::optional<Collider::SatResult> BoxCollider::Sat(std::shared_ptr<Collider> ot
 
 }
 
-std::array<Vector3, 3> BoxCollider::GetAxes(Quaternion quaternion, Cache cache) {
+std::array<Vector3, 3> BoxCollider::GetAxes(const Quaternion &quaternion, Cache &cache) {
     auto R = quaternion.ToMatrix3(&cache);
+    return {
+        Vector3(R[0][0], R[1][0], R[2][0]).normalized(),
+        Vector3(R[0][1], R[1][1], R[2][1]).normalized(),
+        Vector3(R[0][2], R[1][2], R[2][2]).normalized()
+    };
+}
+
+std::array<Vector3, 3> BoxCollider::GetAxes(const Quaternion &quaternion) {
+    std::array<std::array<double, 3>, 3> R;
+    quaternion.ToMatrix3(R);
     return {
         Vector3(R[0][0], R[1][0], R[2][0]).normalized(),
         Vector3(R[0][1], R[1][1], R[2][1]).normalized(),
@@ -335,11 +345,11 @@ ContactPoints BoxCollider::GenerateContacts(SatResult &sat_result) const {
     }
 
     Vector3 ref_center = ref->GetPosition();
-    auto ref_axes = GetAxes(ref->GetQuaternion().Conjugate(), ref->GetParent()->cache);
+    auto ref_axes = GetAxes(ref->GetQuaternion().Conjugate());
     Vector3 ref_half = ref->GetSize() * 0.5;
 
     Vector3 inc_center = inc->GetPosition();
-    auto inc_axes = GetAxes(inc->GetQuaternion().Conjugate(), inc->GetParent()->cache);
+    auto inc_axes = GetAxes(inc->GetQuaternion().Conjugate());
     Vector3 inc_half = inc->GetSize() * 0.5;
 
     Vector3 ref_normal = ref_axes[ref_axis_index];

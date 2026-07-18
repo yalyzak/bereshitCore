@@ -18,7 +18,7 @@ std::pair<Vector3, Vector3> Collider::GetAabb() {
     if (!GetParent()->cache.aabbDirty) {
         return {cachedMin, cachedMax};
     }
-    if (GetParent()->cache.rotationDirty) {
+    if (GetParent()->cache.rotationDirtyAbs) {
         auto abs_rot = GetQuaternion().ToMatrix3Abs(&GetParent()->cache);
 
         // Compute world extents

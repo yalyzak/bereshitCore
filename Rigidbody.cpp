@@ -84,7 +84,7 @@ void Rigidbody::integrate(double dt) {
 
     Vector3 pos = velocity * dt + acceleration * 0.5 * dt * dt;
     if (pos.magnitude() > 0) {
-        GetParent()->cache.aabbDirty = true;
+        cache->aabbDirty = true;
     }
 
     transform->position += velocity * dt + acceleration * 0.5 * dt * dt;
