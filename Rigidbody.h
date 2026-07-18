@@ -18,12 +18,18 @@ private:
     static void PositionalCorrection(const Rigidbody&, const Rigidbody&, double,const Vector3&, double);
     Transform* transform = nullptr;
     Cache* cache = nullptr;
+    double invertInertiaMetrix[3][3] = {
+        {0, 0, 0},
+        {0, 0, 0},
+        {0, 0, 0}
+    };
+    Vector3 invertInertia;
+    Vector3 inertia;
 
 public:
     double GetRestitution() const {
         return restitution;
     }
-    Vector3 invertInertia;
     double mass = 1.0;
     double invMass = 1.0;
 
@@ -40,7 +46,7 @@ public:
     Vector3 angularAcceleration;
     Vector3 torque;
     Vector3 force;
-    Vector3 inertia;
+
 
     bool isKinematic = false;
     bool useGravity = true;

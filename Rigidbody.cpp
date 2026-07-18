@@ -27,7 +27,7 @@ void Rigidbody::UpdateInertiaWorld() {
         for (int j = 0; j < 3; j++) {
             temp[i][j] = 0.0;
             for (int k = 0; k < 3; k++) {
-                temp[i][j] += R[i][k] * InvertWorld[k][j];
+                temp[i][j] += R[i][k] * invertInertiaMetrix[k][j];
             }
         }
     }
@@ -223,6 +223,10 @@ void Rigidbody::attach(GameObject& obj) {
                 (1 / 12.0) * mass * (std::pow(hy, 2) + std::pow(hx, 2))
             );
     invertInertia = inertia.Inverse();
+    invertInertiaMetrix[0][0] = invertInertia.x;
+    invertInertiaMetrix[1][1] = invertInertia.y;
+    invertInertiaMetrix[2][2] = invertInertia.z;
+    UpdateInertiaWorld();
 }
 
 
