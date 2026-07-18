@@ -74,8 +74,8 @@ void Rigidbody::PhysicsUpdate(double dt) {
 void Rigidbody::PhysicsUpdateFirstIteration(double dt) {
     if (!isKinematic) {
         apply_gravity(this->GetParent()->GetWorld()->gravity);
+        integrate(dt);
     }
-    integrate(dt);
 }
 
 
@@ -123,9 +123,8 @@ void Rigidbody::integrate(double dt) {
 void Rigidbody::SolveImpulse(Rigidbody &rb1, Rigidbody &rb2, const Vector3& contact_point, const Vector3& normal, double penetration, double dt) {
         if (!rb1.isKinematic) {
             rb1.velocity += (rb1.force * rb1.invMass) * dt;
-
+            rb1.force.Zero();
         }
-        rb1.force.Zero();
         if (!rb2.isKinematic) {
             rb2.velocity += (rb2.force * rb2.invMass) * dt;
             rb2.force.Zero();
@@ -220,9 +219,10 @@ void Rigidbody::attach(GameObject& obj) {
 
     inertia = Vector3(
                 (1 / 12.0) * mass * (std::pow(hy, 2) + std::pow(hz, 2)),
-                (1 / 12.0) * mass * (std::pow(hx, 2)+ std::pow(hz, 2)),
+                (1 / 12.0) * mass * (std::pow(hx, 2) + std::pow(hz, 2)),
                 (1 / 12.0) * mass * (std::pow(hy, 2) + std::pow(hx, 2))
             );
+    invertInertia = inertia.Inverse();
 }
 
 

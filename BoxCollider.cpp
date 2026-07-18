@@ -385,7 +385,7 @@ ContactPoints BoxCollider::GenerateContacts(SatResult &sat_result) const {
     }
     if (!contacts.empty()) {
         Vector3 average = Vector3::Average(contacts);
-            contacts.insert(contacts.end(),average);
+            contacts.insert(contacts.begin(),average);
     }
 
     return ContactPoints(contacts, sat_result.normal, penetration);

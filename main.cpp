@@ -49,6 +49,7 @@ int main() {
 
     }
     std::cout << obj.GetComponent<Collider>()->GetPosition().toString() << std::endl;
+    std::cout << obj.GetComponent<Collider>()->GetQuaternion().ToEuler().toString() << std::endl;
     auto end = std::chrono::high_resolution_clock::now();
 
     auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start);

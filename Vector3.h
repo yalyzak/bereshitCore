@@ -41,6 +41,7 @@ public:
     [[nodiscard]] Vector3 MatrixMultiplication(const std::array<std::array<double, 3>, 3>& matrix) const;
     [[nodiscard]] double dot(const Vector3& other) const;
     [[nodiscard]] double magnitude() const;
+    [[nodiscard]] Vector3 Inverse() const;
 
     std::string toString() const;
     std::array<double, 3> ToArray() const;

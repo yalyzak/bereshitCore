@@ -42,8 +42,6 @@ public:
     Vector3 force;
     Vector3 inertia;
 
-    int inertiaMetrix[3][3];
-
     bool isKinematic = false;
     bool useGravity = true;
 

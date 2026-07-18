@@ -76,6 +76,13 @@ double Vector3::magnitude() const {
     return std::sqrt(x * x + y * y + z * z);
 }
 
+Vector3 Vector3::Inverse() const {
+    if (x == 0 || y == 0 || z == 0) {
+        throw std::runtime_error("Cannot invert zero component");
+    }
+    return Vector3(1 / x, 1 / y, 1 / z);
+}
+
 double Vector3::dot(const Vector3& other) const {
     return x * other.x + y * other.y + z * other.z;
 }
