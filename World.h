@@ -49,6 +49,7 @@ class World {
 
         void Update(bool updateComponen = false);
         virtual void PythonUpdate(const std::list<GameObject *>& list) const;
+        void SetGizmos(const std::list<Contact>& );
 
 
 

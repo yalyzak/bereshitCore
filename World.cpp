@@ -19,6 +19,14 @@ World::World(bool *running_flag, std::list<GameObject *> children, GameObject* g
         GameObject* child = *i;
         child->setWorld(this);
     }
+    this->gizmos = (new GameObject(Vector3(100000,100000,10000),Vector3(),Vector3(0.1,0.1,0.1)));
+
+    for (int i = 0; i < 100; i++) {
+        this->gizmos->children.push_back(new GameObject(
+    Vector3(100000,100000,10000),
+    Vector3(),
+    Vector3(0.1,0.1,0.1)));
+        }
 }
 
 std::list<GameObject*> World::getAllChildren() const {
@@ -126,6 +134,7 @@ void World::Update(bool updateComponen) {
     }
     auto PhysicsChildren = getAllChildrenPhysics();
     auto Collections = SolveCollectionsFirstIteration(PhysicsChildren, dt);
+    SetGizmos(Collections);
     CallChildrenUpdate(PhysicsChildren, dt, &Component::PhysicsUpdateFirstIteration);
     PythonUpdate(PhysicsChildren);
     for (int i =0; i< physics_epochs; i++) {
@@ -135,6 +144,19 @@ void World::Update(bool updateComponen) {
 
 void World::PythonUpdate(const std::list<GameObject *>& PhysicsChildren) const {
 
+}
+
+void World::SetGizmos(const std::list<Contact>& contacts) {
+    auto gizmoObjects = gizmos->getAllChildren();
+
+    auto gizmoIt = gizmoObjects.begin();
+    auto contactIt = contacts.begin();
+
+    while (gizmoIt != gizmoObjects.end() && contactIt != contacts.end()) {
+        (*gizmoIt)->transform.position = contactIt->contact_point;
+        ++gizmoIt;
+        ++contactIt;
+    }
 }
 
 
