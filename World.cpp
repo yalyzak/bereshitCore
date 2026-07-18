@@ -42,6 +42,10 @@ std::list<GameObject*> World::getAllChildren() const {
     return allChildren;
 }
 
+std::list<GameObject *> World::getGizmos() const {
+    return gizmos->children;
+}
+
 std::list<GameObject *> World::getAllChildrenPhysics() const {
     std::list<GameObject *> objects;
     for (GameObject* child : getAllChildren()) {

@@ -35,6 +35,7 @@ class World {
         };
 
         std::list<GameObject*> getAllChildren() const;
+        std::list<GameObject*> getGizmos() const;
         std::list<GameObject*> getAllChildrenPhysics() const;
         std::list<GameObject*> search_by_component(std::string name) const;
 
