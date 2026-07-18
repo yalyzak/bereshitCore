@@ -6,6 +6,7 @@
 #define BERESHITCORE_RIGIDBODY_H
 
 #include "Component.h"
+#include "Transform.h"
 #include "Vector3.h"
 #include "World.h"
 
@@ -15,6 +16,8 @@ private:
     void UpdateInertiaWorld();
     double restitution = 0.6;
     static void PositionalCorrection(const Rigidbody&, const Rigidbody&, double,const Vector3&, double);
+    Transform* transform = nullptr;
+    Cache* cache = nullptr;
 
 public:
     double GetRestitution() const {
@@ -34,18 +37,21 @@ public:
     Vector3 center_of_mass;
     Vector3 velocity;
     Vector3 acceleration;
-    Vector3 angular_acceleration;
+    Vector3 angularAcceleration;
     Vector3 torque;
     Vector3 force;
-    int inertia[3][3];
+    Vector3 inertia;
+
+    int inertiaMetrix[3][3];
 
     bool isKinematic = false;
     bool useGravity = true;
 
     Vector3 forward;
-    Vector3 Freeze_Rotation;
+    Vector3 up;
+    Vector3 freezeRotation;
 
-    Vector3 angular_velocity;
+    Vector3 angularVelocity;
     Vector3 normal_force;
 
     Rigidbody();
@@ -61,6 +67,7 @@ public:
     static double FindRestitution(const Rigidbody& rb1, const Rigidbody& rb2);
     static void ApplyImpulsePair(Rigidbody& rb1, Rigidbody& rb2, const Vector3& impulseVec, const Vector3& r1, const Vector3& r2);
     void ApplyTorqueImpulse(Vector3 impulse, Vector3 r);
+    void attach(GameObject& obj) override;
 };
 
 

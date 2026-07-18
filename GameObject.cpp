@@ -8,13 +8,13 @@
 
 GameObject::GameObject(const Vector3 &position, const Vector3 &rotation, const Vector3 &scale,
     const std::list<GameObject *> children) : transform(position, rotation, scale), children(children) {
-    
+
 };
 
 GameObject* GameObject::AddComponent(std::shared_ptr<Component> comp) {
     components.push_back(comp);
     comp->SetParent(this);
-    comp->attach(this);
+    comp->attach(*this);
     std::string comp_name = comp->GetName();
     return this;
 }

@@ -18,7 +18,7 @@ void Rigidbody::UpdateInertiaWorld() {
         return;
     }
 
-    auto R = GetParent()->transform.quaternion.ToMatrix3(&GetParent()->cache);
+    auto R = transform->quaternion.ToMatrix3(&GetParent()->cache);
 
     // temp = R * inverse_inertia
     std::array<std::array<double, 3>, 3> temp{};
@@ -51,10 +51,10 @@ void Rigidbody::PositionalCorrection(const Rigidbody &rb1, const Rigidbody &rb2,
     Vector3 correction = normal * correction_mag;
 
     if (!rb1.isKinematic){
-        rb1.GetParent()->transform.position -= correction * rb1.invMass;
+        rb1.transform->position -= correction * rb1.invMass;
     }
     if (!rb2.isKinematic){
-        rb2.GetParent()->transform.position -= correction * rb2.invMass;
+        rb2.transform->position -= correction * rb2.invMass;
     }
 }
 
@@ -81,12 +81,40 @@ void Rigidbody::PhysicsUpdateFirstIteration(double dt) {
 
 void Rigidbody::integrate(double dt) {
     acceleration = force * invMass;
+
     Vector3 pos = velocity * dt + acceleration * 0.5 * dt * dt;
     if (pos.magnitude() > 0) {
         GetParent()->cache.aabbDirty = true;
     }
 
-    GetParent()->transform.position += velocity * dt + acceleration * 0.5 * dt * dt;
+    transform->position += velocity * dt + acceleration * 0.5 * dt * dt;
+
+    if (!freezeRotation.x) {
+        angularAcceleration.x = torque.x / inertia.x;
+    }if (!freezeRotation.y) {
+        angularAcceleration.y = torque.y / inertia.y;
+    }if (!freezeRotation.z) {
+        angularAcceleration.z = torque.z / inertia.z;
+    }
+
+    Vector3 angDisp = angularVelocity * dt + angularAcceleration * dt * dt * 0.5;
+
+    angularVelocity += angularAcceleration * dt;
+
+    transform->quaternion *= Quaternion::EulerRadians(angDisp);
+
+    if (angDisp.magnitude() > 0) {
+        UpdateInertiaWorld();
+        transform->rotation = transform->quaternion.ToEuler();
+        cache->rotationDirty = true;
+        cache->rotationDirtyAbs = true;
+        cache->aabbDirty = true;
+        up = transform->quaternion.Rotate(Vector3(0, 1, 0));
+        forward = transform->quaternion.Rotate(Vector3(0, 0, 1));
+
+    }
+
+
     velocity += acceleration * dt;
     force.Zero();
     torque.Zero();
@@ -103,11 +131,11 @@ void Rigidbody::SolveImpulse(Rigidbody &rb1, Rigidbody &rb2, const Vector3& cont
             rb2.velocity += (rb2.force * rb2.invMass) * dt;
             rb2.force.Zero();
         }
-        Vector3 r1 = contact_point - rb1.GetParent()->transform.position;
-        Vector3 r2 = contact_point - rb2.GetParent()->transform.position;
+        Vector3 r1 = contact_point - rb1.transform->position;
+        Vector3 r2 = contact_point - rb2.transform->position;
 
-        Vector3 v1_at_p = rb1.velocity - rb1.angular_velocity.cross(r1);
-        Vector3 v2_at_p = rb2.velocity - rb2.angular_velocity.cross(r2);
+        Vector3 v1_at_p = rb1.velocity - rb1.angularVelocity.cross(r1);
+        Vector3 v2_at_p = rb2.velocity - rb2.angularVelocity.cross(r2);
         Vector3 relative_vel = v2_at_p - v1_at_p;
         double v_norm = relative_vel.dot(normal);
 
@@ -168,19 +196,34 @@ void Rigidbody::ApplyImpulsePair(Rigidbody& rb1, Rigidbody &rb2, const Vector3 &
 
 void Rigidbody::ApplyTorqueImpulse(Vector3 impulse, Vector3 r) {
     Vector3 torqueImpulse = r.cross(impulse);
-    Vector3 localTorqueImpulse = GetParent()->transform.quaternion.RotateConjugated(torqueImpulse);
+    Vector3 localTorqueImpulse = transform->quaternion.RotateConjugated(torqueImpulse);
     Vector3 local_delta_w = localTorqueImpulse * invertInertia;
-    Vector3 ang_impulse = GetParent()->transform.quaternion.Rotate(local_delta_w);
+    Vector3 ang_impulse = transform->quaternion.Rotate(local_delta_w);
 
-    if (!Freeze_Rotation.x) {
-        angular_velocity.x += ang_impulse.x;
+    if (!freezeRotation.x) {
+        angularVelocity.x += ang_impulse.x;
     }
-    if (!Freeze_Rotation.y) {
-        angular_velocity.y += ang_impulse.y;
+    if (!freezeRotation.y) {
+        angularVelocity.y += ang_impulse.y;
     }
-    if (!Freeze_Rotation.z) {
-        angular_velocity.z += ang_impulse.z;
+    if (!freezeRotation.z) {
+        angularVelocity.z += ang_impulse.z;
     }
+}
+
+void Rigidbody::attach(GameObject& obj) {
+    Component::attach(obj);
+    transform = &obj.transform;
+    cache = &obj.cache;
+    double hx = transform->scale.x;
+    double hy = transform->scale.y;
+    double hz = transform->scale.z;
+
+    inertia = Vector3(
+                (1 / 12) * mass * (std::pow(hy, 2) + std::pow(hz, 2)),
+                (1 / 12) * mass * (std::pow(hx, 2)+ std::pow(hz, 2)),
+                (1 / 12) * mass * (std::pow(hy, 2) + std::pow(hx, 2))
+            );
 }
 
 

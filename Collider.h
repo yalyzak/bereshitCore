@@ -67,7 +67,7 @@ public:
     Quaternion GetQuaternion() const;
     Vector3 GetPosition() const;
     Vector3 GetSize() const;
-    void attach(GameObject *obj) override;
+    void attach(GameObject& obj) override;
 
 
     virtual ContactPoints CheckCollision(std::shared_ptr<Collider> collider2);

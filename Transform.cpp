@@ -10,8 +10,11 @@ Transform::Transform(
     const Vector3& scale,
     const Quaternion& quaternion
 ) : position(position), rotation(rotation), scale(scale), quaternion(quaternion) {
-    if (rotation.magnitude() > 0) {
+    if (quaternion.magnitude() > 0) {
+        this->rotation = this->quaternion.ToEuler();
+    }else if (rotation.magnitude() > 0) {
         this->quaternion = Quaternion::Euler(rotation);
     }
+
 }
 

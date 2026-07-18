@@ -29,7 +29,7 @@ public:
     virtual void Update(double dt);
     virtual void PhysicsUpdateFirstIteration(double dt);
     virtual void PhysicsUpdate(double dt);
-    virtual void attach(GameObject* obj);
+    virtual void attach(GameObject& obj);
     virtual std::string GetTypeName() const;
 
     virtual void OnCollisionEnter(const Collision&) {}

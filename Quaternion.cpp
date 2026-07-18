@@ -2,6 +2,13 @@
 #include "Cache.h"
 #include <numbers>
 
+constexpr double RadToDeg(double rad) {
+    return rad * (180.0 / std::numbers::pi);
+}
+constexpr double DegToRad(double deg) {
+    return deg * (std::numbers::pi / 180.0);
+}
+
 Quaternion::Quaternion()
     : x(1), y(0), z(0), w(0) {
 }
@@ -32,6 +39,32 @@ Quaternion Quaternion::Inverse() const
         -z / normSq,
          w / normSq
     );
+}
+
+double Quaternion::magnitude() const {
+    return std::sqrt(x * x + y * y + z * z + w * w);
+}
+
+Vector3 Quaternion::ToEuler() const {
+    double sinr_cosp = 2 * (w * x + y * z);
+    double cosr_cosp = 1 - 2 * (x * x + y * y);
+    double roll = std::atan2(sinr_cosp, cosr_cosp);
+
+    double sinp = 2 * (w * y - z * x);
+    double pitch;
+    if (std::abs(sinp) >= 1) {
+       pitch = std::copysign(std::numbers::pi / 2, sinp);
+
+    }else {
+       pitch = std::asin(sinp);
+
+    }
+
+    double siny_cosp = 2 * (w * z + x * y);
+    double cosy_cosp = 1 - 2 * (y * y + z * z);
+    double yaw = std::atan2(siny_cosp, cosy_cosp);
+
+    return Vector3(RadToDeg(roll), RadToDeg(pitch), RadToDeg(yaw));
 }
 
 
@@ -140,9 +173,29 @@ std::array<std::array<double, 3>, 3>& Quaternion::ToMatrix3Abs(Cache* cache) con
 }
 
 Quaternion Quaternion::Euler(Vector3 vec) {
-    double roll  = vec.x * std::numbers::pi / 180.0;
-    double pitch = vec.y * std::numbers::pi / 180.0;
-    double yaw   = vec.z * std::numbers::pi / 180.0;
+    double roll = DegToRad(vec.x);
+    double pitch = DegToRad(vec.y);
+    double yaw = DegToRad(vec.z);
+
+    double c1 = std::cos(yaw / 2.0);
+    double s1 = std::sin(yaw / 2.0);
+    double c2 = std::cos(pitch / 2.0);
+    double s2 = std::sin(pitch / 2.0);
+    double c3 = std::cos(roll / 2.0);
+    double s3 = std::sin(roll / 2.0);
+
+    double w = c1 * c2 * c3 + s1 * s2 * s3;
+    double x = c1 * c2 * s3 - s1 * s2 * c3;
+    double y = c1 * s2 * c3 + s1 * c2 * s3;
+    double z = s1 * c2 * c3 - c1 * s2 * s3;
+
+    return Quaternion(x, y, z, w);
+}
+
+Quaternion Quaternion::EulerRadians(Vector3 vec) {
+    double roll  = vec.x;
+    double pitch = vec.y;
+    double yaw   = vec.z;
 
     double c1 = std::cos(yaw / 2.0);
     double s1 = std::sin(yaw / 2.0);

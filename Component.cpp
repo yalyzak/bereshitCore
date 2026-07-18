@@ -21,7 +21,7 @@ void Component::PhysicsUpdateFirstIteration(double dt) {
 void Component::PhysicsUpdate(double dt) {
 }
 
-void Component::attach(GameObject* obj) {
+void Component::attach(GameObject& obj) {
     SetName(GetTypeName());
 }
 

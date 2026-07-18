@@ -137,9 +137,9 @@ Vector3 Collider::GetSize() const {
     return transform->scale + deltaTransform.scale;
 }
 
-void Collider::attach(GameObject* obj) {
-    transform = &obj->transform;
-    halfSize = (obj->transform.scale + deltaTransform.scale) * 0.5;
+void Collider::attach(GameObject& obj) {
+    transform = &obj.transform;
+    halfSize = (obj.transform.scale + deltaTransform.scale) * 0.5;
 }
 
 ContactPoints Collider::CheckCollision(std::shared_ptr<Collider> collider2) {
