@@ -25,9 +25,9 @@ class World {
 
 
     public:
-        double tick;
-        double speed;
-        int physics_epochs;
+        double tick = 1/60.0;
+        double speed = 1;
+        int physics_epochs = 10;
         Vector3 gravity = Vector3(0.0f, -9.8f, 0.0f);
         World(bool* running_flag, std::list<GameObject*> children, GameObject* gizmos, Vector3 gravity, double tick, double speed, int physics_epochs);
         std::list<GameObject*> getChildren() {

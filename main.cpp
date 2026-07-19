@@ -39,7 +39,7 @@ int main() {
 
     Vector3* pos  = &obj.transform.position;
     Vector3* pos2  = &floor.transform.position;
-    double seconds = 60 * 60 * 24;
+    double seconds = 60 * 60 * 1;
     double dt = 1/60.0;
     for (int i; i++, i< 1/dt * seconds;) {
         // std::cout <<pos->toString() << std::endl;
