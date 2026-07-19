@@ -69,7 +69,7 @@ World::World(bool *running_flag, std::list<GameObject *> children, GameObject* g
     this->gizmos = (new GameObject(Vector3(100000,100000,10000),Vector3(),Vector3(0.1,0.1,0.1)));
 
     for (int i = 0; i < 100; i++) {
-        this->gizmos->children.push_back(new GameObject(
+        this->gizmos->GetChildren().push_back(new GameObject(
     Vector3(100000,100000,10000),
     Vector3(),
     Vector3(0.1,0.1,0.1)));
@@ -101,7 +101,7 @@ std::vector<std::shared_ptr<Collider>>& World::GetAllPhysicsColliders() {
 }
 
 std::list<GameObject *> World::getGizmos() const {
-    return gizmos->children;
+    return gizmos->GetChildren();
 }
 
 std::list<GameObject*> World::search_by_component(std::string name) const{

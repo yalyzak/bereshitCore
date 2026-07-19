@@ -25,6 +25,8 @@ GameObject* GameObject::AddComponent(std::shared_ptr<Component> comp) {
 //     }
 // }
 
+
+
 std::list<GameObject *> GameObject::GetAllChildren() {
     std::list<GameObject*> allChildren;
 

@@ -20,12 +20,12 @@ class GameObject {
     private:
         World* world = nullptr;
         GameObject* parent = nullptr;
+        std::list<GameObject*> children;
+        std::list<std::shared_ptr<Component>> components;
 
     public:
         Transform transform;
         std::string name;
-        std::list<GameObject*> children;
-        std::list<std::shared_ptr<Component>> components;
         Cache cache;
 
 
@@ -50,6 +50,9 @@ class GameObject {
             parent = p;
         };
 
+    std::list<GameObject*> GetChildren() {
+        return children;
+    };
     std::list<GameObject*> GetAllChildren();
     std::list<GameObject*> search_by_component(std::string name);
     std::shared_ptr<Component> GetComponent(const std::string& name);
