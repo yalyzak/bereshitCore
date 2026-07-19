@@ -324,9 +324,7 @@ ContactPoints BoxCollider::GenerateContacts(SatResult &sat_result) const {
         auto [c1, c2] = ClosestPointsBetweenSegments(p1, q1, p2, q2);
 
         Vector3 contact_point = (c1 + c2) * 0.5;
-        std::vector<Vector3> arr;
-        arr.push_back(contact_point);
-        return ContactPoints(arr, normal, penetration);
+        return ContactPoints({contact_point}, normal, {penetration});
     }
     int ref_axis_index = std::get<int>(axis_index);
     bool flip;
@@ -384,6 +382,7 @@ ContactPoints BoxCollider::GenerateContacts(SatResult &sat_result) const {
     }
 
     std::vector<Vector3> contacts;
+    std::vector<double> depths;
     double ref_plane_d = ref_normal.dot(ref_face[0]);
 
     for (auto p : clipped) {
@@ -391,6 +390,7 @@ ContactPoints BoxCollider::GenerateContacts(SatResult &sat_result) const {
         if (depth >= 0) {
             Vector3 projected_p = p + ref_normal * depth;
             contacts.push_back(projected_p);
+            depths.push_back(depth);
         }
     }
     if (!contacts.empty()) {
@@ -398,7 +398,7 @@ ContactPoints BoxCollider::GenerateContacts(SatResult &sat_result) const {
             contacts.insert(contacts.begin(),average);
     }
 
-    return ContactPoints(contacts, sat_result.normal, penetration);
+    return ContactPoints(contacts, sat_result.normal, depths);
 
 }
 

@@ -9,6 +9,6 @@
 struct ContactPoints {
     std::vector<Vector3> contact_points;
     Vector3 normal;
-    double depth;
+    std::vector<double> depth;
 };
 #endif //BERESHITCORE_CONTACTPOINTS_H

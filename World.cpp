@@ -124,9 +124,12 @@ std::vector<Contact> World::SolveCollectionsFirstIteration(const std::list<GameO
         if (result.contact_points.empty()){
             continue;
         }
-        for (auto contact_point : result.contact_points) {
-            Rigidbody::SolveImpulse(*rb1, *rb2, contact_point, result.normal, result.depth, dt);
-            contacts.push_back({*rb1, *rb2, result.normal, result.depth, contact_point});
+        Vector3 normal = result.normal;
+        for (size_t i = 0; i < result.contact_points.size(); ++i) {
+            const Vector3& contact_point = result.contact_points[i];
+            double depth = result.depth[i];
+            Rigidbody::SolveImpulse(*rb1, *rb2, contact_point, normal,depth, dt);
+            contacts.push_back({*rb1, *rb2, normal, depth, contact_point});
         }
 
         
