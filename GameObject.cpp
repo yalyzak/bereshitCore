@@ -4,6 +4,7 @@
 
 #include "GameObject.h"
 #include "Rigidbody.h"
+#include "Collider.h"
 #include "Transform.h"
 
 
@@ -40,7 +41,7 @@ std::list<GameObject *> GameObject::GetAllChildren() {
 
 void GameObject::GetAllChildrenPhysics(std::vector<GameObject*>& result) {
     for (GameObject* child : children) {
-        if (child->GetComponent<Rigidbody>()) {
+        if (child->GetComponent<Rigidbody>() && child->GetComponent<Collider>()) {
             result.push_back(child);
         }
 

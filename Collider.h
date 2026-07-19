@@ -63,7 +63,7 @@ public:
 
     Collider(bool is_trigger =false);
     std::pair<Vector3, Vector3> GetAabb();
-    static std::vector<std::pair<std::shared_ptr<Collider>, std::shared_ptr<Collider>>> SweepAndPrune(const std::list<std::shared_ptr<Collider>>& colliders);
+    static std::vector<std::pair<std::shared_ptr<Collider>, std::shared_ptr<Collider>>> SweepAndPrune(const std::vector<std::shared_ptr<Collider>>& colliders);
     Quaternion GetQuaternion() const;
     Vector3 GetPosition() const;
     Vector3 GetSize() const;

@@ -38,7 +38,7 @@ int main() {
 
     double seconds = 60 * 60 * 24;
     double dt = 1/60.0;
-    for (int i; i++, i< 1/dt * seconds;) {
+    for (int i = 0; i++, i< 1/dt * seconds;) {
         // std::cout <<pos->toString() << std::endl;
         // std::cout << obj.GetComponent<Collider>()->GetPosition().toString() << std::endl;
 

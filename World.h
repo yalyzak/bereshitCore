@@ -24,12 +24,16 @@ class World {
         GameObject* gizmos;
         bool allChildrenDirty = true;
         bool physicsChildrenDirty = true;
+        bool physicsCollidersDirty = true;
         std::vector<GameObject*> cacheAllChildren;
         std::vector<GameObject*> cachePhysicsChildren;
+        std::vector<std::shared_ptr<Collider>> cachePhysicsColliders;
         void GetAllChildren(std::vector<GameObject*>& result);
         void GetAllChildrenPhysics(std::vector<GameObject*>& result);
+        void GetAllPhysicsColliders(std::vector<std::shared_ptr<Collider>>& result);
         void SetCacheAllChildren();
-        void SeCachetPhysicsChildren();
+        void SetCachePhysicsChildren();
+        void SetCachePhysicsColliders();
         void SetCache();
 
 
@@ -49,7 +53,8 @@ class World {
         void AddChild(GameObject *child);
 
         std::vector<GameObject*>& getAllChildren();
-        std::vector<GameObject*>& getAllChildrenPhysics();
+        std::vector<GameObject*>& GetAllChildrenPhysics();
+        std::vector<std::shared_ptr<Collider>>& GetAllPhysicsColliders();
         std::list<GameObject*> getGizmos() const;
         std::list<GameObject*> search_by_component(std::string name) const;
         void SolveCollections(const std::vector<Contact>&, double);
@@ -61,7 +66,7 @@ class World {
 
         void CallChildrenUpdate(const std::vector<GameObject *> & list, double dt, void (Component::*func)(double));
 
-        [[nodiscard]] std::vector<Contact> SolveCollectionsFirstIteration(const std::vector<GameObject *> & list, double dt) const;
+        [[nodiscard]] std::vector<Contact> SolveCollectionsFirstIteration(const std::vector<std::shared_ptr<Collider>>& colliders, double dt) const;
 
         void Update(bool updateComponen = false);
         void SetGizmos(const std::list<Contact>& );

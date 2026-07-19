@@ -39,7 +39,7 @@ std::vector<
     std::pair<std::shared_ptr<Collider>, std::shared_ptr<Collider>>
 >
 Collider::SweepAndPrune(
-    const std::list<std::shared_ptr<Collider>>& colliders
+    const std::vector<std::shared_ptr<Collider>>& colliders
 ) {
     struct Endpoint {
         double position;

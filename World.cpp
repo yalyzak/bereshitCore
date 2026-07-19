@@ -18,11 +18,17 @@ void World::GetAllChildren(std::vector<GameObject *> &result) {
 }
 void World::GetAllChildrenPhysics(std::vector<GameObject *> &result) {
     for (GameObject* child : children) {
-        if (child->GetComponent<Rigidbody>()) {
+        if (child->GetComponent<Rigidbody>() && child->GetComponent<Collider>()) {
             result.push_back(child);
         }
 
         child->GetAllChildrenPhysics(result);
+    }
+}
+
+void World::GetAllPhysicsColliders(std::vector<std::shared_ptr<Collider>> &result) {
+    for (GameObject* child : GetAllChildrenPhysics()) {
+            result.push_back(child->GetComponent<Collider>());
     }
 }
 
@@ -32,15 +38,22 @@ void World::SetCacheAllChildren() {
     allChildrenDirty = false;
 }
 
-void World::SeCachetPhysicsChildren() {
+void World::SetCachePhysicsChildren() {
     cachePhysicsChildren.clear();
     GetAllChildrenPhysics(cachePhysicsChildren);
     physicsChildrenDirty = false;
 }
 
+void World::SetCachePhysicsColliders() {
+    cachePhysicsColliders.clear();
+    GetAllPhysicsColliders(cachePhysicsColliders);
+    physicsCollidersDirty = false;
+}
+
 void World::SetCache() {
     SetCacheAllChildren();
-    SeCachetPhysicsChildren();
+    SetCachePhysicsChildren();
+    SetCachePhysicsColliders();
 }
 
 
@@ -79,9 +92,14 @@ void World::AddChild(GameObject *child) {
 std::vector<GameObject*>& World::getAllChildren(){
     return cacheAllChildren;
 }
-std::vector<GameObject *>& World::getAllChildrenPhysics(){
+std::vector<GameObject *>& World::GetAllChildrenPhysics(){
     return cachePhysicsChildren;
 }
+
+std::vector<std::shared_ptr<Collider>>& World::GetAllPhysicsColliders() {
+    return cachePhysicsColliders;
+}
+
 std::list<GameObject *> World::getGizmos() const {
     return gizmos->children;
 }
@@ -131,13 +149,8 @@ void World::CallChildrenUpdate(const std::vector<GameObject *> &list, double dt,
 }
 
 
-std::vector<Contact> World::SolveCollectionsFirstIteration(const std::vector<GameObject *>& PhysicsChildren, double dt) const {
+std::vector<Contact> World::SolveCollectionsFirstIteration(const std::vector<std::shared_ptr<Collider>>& colliders, double dt) const {
     std::vector<Contact> contacts;
-    std::list<std::shared_ptr<Collider>> colliders;
-
-    for (const auto PhysicsChild : PhysicsChildren) {
-        colliders.push_back(PhysicsChild->GetComponent<Collider>());
-    }
 
     auto candidate_pairs = Collider::SweepAndPrune(colliders);
 
@@ -174,8 +187,10 @@ void World::Update(bool updateComponen) {
     if (updateComponen) {
         CallChildrenUpdate(allChildren, dt, &Component::Update);
     }
-    const auto& PhysicsChildren = getAllChildrenPhysics();
-    auto collections = SolveCollectionsFirstIteration(PhysicsChildren, dt);
+    const auto& PhysicsColliders = GetAllPhysicsColliders();
+    auto collections = SolveCollectionsFirstIteration(PhysicsColliders, dt);
+
+    const auto& PhysicsChildren = GetAllChildrenPhysics();
     CallChildrenUpdate(PhysicsChildren, dt, &Component::PhysicsUpdateFirstIteration);
     for (int i =0; i< physics_epochs; i++) {
         SolveCollections(collections, dt);
