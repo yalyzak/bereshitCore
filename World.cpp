@@ -34,7 +34,7 @@ void World::SetCacheAllChildren() {
 
 void World::SeCachetPhysicsChildren() {
     cachePhysicsChildren.clear();
-    GetAllChildrenPhysics(cacheAllChildren);
+    GetAllChildrenPhysics(cachePhysicsChildren);
     physicsChildrenDirty = false;
 }
 
@@ -170,12 +170,11 @@ std::vector<Contact> World::SolveCollectionsFirstIteration(const std::vector<Gam
 
 void World::Update(bool updateComponen) {
     double dt = tick;
-    bool FirstIteration = true;
-    const auto allchildren = getAllChildren();
+    const auto& allChildren = getAllChildren();
     if (updateComponen) {
-        CallChildrenUpdate(allchildren, dt, &Component::Update);
+        CallChildrenUpdate(allChildren, dt, &Component::Update);
     }
-    const auto PhysicsChildren = getAllChildrenPhysics();
+    const auto& PhysicsChildren = getAllChildrenPhysics();
     auto collections = SolveCollectionsFirstIteration(PhysicsChildren, dt);
     CallChildrenUpdate(PhysicsChildren, dt, &Component::PhysicsUpdateFirstIteration);
     for (int i =0; i< physics_epochs; i++) {
