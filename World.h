@@ -13,6 +13,7 @@
 #include "Vector3.h"
 #include "Component.h"
 #include "Contact.h"
+#include "GameObject.h"
 
 
 class GameObject;
@@ -21,6 +22,17 @@ class World {
     private:
         std::list<GameObject*> children;
         GameObject* gizmos;
+        bool allChildrenDirty = true;
+        bool physicsChildrenDirty = true;
+        std::vector<GameObject*> cacheAllChildren;
+        std::vector<GameObject*> cachePhysicsChildren;
+        void GetAllChildren(std::vector<GameObject*>& result);
+        void GetAllChildrenPhysics(std::vector<GameObject*>& result);
+        void SetCacheAllChildren();
+        void SeCachetPhysicsChildren();
+        void SetCache();
+
+
 
 
 
@@ -29,14 +41,16 @@ class World {
         double speed = 1;
         int physics_epochs = 10;
         Vector3 gravity = Vector3(0.0f, -9.8f, 0.0f);
+
         World(bool* running_flag, std::list<GameObject*> children, GameObject* gizmos, Vector3 gravity, double tick, double speed, int physics_epochs);
         std::list<GameObject*> getChildren() {
             return children;
         };
+        void AddChild(GameObject *child);
 
-        std::list<GameObject*> getAllChildren() const;
+        std::vector<GameObject*>& getAllChildren();
+        std::vector<GameObject*>& getAllChildrenPhysics();
         std::list<GameObject*> getGizmos() const;
-        std::list<GameObject*> getAllChildrenPhysics() const;
         std::list<GameObject*> search_by_component(std::string name) const;
         void SolveCollections(const std::vector<Contact>&, double);
 
@@ -45,12 +59,11 @@ class World {
             std::exit(0);
         }
 
-        void CallChildrenUpdate(const std::list<GameObject *> & list, double dt, void (Component::*func)(double));
+        void CallChildrenUpdate(const std::vector<GameObject *> & list, double dt, void (Component::*func)(double));
 
-        [[nodiscard]] std::vector<Contact> SolveCollectionsFirstIteration(const std::list<GameObject *> & list, double dt) const;
+        [[nodiscard]] std::vector<Contact> SolveCollectionsFirstIteration(const std::vector<GameObject *> & list, double dt) const;
 
         void Update(bool updateComponen = false);
-        virtual void PythonUpdate(const std::list<GameObject *>& list) const;
         void SetGizmos(const std::list<Contact>& );
 
 

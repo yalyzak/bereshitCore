@@ -12,7 +12,7 @@
 
 #include "Transform.h"
 #include "Component.h"
-#include "World.h"
+class World;
 #include "Cache.h"
 
 
@@ -50,7 +50,7 @@ class GameObject {
             parent = p;
         };
 
-    std::list<GameObject*> getAllChildren();
+    std::list<GameObject*> GetAllChildren();
     std::list<GameObject*> search_by_component(std::string name);
     std::shared_ptr<Component> GetComponent(const std::string& name);
     template<typename T>
@@ -63,6 +63,8 @@ class GameObject {
         return nullptr;
     }
     const std::list<std::shared_ptr<Component>>& GetComponents() const;
+    void GetAllChildrenPhysics(std::vector<GameObject*>& result);
+    void GetAllChildren(std::vector<GameObject*>& result);
 
 };
 

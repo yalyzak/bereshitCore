@@ -3,6 +3,7 @@
 //
 
 #include "GameObject.h"
+#include "Rigidbody.h"
 #include "Transform.h"
 
 
@@ -23,17 +24,35 @@ GameObject* GameObject::AddComponent(std::shared_ptr<Component> comp) {
 //     }
 // }
 
-std::list<GameObject *> GameObject::getAllChildren() {
+std::list<GameObject *> GameObject::GetAllChildren() {
     std::list<GameObject*> allChildren;
 
     for (GameObject* child : children) {
         allChildren.push_back(child);
 
-        auto descendants = child->getAllChildren();
+        auto descendants = child->GetAllChildren();
         allChildren.splice(allChildren.end(), descendants);
     }
 
     return allChildren;
+}
+
+
+void GameObject::GetAllChildrenPhysics(std::vector<GameObject*>& result) {
+    for (GameObject* child : children) {
+        if (child->GetComponent<Rigidbody>()) {
+            result.push_back(child);
+        }
+
+        child->GetAllChildrenPhysics(result);
+    }
+}
+
+void GameObject::GetAllChildren(std::vector<GameObject *> &result) {
+    for (GameObject* child : children) {
+        result.push_back(child);
+        child->GetAllChildren(result);
+    }
 }
 
 std::list<GameObject*> GameObject::search_by_component(std::string name) {
