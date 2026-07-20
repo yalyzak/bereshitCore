@@ -5,6 +5,7 @@
 #include "BoxCollider.h"
 #include <algorithm>
 #include "GameObject.h"
+#include <numeric>
 
 std::pair<Vector3, Vector3> BoxCollider::GetEdgeSegment(const Vector3& center,const std::array<Vector3, 3> &axes, const Vector3& half,int axis_index,const Vector3 &normal) {
 
@@ -385,7 +386,7 @@ ContactPoints BoxCollider::GenerateContacts(SatResult &sat_result) const {
     std::vector<double> depths;
     double ref_plane_d = ref_normal.dot(ref_face[0]);
 
-    for (auto p : clipped) {
+    for (auto& p : clipped) {
         double depth = ref_plane_d - ref_normal.dot(p);
         if (depth >= 0) {
             Vector3 projected_p = p + ref_normal * depth;
@@ -394,8 +395,12 @@ ContactPoints BoxCollider::GenerateContacts(SatResult &sat_result) const {
         }
     }
     if (!contacts.empty()) {
-        Vector3 average = Vector3::Average(contacts);
-            contacts.insert(contacts.begin(),average);
+        Vector3 averagePoint = Vector3::Average(contacts);
+        double averageDepth = std::accumulate(depths.begin(), depths.end(), 0.0)
+             / depths.size();;
+
+            contacts.insert(contacts.begin(), averagePoint);
+            depths.insert(depths.begin(), averageDepth);
     }
 
     return ContactPoints(contacts, sat_result.normal, depths);

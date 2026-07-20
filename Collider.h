@@ -16,6 +16,7 @@
 #include "Transform.h"
 #include "Vector3.h"
 #include "Quaternion.h"
+#include "RayCastHit.h"
 
 class Collider : public Component{
     public:
@@ -63,7 +64,7 @@ public:
 
     Collider(bool is_trigger =false);
     std::pair<Vector3, Vector3> GetAabb();
-    static std::vector<std::pair<std::shared_ptr<Collider>, std::shared_ptr<Collider>>> SweepAndPrune(const std::list<std::shared_ptr<Collider>>& colliders);
+    static std::vector<std::pair<std::shared_ptr<Collider>, std::shared_ptr<Collider>>> SweepAndPrune(const std::vector<std::shared_ptr<Collider>>& colliders);
     Quaternion GetQuaternion() const;
     Vector3 GetPosition() const;
     Vector3 GetSize() const;
@@ -82,6 +83,7 @@ public:
     virtual void OnTriggerStay(const Collision& collision);
     virtual void OnTriggerExit(const Collision& collision);
     virtual void HandleCollisionEvents(Collider*, ContactPoints*);
+    virtual RayCastHit RayCast(const Vector3 &origin, const Vector3 &direction, double maxDistance) const;
 
 
 };

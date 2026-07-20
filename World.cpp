@@ -10,6 +10,53 @@
 #include "Rigidbody.h"
 #include "Collider.h"
 
+void World::GetAllChildren(std::vector<GameObject *> &result) {
+    for (GameObject* child : children) {
+        result.push_back(child);
+        child->GetAllChildren(result);
+    }
+}
+void World::GetAllChildrenPhysics(std::vector<GameObject *> &result) {
+    for (GameObject* child : children) {
+        if (child->GetComponent<Rigidbody>() && child->GetComponent<Collider>()) {
+            result.push_back(child);
+        }
+
+        child->GetAllChildrenPhysics(result);
+    }
+}
+
+void World::GetAllPhysicsColliders(std::vector<std::shared_ptr<Collider>> &result) {
+    for (GameObject* child : GetAllChildrenPhysics()) {
+            result.push_back(child->GetComponent<Collider>());
+    }
+}
+
+void World::SetCacheAllChildren() {
+    cacheAllChildren.clear();
+    GetAllChildren(cacheAllChildren);
+    allChildrenDirty = false;
+}
+
+void World::SetCachePhysicsChildren() {
+    cachePhysicsChildren.clear();
+    GetAllChildrenPhysics(cachePhysicsChildren);
+    physicsChildrenDirty = false;
+}
+
+void World::SetCachePhysicsColliders() {
+    cachePhysicsColliders.clear();
+    GetAllPhysicsColliders(cachePhysicsColliders);
+    physicsCollidersDirty = false;
+}
+
+void World::SetCache() {
+    SetCacheAllChildren();
+    SetCachePhysicsChildren();
+    SetCachePhysicsColliders();
+}
+
+
 
 
 
@@ -22,39 +69,39 @@ World::World(bool *running_flag, std::list<GameObject *> children, GameObject* g
     this->gizmos = (new GameObject(Vector3(100000,100000,10000),Vector3(),Vector3(0.1,0.1,0.1)));
 
     for (int i = 0; i < 100; i++) {
-        this->gizmos->children.push_back(new GameObject(
+        this->gizmos->GetChildren().push_back(new GameObject(
     Vector3(100000,100000,10000),
     Vector3(),
     Vector3(0.1,0.1,0.1)));
         }
+    SetCache();
 }
 
-std::list<GameObject*> World::getAllChildren() const {
-    std::list<GameObject*> allChildren;
+void World::AddChild(GameObject *child) {
+    cacheAllChildren.push_back(child);
+    child->GetAllChildren(cacheAllChildren);
 
-    for (GameObject* child : children) {
-        allChildren.push_back(child);
-
-        auto descendants = child->getAllChildren();
-        allChildren.splice(allChildren.end(), descendants);
+    if (child->GetComponent<Rigidbody>()) {
+        cachePhysicsChildren.push_back(child);
     }
+    child->GetAllChildrenPhysics(cachePhysicsChildren);
+    allChildrenDirty = false;
+    physicsChildrenDirty = false;
+}
 
-    return allChildren;
+std::vector<GameObject*>& World::getAllChildren(){
+    return cacheAllChildren;
+}
+std::vector<GameObject *>& World::GetAllChildrenPhysics(){
+    return cachePhysicsChildren;
+}
+
+std::vector<std::shared_ptr<Collider>>& World::GetAllPhysicsColliders() {
+    return cachePhysicsColliders;
 }
 
 std::list<GameObject *> World::getGizmos() const {
-    return gizmos->children;
-}
-
-std::list<GameObject *> World::getAllChildrenPhysics() const {
-    std::list<GameObject *> objects;
-    for (GameObject* child : getAllChildren()) {
-        if (child->GetComponent<Rigidbody>())
-        {
-            objects.push_back(child);
-        }
-    }
-    return objects;
+    return gizmos->GetChildren();
 }
 
 std::list<GameObject*> World::search_by_component(std::string name) const{
@@ -85,7 +132,7 @@ void World::Start() {
 
 
 
-void World::CallChildrenUpdate(const std::list<GameObject *> &list, double dt, void (Component::*func)(double)) {
+void World::CallChildrenUpdate(const std::vector<GameObject *> &list, double dt, void (Component::*func)(double)) {
     for (auto child : list) {
         for (auto component : child->GetComponents()) {
             try {
@@ -102,13 +149,8 @@ void World::CallChildrenUpdate(const std::list<GameObject *> &list, double dt, v
 }
 
 
-std::vector<Contact> World::SolveCollectionsFirstIteration(const std::list<GameObject *>& PhysicsChildren, double dt) const {
+std::vector<Contact> World::SolveCollectionsFirstIteration(const std::vector<std::shared_ptr<Collider>>& colliders, double dt) const {
     std::vector<Contact> contacts;
-    std::list<std::shared_ptr<Collider>> colliders;
-
-    for (const auto PhysicsChild : PhysicsChildren) {
-        colliders.push_back(PhysicsChild->GetComponent<Collider>());
-    }
 
     auto candidate_pairs = Collider::SweepAndPrune(colliders);
 
@@ -141,27 +183,25 @@ std::vector<Contact> World::SolveCollectionsFirstIteration(const std::list<GameO
 
 void World::Update(bool updateComponen) {
     double dt = tick;
-    bool FirstIteration = true;
-    auto allchildren = getAllChildren();
+    const auto& allChildren = getAllChildren();
     if (updateComponen) {
-        CallChildrenUpdate(allchildren, dt, &Component::Update);
+        CallChildrenUpdate(allChildren, dt, &Component::Update);
     }
-    auto PhysicsChildren = getAllChildrenPhysics();
-    auto collections = SolveCollectionsFirstIteration(PhysicsChildren, dt);
+    const auto& PhysicsColliders = GetAllPhysicsColliders();
+    auto collections = SolveCollectionsFirstIteration(PhysicsColliders, dt);
+
+    const auto& PhysicsChildren = GetAllChildrenPhysics();
     CallChildrenUpdate(PhysicsChildren, dt, &Component::PhysicsUpdateFirstIteration);
-    PythonUpdate(PhysicsChildren);
     for (int i =0; i< physics_epochs; i++) {
         SolveCollections(collections, dt);
         CallChildrenUpdate(PhysicsChildren, dt, &Component::PhysicsUpdate);
     }
 }
 
-void World::PythonUpdate(const std::list<GameObject *>& PhysicsChildren) const {
 
-}
 
 void World::SetGizmos(const std::list<Contact>& contacts) {
-    auto gizmoObjects = gizmos->getAllChildren();
+    auto gizmoObjects = gizmos->GetAllChildren();
 
     auto gizmoIt = gizmoObjects.begin();
     auto contactIt = contacts.begin();

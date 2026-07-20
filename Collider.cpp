@@ -39,7 +39,7 @@ std::vector<
     std::pair<std::shared_ptr<Collider>, std::shared_ptr<Collider>>
 >
 Collider::SweepAndPrune(
-    const std::list<std::shared_ptr<Collider>>& colliders
+    const std::vector<std::shared_ptr<Collider>>& colliders
 ) {
     struct Endpoint {
         double position;
@@ -243,6 +243,11 @@ void Collider::HandleCollisionEvents(Collider* otherCollider, ContactPoints* res
     }
 
 
+}
+
+RayCastHit Collider::RayCast(const Vector3 &origin, const Vector3 &direction, double maxDistance) const{
+    std::cout << "Ray casting was not defined for " << GetName() << '\n';
+    return {};
 }
 
 

@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 4.2)
+cmake_minimum_required(VERSION 3.20)
 project(bereshitCore)
 
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_BUILD_TYPE RelWithDebInfo)
 
 add_executable(bereshitCore main.cpp
         Vector3.cpp
@@ -30,4 +31,9 @@ add_executable(bereshitCore main.cpp
         BoxCollider.h
         Collision.h
         ContactPoints.h
+        Joint.cpp
+        Joint.h
+        Physics.cpp
+        Physics.h
+        RayCastHit.h
 )
