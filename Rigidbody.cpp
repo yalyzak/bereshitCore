@@ -106,7 +106,7 @@ void Rigidbody::ApplyFrictionImpulse(Rigidbody& rb1, Rigidbody& rb2, const Vecto
     double max_friction = mu * J;
     Jt_magnitude = std::max(-max_friction, std::min(Jt_magnitude, max_friction));
 
-    ApplyImpulsePair(rb1, rb2, tangent * Jt_magnitude, Vector3(), Vector3());
+    ApplyImpulsePair(rb1, rb2, tangent * Jt_magnitude, r1, r2);
 }
 
 Rigidbody::Rigidbody() {
