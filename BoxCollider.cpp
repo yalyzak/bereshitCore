@@ -386,7 +386,7 @@ ContactPoints BoxCollider::GenerateContacts(SatResult &sat_result) const {
     std::vector<double> depths;
     double ref_plane_d = ref_normal.dot(ref_face[0]);
 
-    for (auto p : clipped) {
+    for (auto& p : clipped) {
         double depth = ref_plane_d - ref_normal.dot(p);
         if (depth >= 0) {
             Vector3 projected_p = p + ref_normal * depth;

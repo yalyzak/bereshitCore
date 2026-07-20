@@ -31,4 +31,9 @@ add_executable(bereshitCore main.cpp
         BoxCollider.h
         Collision.h
         ContactPoints.h
+        Joint.cpp
+        Joint.h
+        Physics.cpp
+        Physics.h
+        RayCastHit.h
 )

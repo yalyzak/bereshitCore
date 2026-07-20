@@ -16,6 +16,7 @@
 #include "Transform.h"
 #include "Vector3.h"
 #include "Quaternion.h"
+#include "RayCastHit.h"
 
 class Collider : public Component{
     public:
@@ -82,6 +83,7 @@ public:
     virtual void OnTriggerStay(const Collision& collision);
     virtual void OnTriggerExit(const Collision& collision);
     virtual void HandleCollisionEvents(Collider*, ContactPoints*);
+    virtual RayCastHit RayCast(const Vector3 &origin, const Vector3 &direction, double maxDistance) const;
 
 
 };

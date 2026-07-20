@@ -57,10 +57,19 @@ class GameObject {
     std::list<GameObject*> search_by_component(std::string name);
     std::shared_ptr<Component> GetComponent(const std::string& name);
     template<typename T>
-    std::shared_ptr<T> GetComponent() const {
+    std::shared_ptr<T> GetComponent1() const {
         for (const auto& component : components) {
             if (auto casted = std::dynamic_pointer_cast<T>(component)) {
                 return casted;
+            }
+        }
+        return nullptr;
+    }
+    template<typename T>
+    T* GetComponent() const {
+        for (const auto& component : components) {
+            if (auto casted = std::dynamic_pointer_cast<T>(component)) {
+                return casted.get();
             }
         }
         return nullptr;

@@ -36,10 +36,6 @@ class World {
         void SetCachePhysicsColliders();
         void SetCache();
 
-
-
-
-
     public:
         double tick = 1/60.0;
         double speed = 1;
@@ -69,7 +65,7 @@ class World {
         [[nodiscard]] std::vector<Contact> SolveCollectionsFirstIteration(const std::vector<std::shared_ptr<Collider>>& colliders, double dt) const;
 
         void Update(bool updateComponen = false);
-        void SetGizmos(const std::list<Contact>& );
+        void SetGizmos(const std::list<Contact>&);
 
 
 
