@@ -19,7 +19,6 @@ add_executable(bereshitCore main.cpp
         World.h
         quaternion.cpp
         quaternion.h
-        Cache.cpp
         Cache.h
         Contact.cpp
         Contact.h
@@ -36,4 +35,6 @@ add_executable(bereshitCore main.cpp
         Physics.cpp
         Physics.h
         RayCastHit.h
+        FixedJoint.cpp
+        FixedJoint.h
 )

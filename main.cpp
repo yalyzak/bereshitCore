@@ -6,6 +6,8 @@
 #include "Rigidbody.h"
 #include "Collider.h"
 #include "BoxCollider.h"
+#include "Joint.h"
+#include "FixedJoint.h"
 
 // TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 
@@ -16,21 +18,35 @@ int main() {
     const auto lang = "C++";
     std::cout << "Hello and welcome to " << lang << "!\n";
 
-    GameObject obj(Vector3(0,2,0), Vector3(0,0,10), Vector3(1,1,1));
+    GameObject obj1(Vector3(0,2,0), Vector3(0,0,10), Vector3(1,1,1));
     auto rb1 = std::make_shared<Rigidbody>();
     auto col1 = std::make_shared<BoxCollider>();
-    obj.AddComponent(rb1);
-    obj.AddComponent(col1);
-    obj.name = "obj";
-    GameObject floor(Vector3(0,-1,0), Vector3(0,0,0), Vector3(10,1,10));
+    obj1.AddComponent(rb1);
+    obj1.AddComponent(col1);
+    obj1.name = "obj1";
+
+    GameObject obj2(Vector3(0,5,3), Vector3(0,0,10), Vector3(1,1,1));
     auto rb2 = std::make_shared<Rigidbody>();
     auto col2 = std::make_shared<BoxCollider>();
-    rb2->isKinematic = true;
-    floor.AddComponent(rb2);
-    floor.AddComponent(col2);
+    auto joint = std::make_shared<FixedJoint>(&obj1);
+
+    obj2.AddComponent(rb2);
+    obj2.AddComponent(col2);
+    obj2.AddComponent(joint);
+    obj2.name = "obj2";
+
+
+    GameObject floor(Vector3(0,-1,0), Vector3(0,0,0), Vector3(10,1,10));
+    auto rb3 = std::make_shared<Rigidbody>();
+    auto col3 = std::make_shared<BoxCollider>();
+    rb3->isKinematic = true;
+    floor.AddComponent(rb3);
+    floor.AddComponent(col3);
     floor.name = "floor";
+
     std::list<GameObject*> scene;
-    scene.push_back(&obj);
+    scene.push_back(&obj1);
+    scene.push_back(&obj2);
     scene.push_back(&floor);
     GameObject* gimoz{};
     bool running = true;
@@ -45,8 +61,8 @@ int main() {
         world.Update();
 
     }
-    std::cout << obj.GetComponent<Collider>()->GetPosition().toString() << std::endl;
-    std::cout << obj.GetComponent<Collider>()->GetQuaternion().ToEuler().toString() << std::endl;
+    std::cout << obj1.GetComponent<Collider>()->GetPosition().toString() << std::endl;
+    std::cout << obj1.GetComponent<Collider>()->GetQuaternion().ToEuler().toString() << std::endl;
     auto end = std::chrono::high_resolution_clock::now();
 
     auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start);

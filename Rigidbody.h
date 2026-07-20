@@ -30,6 +30,7 @@ public:
     double GetRestitution() const {
         return restitution;
     }
+
     double mass = 1.0;
     double invMass = 1.0;
 
@@ -64,6 +65,7 @@ public:
     void PhysicsUpdate(double dt) override;
     void PhysicsUpdateFirstIteration(double dt) override;
     void integrate(double dt);
+    void ForceIntegrate(double dt);
     static void SolveImpulse(Rigidbody& rb1, Rigidbody& rb2, const Vector3& contact_point, const Vector3& normal, double penetration, double dt);
     std::array<std::array<double, 3>, 3>* GetInvertWorld() {
         return &InvertWorld;

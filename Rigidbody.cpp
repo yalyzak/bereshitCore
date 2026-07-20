@@ -120,15 +120,17 @@ void Rigidbody::integrate(double dt) {
 
 }
 
+void Rigidbody::ForceIntegrate(double dt) {
+    if (!isKinematic) {
+        velocity += (force / mass) * dt;
+        force.Zero();
+    }
+}
+
 void Rigidbody::SolveImpulse(Rigidbody &rb1, Rigidbody &rb2, const Vector3& contact_point, const Vector3& normal, double penetration, double dt) {
-        if (!rb1.isKinematic) {
-            rb1.velocity += (rb1.force * rb1.invMass) * dt;
-            rb1.force.Zero();
-        }
-        if (!rb2.isKinematic) {
-            rb2.velocity += (rb2.force * rb2.invMass) * dt;
-            rb2.force.Zero();
-        }
+        rb1.ForceIntegrate(dt);
+        rb2.ForceIntegrate(dt);
+
         Vector3 r1 = contact_point - rb1.transform->position;
         Vector3 r2 = contact_point - rb2.transform->position;
 

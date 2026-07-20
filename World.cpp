@@ -133,7 +133,7 @@ void World::Start() {
 
 
 void World::CallChildrenUpdate(const std::vector<GameObject *> &list, double dt, void (Component::*func)(double)) {
-    for (auto child : list) {
+    for (auto& child : list) {
         for (auto component : child->GetComponents()) {
             try {
                 (component.get()->*func)(dt);
