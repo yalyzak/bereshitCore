@@ -407,3 +407,12 @@ ContactPoints BoxCollider::GenerateContacts(SatResult &sat_result) const {
 
 }
 
+void BoxCollider::attach(GameObject &obj) {
+    Collider::attach(obj);
+    SetName("BoxCollider");
+}
+
+
+
+
+

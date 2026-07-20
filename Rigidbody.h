@@ -13,9 +13,12 @@
 class Rigidbody : public Component {
 private:
     std::array<std::array<double, 3>, 3> InvertWorld;
+    static double GetFrictionCoefficient(const Rigidbody&, const Rigidbody&);
     void UpdateInertiaWorld();
     double restitution = 0.6;
     static void PositionalCorrection(const Rigidbody&, const Rigidbody&, double,const Vector3&, double);
+    static void ApplyFrictionImpulse(Rigidbody& rb1, Rigidbody& rb2,const Vector3& relativeVelocity,
+        const Vector3& normal , double J, const Vector3& r1, const Vector3& r2);
     Transform* transform = nullptr;
     Cache* cache = nullptr;
     double invertInertiaMetrix[3][3] = {
@@ -27,7 +30,7 @@ private:
     Vector3 inertia;
 
 public:
-    double GetRestitution() const {
+    [[nodiscard]] double GetRestitution() const {
         return restitution;
     }
 

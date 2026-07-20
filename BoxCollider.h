@@ -31,6 +31,7 @@ class BoxCollider : public Collider {
 
     ContactPoints GenerateContacts(SatResult &) const override;
 
+    void attach(GameObject &obj) override;
 
 
 

@@ -37,14 +37,14 @@ void FixedJoint::SolveLinear(double dt) {
 
     Vector3 impulse = -Solve3x3(dv + bias);
 
-    if (!rbA->isKinematic) {
-        rbA->velocity -= impulse * invertMassA;
-        rbA->angularVelocity += rA.cross(impulse).MatrixMultiplication(*IinvA);
-    }
-    if (!rbB->isKinematic) {
-        rbB->velocity += impulse * invertMassB;
-        rbB->angularVelocity -= rB.cross(impulse).MatrixMultiplication(*IinvB);
-    }
+    // if (!rbA->isKinematic) {
+    //     rbA->velocity -= impulse * invertMassA;
+    //     rbA->angularVelocity += rA.cross(impulse).MatrixMultiplication(*IinvA);
+    // }
+    // if (!rbB->isKinematic) {
+    //     rbB->velocity += impulse * invertMassB;
+    //     rbB->angularVelocity -= rB.cross(impulse).MatrixMultiplication(*IinvB);
+    // }
 
     // Rigidbody::ApplyImpulsePair(*rbA, *rbB, impulse, rA, rB);
 }
@@ -76,10 +76,10 @@ void FixedJoint::SolveAngular(double dt) {
 
     Vector3 impulse = -Solve3x3((rel_w + bias));
 
-    if (!rbA->isKinematic) {
-        rbA->angularVelocity -= impulse.MatrixMultiplication(*IA);
-    }
-    rbB->angularVelocity += impulse.MatrixMultiplication(*IB);
+    // if (!rbA->isKinematic) {
+    //     rbA->angularVelocity -= impulse.MatrixMultiplication(*IA);
+    // }
+    // rbB->angularVelocity += impulse.MatrixMultiplication(*IB);
 }
 
 

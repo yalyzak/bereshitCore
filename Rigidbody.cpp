@@ -8,6 +8,11 @@
 #include "World.h"
 #include "Vector3.h"
 
+
+double Rigidbody::GetFrictionCoefficient(const Rigidbody &, const Rigidbody &) {
+    return 0.6;
+}
+
 void Rigidbody::UpdateInertiaWorld() {
     if (isKinematic) {
         InvertWorld = {{
@@ -56,6 +61,52 @@ void Rigidbody::PositionalCorrection(const Rigidbody &rb1, const Rigidbody &rb2,
     if (!rb2.isKinematic){
         rb2.transform->position -= correction * rb2.invMass;
     }
+}
+
+
+#include <algorithm>
+void Rigidbody::ApplyFrictionImpulse(Rigidbody& rb1, Rigidbody& rb2, const Vector3& relativeVelocity, const Vector3& normal,
+    double J,const Vector3& r1, const Vector3& r2) {
+
+    Vector3 tangent = relativeVelocity - normal * relativeVelocity.dot(normal);
+    double tangentLength = tangent.magnitude();
+
+    if (tangentLength < 1e-6) {
+        return;
+    }
+
+    tangent = tangent.normalized();
+    double mu = GetFrictionCoefficient(rb1, rb2);
+
+    double Jt_magnitude = -relativeVelocity.dot(tangent);
+
+    double denom = 0.0;
+
+    if (!rb1.isKinematic) {
+        denom += rb1.invMass;
+
+        Vector3 r1xt = r1.cross(tangent);
+        Vector3 ang1 = r1xt.MatrixMultiplication(*rb1.GetInvertWorld());
+        denom += (ang1.cross(r1)).dot(tangent);
+    }
+    if (!rb2.isKinematic) {
+        denom += rb2.invMass;
+
+        Vector3 r2xt = r2.cross(tangent);
+        Vector3 ang2 = r2xt.MatrixMultiplication(*rb2.GetInvertWorld());
+        denom += (ang2.cross(r2)).dot(tangent);
+    }
+
+
+    if (denom == 0.0) {
+        return;
+    }
+
+    Jt_magnitude /= denom;
+    double max_friction = mu * J;
+    Jt_magnitude = std::max(-max_friction, std::min(Jt_magnitude, max_friction));
+
+    ApplyImpulsePair(rb1, rb2, tangent * Jt_magnitude, Vector3(), Vector3());
 }
 
 Rigidbody::Rigidbody() {
@@ -160,16 +211,16 @@ void Rigidbody::SolveImpulse(Rigidbody &rb1, Rigidbody &rb2, const Vector3& cont
         }
         double kLinear =  (rb1.isKinematic ? 0.0 : rb1.invMass) + (rb2.isKinematic ? 0.0 : rb2.invMass);
         double kAngular = normal.dot(term1 + term2);
-        double inv_eff_mass = kLinear + kAngular;
+        double inverseMass = kLinear + kAngular;
 
-        PositionalCorrection(rb1, rb2, penetration, normal, inv_eff_mass);
+        PositionalCorrection(rb1, rb2, penetration, normal, inverseMass);
 
-        double J = -(1 + restitution) * v_norm / inv_eff_mass;
+        double J = -(1 + restitution) * v_norm / inverseMass;
 
         ApplyImpulsePair(rb1, rb2, normal * J, r1, r2);
 
 
-        // rb1._apply_friction_impulse(rb2, relative_vel, normal, J, r1, r2)
+        ApplyFrictionImpulse(rb1, rb2, relative_vel, normal, J, r1, r2);
 }
 
 double Rigidbody::FindRestitution(const Rigidbody &rb1, const Rigidbody &rb2) {

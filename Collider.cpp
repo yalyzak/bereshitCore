@@ -10,8 +10,8 @@
 #include <iostream>
 
 
-Collider::Collider(bool is_trigger) : isTrigger(is_trigger), other(nullptr) {
-
+Collider::Collider(bool is_trigger) : isTrigger(is_trigger) {
+    SetName("Collider");
 }
 
 std::pair<Vector3, Vector3> Collider::GetAabb() const {
