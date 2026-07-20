@@ -13,5 +13,6 @@ from bereshitCore import Vector3
 from bereshitCore import World
 from bereshitCore import Rigidbody
 from bereshitCore import Collider
-
+from bereshitCore import BoxCollider
+from bereshitCore import Quaternion
 

@@ -11,6 +11,7 @@
 #include "Transform.h"
 #include "Cache.h"
 #include "Rigidbody.h"
+#include "BoxCollider.h"
 #include "Collider.h"
 
 
@@ -65,6 +66,7 @@ PYBIND11_MODULE(bereshitCore, m) {
         .def(py::init<float, float, float>())
         .def(py::init<>())
         .def("magnitude", &Vector3::magnitude)
+        .def("normalized", &Vector3::normalized)
         .def("to_np", [](const Vector3& v) {
             auto a = v.ToArray();
             return py::array_t<double>(a.size(), a.data());
@@ -77,15 +79,36 @@ PYBIND11_MODULE(bereshitCore, m) {
 
         .def("__mul__",
             py::overload_cast<const Vector3&>(&Vector3::operator*, py::const_))
+        .def("__add__",
+        py::overload_cast<const Vector3&>(
+            &Vector3::operator+, py::const_
+        )
+    )
+
+    .def("__iadd__",
+        [](Vector3& self, const Vector3& other) -> Vector3& {
+            self += other;
+            return self;
+        },
+        py::return_value_policy::reference_internal
+    )
         .def_readwrite("x", &Vector3::x)
         .def_readwrite("y", &Vector3::y)
         .def_readwrite("z", &Vector3::z);
+
     py::class_<Quaternion>(m, "Quaternion")
         .def_readwrite("x", &Quaternion::x)
         .def_readwrite("y", &Quaternion::y)
         .def_readwrite("z", &Quaternion::z)
+        .def_readwrite("w", &Quaternion::w)
+
+    .def("__mul__",
+            py::overload_cast<const Quaternion&>(&Quaternion::operator*, py::const_))
+
         .def("rotate", &Quaternion::Rotate)
-        .def("to_matrix3", &Quaternion::ToMatrix3)
+        .def("to_matrix3",py::overload_cast<std::array<std::array<double, 3>, 3>&>(&Quaternion::ToMatrix3,py::const_))
+        .def("axis_angle", &Quaternion::AxisAngle)
+        .def("conjugate", &Quaternion::Conjugate)
         .def_readwrite("w", &Quaternion::w);
 
     py::class_<Transform>(m, "Transform")
@@ -138,12 +161,14 @@ PYBIND11_MODULE(bereshitCore, m) {
     .def("Start", &World::Start)
     .def("Exit", &World::Exit)
     .def("get_all_children", &World::getAllChildren)
+    .def("get_gizmos", &World::getGizmos)
     .def("PythonUpdate", &World::PythonUpdate)
     .def("update", &World::Update, py::arg("updateComponent") = false);
 
     py::class_<Component, PyComponent, std::shared_ptr<Component>>(m, "Component")
     .def(py::init<>())
     .def_property("name", &Component::GetName, &Component::SetName)
+    .def_property_readonly("parent", &Component::GetParent)
     .def("Update", &Component::Update)
     .def("Start", &Component::Start)
     .def("attach", &Component::attach);
@@ -151,10 +176,13 @@ PYBIND11_MODULE(bereshitCore, m) {
     .def("SetDirty", &Cache::SetDirty);
     py::class_<Rigidbody, Component, std::shared_ptr<Rigidbody>>(m, "Rigidbody")
     .def_readwrite("isKinematic", &Rigidbody::isKinematic)
+    .def_readwrite("Freeze_Rotation", &Rigidbody::freezeRotation)
     .def(py::init<>());
+
     py::class_<Collider, Component, std::shared_ptr<Collider>>(m, "Collider")
      .def(py::init<bool>(), py::arg("is_trigger") = false);
-
+    py::class_<BoxCollider, Collider, std::shared_ptr<BoxCollider>>(m, "BoxCollider")
+    .def(py::init<>());
 
 
 
