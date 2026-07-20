@@ -6,7 +6,6 @@
 #define BERESHITCORE_COLLIDER_H
 
 #include <memory>
-#include <list>
 #include <utility>
 #include <vector>
 #include <optional>
@@ -41,47 +40,47 @@ class Collider : public Component{
         };
 
     private:
-        bool isTrigger;
+        mutable bool isTrigger;
         Transform* transform;
         Vector3 halfSize = Vector3();
         Transform deltaTransform;
-        bool enter;
-        bool stay;
-        std::shared_ptr<Collider> other;
-        Vector3 cachedMin;
-        Vector3 cachedMax;
+        mutable bool enter;
+        mutable bool stay;
+        const Collider* other;
+        mutable Vector3 cachedMin;
+        mutable Vector3 cachedMax;
 
 
 
-        virtual std::optional<SatResult> Sat(std::shared_ptr<Collider> otherCollider) const;
+        virtual std::optional<SatResult> Sat(const Collider* otherCollider) const;
 
 public:
 
 
-    bool GetIsTrigger() {
+    bool GetIsTrigger() const {
         return isTrigger;
     }
 
     Collider(bool is_trigger =false);
-    std::pair<Vector3, Vector3> GetAabb();
-    static std::vector<std::pair<std::shared_ptr<Collider>, std::shared_ptr<Collider>>> SweepAndPrune(const std::vector<std::shared_ptr<Collider>>& colliders);
+    std::pair<Vector3, Vector3> GetAabb() const;
+    static std::vector<std::pair<Collider*,Collider*>> SweepAndPrune(const std::vector<Collider*>& colliders);
     Quaternion GetQuaternion() const;
     Vector3 GetPosition() const;
     Vector3 GetSize() const;
     void attach(GameObject& obj) override;
 
 
-    virtual ContactPoints CheckCollision(std::shared_ptr<Collider> collider2);
-    virtual bool AabbCollision(std::shared_ptr<Collider> collider2);
+    virtual ContactPoints CheckCollision(const Collider* collider2);
+    virtual bool AabbCollision(const Collider* collider2);
     virtual ContactPoints GenerateContacts(SatResult&) const;
-    virtual void HandleCollisionExit();
-    virtual void CallCollisionEvent(const Collision& collision, void (Component::*func)(const Collision&));
-    virtual void OnCollisionEnter(const Collision& collision);
-    virtual void OnCollisionStay(const Collision& collision);
-    virtual void OnCollisionExit(const Collision& collision);
-    virtual void OnTriggerEnter(const Collision& collision);
-    virtual void OnTriggerStay(const Collision& collision);
-    virtual void OnTriggerExit(const Collision& collision);
+    virtual void HandleCollisionExit() const;
+    virtual void CallCollisionEvent(const Collision& collision, void (Component::*func)(const Collision&)) const;
+    virtual void OnCollisionEnter(const Collision& collision) const;
+    virtual void OnCollisionStay(const Collision& collision) const;
+    virtual void OnCollisionExit(const Collision& collision) const;
+    virtual void OnTriggerEnter(const Collision& collision) const;
+    virtual void OnTriggerStay(const Collision& collision) const;
+    virtual void OnTriggerExit(const Collision& collision) const;
     virtual void HandleCollisionEvents(Collider*, ContactPoints*);
     virtual RayCastHit RayCast(const Vector3 &origin, const Vector3 &direction, double maxDistance) const;
 

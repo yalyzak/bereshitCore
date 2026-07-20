@@ -98,7 +98,7 @@ std::vector<Vector3> BoxCollider::ClipPolygon(const std::vector<Vector3>& poly,c
     return result;
 }
 
-ContactPoints BoxCollider::CheckCollision(std::shared_ptr<Collider> collider2)  {
+ContactPoints BoxCollider::CheckCollision(const Collider* collider2)  {
     ContactPoints contact_points;
   //          contact_points.contact_points.push_back(Vector3(1,1,1));
     if (typeid(*collider2) == typeid(BoxCollider)) {
@@ -121,7 +121,7 @@ ContactPoints BoxCollider::CheckCollision(std::shared_ptr<Collider> collider2)  
         // HandleCollisionEvents(collider2.get(), &contact_points);
         // collider2->HandleCollisionEvents(this, &contact_points);
 
-        if (GetIsTrigger() || (*collider2).GetIsTrigger()) {
+        if (GetIsTrigger() || collider2->GetIsTrigger()) {
             return contact_points;
         }
         return contact_points;
@@ -129,7 +129,7 @@ ContactPoints BoxCollider::CheckCollision(std::shared_ptr<Collider> collider2)  
     return contact_points;
 }
 
-bool BoxCollider::AabbCollision(std::shared_ptr<Collider> collider2) {
+bool BoxCollider::AabbCollision(const Collider* collider2) {
     auto [min1, max1] = GetAabb();
     auto [min2, max2] = collider2->GetAabb();
 
@@ -141,7 +141,7 @@ bool BoxCollider::AabbCollision(std::shared_ptr<Collider> collider2) {
 
 
 
-std::optional<Collider::SatResult> BoxCollider::Sat(std::shared_ptr<Collider> otherCollider) const {
+std::optional<Collider::SatResult> BoxCollider::Sat(const Collider* otherCollider) const {
     Vector3 ACenter = GetPosition();
     Vector3 BCenter = otherCollider->GetPosition();
 

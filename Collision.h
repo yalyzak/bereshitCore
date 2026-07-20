@@ -12,7 +12,7 @@
 class Collider;
 
 struct Collision {
-    std::shared_ptr<Collider> other;
+    const Collider* other;
     ContactPoints* contact_points;
 };
 #endif //BERESHITCORE_COLLISION_H

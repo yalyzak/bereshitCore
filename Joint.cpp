@@ -7,6 +7,9 @@
 #include "Rigidbody.h"
 #include "Physics.h"
 
+void Joint::CastAnchorDefault() {
+}
+
 Joint::Joint(GameObject *bodyB, Vector3 anchor, double beta) : bodyB(bodyB), worldAnchor(&anchor), beta(beta) {
 }
 
@@ -25,7 +28,7 @@ void Joint::attach(GameObject &obj) {
 }
 
 void Joint::CastAnchor() {
-    Vector3* hit = Physics::RayCast(transformA.position, (bodyB->transform.position - bodyA->transform.position), bodyB->GetComponent<Collider>()).point;
+    Vector3* hit = Physics::RayCast(transformA->position, (transformB->position - transformA->position), bodyB->GetComponent<Collider>()).point;
 
     if (hit != nullptr) {
         worldAnchor = hit;
@@ -33,10 +36,10 @@ void Joint::CastAnchor() {
     }else {
         CastAnchorDefault();
 
-        initialRelativeRotation = (bodyA->transform.quaternion.inverse() * self.body_b.quaternion)
+        initialRelativeRotation = (bodyA->transform.quaternion.Inverse() * transformB->quaternion);
 
-        localAnchorA = self.body_a.quaternion.rotate_conjugated(self.world_anchor - self.body_a.position)
-        localAnchorB = self.body_b.quaternion.rotate_conjugated(self.world_anchor - self.body_b.position)
+        localAnchorA = transformA->quaternion.RotateConjugated(*worldAnchor - transformA->position);
+        localAnchorB = transformB->quaternion.RotateConjugated(*worldAnchor - transformB->position);
     }
 
 

@@ -11,6 +11,7 @@ class GameObject;
 class Transform;
 #include "Vector3.h"
 #include "Quaternion.h"
+#include "Collider.h"
 
 
 class Joint : public Component{

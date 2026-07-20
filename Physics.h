@@ -11,7 +11,7 @@
 
 class Physics {
 public:
-    static World* world;
+    inline static World* world = nullptr;
     static RayCastHit RayCast(const Vector3& origin, const Vector3& direction, const Collider* layerMask, float maxDistance=std::numeric_limits<float>::max());
 };
 

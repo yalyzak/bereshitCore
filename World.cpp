@@ -26,7 +26,7 @@ void World::GetAllChildrenPhysics(std::vector<GameObject *> &result) {
     }
 }
 
-void World::GetAllPhysicsColliders(std::vector<std::shared_ptr<Collider>> &result) {
+void World::GetAllPhysicsColliders(std::vector<Collider*> &result) {
     for (GameObject* child : GetAllChildrenPhysics()) {
             result.push_back(child->GetComponent<Collider>());
     }
@@ -96,7 +96,7 @@ std::vector<GameObject *>& World::GetAllChildrenPhysics(){
     return cachePhysicsChildren;
 }
 
-std::vector<std::shared_ptr<Collider>>& World::GetAllPhysicsColliders() {
+std::vector<Collider*>& World::GetAllPhysicsColliders() {
     return cachePhysicsColliders;
 }
 
@@ -149,7 +149,7 @@ void World::CallChildrenUpdate(const std::vector<GameObject *> &list, double dt,
 }
 
 
-std::vector<Contact> World::SolveCollectionsFirstIteration(const std::vector<std::shared_ptr<Collider>>& colliders, double dt) const {
+std::vector<Contact> World::SolveCollectionsFirstIteration(const std::vector<Collider*>& colliders, double dt) const {
     std::vector<Contact> contacts;
 
     auto candidate_pairs = Collider::SweepAndPrune(colliders);

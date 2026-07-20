@@ -14,7 +14,7 @@ Collider::Collider(bool is_trigger) : isTrigger(is_trigger), other(nullptr) {
 
 }
 
-std::pair<Vector3, Vector3> Collider::GetAabb() {
+std::pair<Vector3, Vector3> Collider::GetAabb() const {
     if (!GetParent()->cache.aabbDirty) {
         return {cachedMin, cachedMax};
     }
@@ -35,16 +35,14 @@ std::pair<Vector3, Vector3> Collider::GetAabb() {
     return {GetPosition() - halfSize, GetPosition() + halfSize};
 }
 
-std::vector<
-    std::pair<std::shared_ptr<Collider>, std::shared_ptr<Collider>>
->
+std::vector<std::pair<Collider*, Collider*>>
 Collider::SweepAndPrune(
-    const std::vector<std::shared_ptr<Collider>>& colliders
+    const std::vector<Collider*>& colliders
 ) {
     struct Endpoint {
         double position;
         bool isStart;
-        std::shared_ptr<Collider> collider;
+        Collider* collider;
     };
 
     std::vector<Endpoint> endpoints;
@@ -86,18 +84,16 @@ Collider::SweepAndPrune(
         }
     );
 
-    std::unordered_set<std::shared_ptr<Collider>> active;
+    std::unordered_set<Collider*> active;
 
-    std::vector<
-        std::pair<std::shared_ptr<Collider>, std::shared_ptr<Collider>>
-    > candidatePairs;
+    std::vector<std::pair<Collider*, Collider*>> candidatePairs;
 
     // Sweep along the X axis
     for (const auto& endpoint : endpoints) {
         const auto& collider = endpoint.collider;
 
         if (endpoint.isStart) {
-            const auto [minA, maxA] = collider->GetAabb();
+            const auto& [minA, maxA] = collider->GetAabb();
 
             for (const auto& other : active) {
                 const auto [minB, maxB] = other->GetAabb();
@@ -142,15 +138,15 @@ void Collider::attach(GameObject& obj) {
     halfSize = (obj.transform.scale + deltaTransform.scale) * 0.5;
 }
 
-ContactPoints Collider::CheckCollision(std::shared_ptr<Collider> collider2) {
+ContactPoints Collider::CheckCollision(const Collider* collider2) {
     return {};
 }
 
-bool Collider::AabbCollision(std::shared_ptr<Collider> collider2) {
+bool Collider::AabbCollision(const Collider* collider2) {
     return false;
 }
 
-std::optional<Collider::SatResult> Collider::Sat(std::shared_ptr<Collider> otherCollider) const {
+std::optional<Collider::SatResult> Collider::Sat(const Collider* otherCollider) const {
     return std::nullopt;
 }
 
@@ -161,7 +157,7 @@ ContactPoints Collider::GenerateContacts(SatResult&) const {
 }
 
 
-void Collider::HandleCollisionExit() {
+void Collider::HandleCollisionExit() const {
     Collision collision(other, nullptr);
     if (!isTrigger) {
         if (stay || enter) {
@@ -178,7 +174,7 @@ void Collider::HandleCollisionExit() {
 void Collider::CallCollisionEvent(
     const Collision& collision,
     void (Component::*function)(const Collision&)
-) {
+) const {
     for (const auto& component : GetParent()->GetComponents()) {
         // Skip this collider and every other Collider component
         if (dynamic_cast<Collider*>(component.get()) != nullptr)
@@ -188,18 +184,18 @@ void Collider::CallCollisionEvent(
     }
 }
 
-void Collider::OnCollisionEnter(const Collision &collision) {
+void Collider::OnCollisionEnter(const Collision &collision) const {
     enter = true;
     CallCollisionEvent(collision, &Component::OnCollisionEnter);
 }
 
-void Collider::OnCollisionStay(const Collision &collision) {
+void Collider::OnCollisionStay(const Collision &collision) const{
     enter = false;
     stay = true;
     CallCollisionEvent(collision, &Component::OnCollisionStay);
 }
 
-void Collider::OnCollisionExit(const Collision& collision) {
+void Collider::OnCollisionExit(const Collision& collision) const {
     enter = false;
     stay = false;
     CallCollisionEvent(collision, &Component::OnCollisionExit);
@@ -207,26 +203,26 @@ void Collider::OnCollisionExit(const Collision& collision) {
 
 
 
-void Collider::OnTriggerEnter(const Collision &collision) {
+void Collider::OnTriggerEnter(const Collision &collision) const {
     enter = true;
     CallCollisionEvent(collision, &Component::OnTriggerEnter);
 }
 
-void Collider::OnTriggerStay(const Collision &collision) {
+void Collider::OnTriggerStay(const Collision &collision) const {
     enter = false;
     stay = true;
     CallCollisionEvent(collision, &Component::OnTriggerStay);
 }
 
-void Collider::OnTriggerExit(const Collision& collision) {
+void Collider::OnTriggerExit(const Collision& collision) const {
     enter = false;
     stay = false;
     CallCollisionEvent(collision, &Component::OnTriggerExit);
 }
 
 void Collider::HandleCollisionEvents(Collider* otherCollider, ContactPoints* result) {
-    bool same_collider = (other.get() == otherCollider);
-    other = std::shared_ptr<Collider>(otherCollider);
+    bool same_collider = (other == otherCollider);
+    other = otherCollider;
     Collision collision = Collision(other, result);
     if (!isTrigger) {
         if ((enter || stay) & same_collider){

@@ -25,9 +25,9 @@ class BoxCollider : public Collider {
 
     public:
 
-    [[nodiscard]] auto CheckCollision(std::shared_ptr<Collider> collider2) -> ContactPoints override;
-    bool AabbCollision(std::shared_ptr<Collider> collider2) override;
-    std::optional<SatResult> Sat(std::shared_ptr<Collider> otherCollider) const override;
+    [[nodiscard]] auto CheckCollision(const Collider* collider2) -> ContactPoints override;
+    bool AabbCollision(const Collider* collider2) override;
+    std::optional<SatResult> Sat(const Collider* otherCollider) const override;
 
     ContactPoints GenerateContacts(SatResult &) const override;
 
