@@ -116,15 +116,15 @@ std::list<GameObject*> World::search_by_component(std::string name) const{
 }
 
 void World::SolveCollections(const std::vector<Contact> &contacts, double dt) {
-    for (auto contact : contacts) {
+    for (const auto& contact : contacts) {
         Rigidbody::SolveImpulse(contact.rb1, contact.rb2, contact.contact_point, contact.normal, contact.penetration, dt);
     }
 }
 
 void World::Start() {
     auto children = getAllChildren();
-    for (GameObject* child : children) {
-        for (auto component : child->GetComponents()) {
+    for (const GameObject* child : children) {
+        for (auto& component : child->GetComponents()) {
             component->Start();
         }
     }
@@ -133,7 +133,7 @@ void World::Start() {
 
 
 void World::CallChildrenUpdate(const std::vector<GameObject *> &list, double dt, void (Component::*func)(double)) {
-    for (auto& child : list) {
+    for (const auto& child : list) {
         for (auto component : child->GetComponents()) {
             try {
                 (component.get()->*func)(dt);
