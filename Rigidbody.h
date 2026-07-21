@@ -9,6 +9,7 @@
 #include "Transform.h"
 #include "Vector3.h"
 #include "World.h"
+#include <optional>
 
 class Rigidbody : public Component {
 private:
@@ -19,6 +20,9 @@ private:
     static void PositionalCorrection(const Rigidbody&, const Rigidbody&, double,const Vector3&, double);
     static void ApplyFrictionImpulse(Rigidbody& rb1, Rigidbody& rb2,const Vector3& relativeVelocity,
         const Vector3& normal , double J, const Vector3& r1, const Vector3& r2);
+
+    static std::optional<std::tuple<double, Vector3, Vector3, Vector3, double>> FindImpulse(Rigidbody& rb1, Rigidbody& rb2, const Vector3& contact_point, const Vector3& normal, double dt);
+
     Transform* transform = nullptr;
     Cache* cache = nullptr;
     double invertInertiaMetrix[3][3] = {
@@ -77,6 +81,8 @@ public:
     static void ApplyImpulsePair(Rigidbody& rb1, Rigidbody& rb2, const Vector3& impulseVec, const Vector3& r1, const Vector3& r2);
     void ApplyTorqueImpulse(Vector3 impulse, Vector3 r);
     void attach(GameObject& obj) override;
+
+    static void SolveFrictionImpulse(Rigidbody& rb1, Rigidbody& rb2, const Vector3& contact_point, const Vector3& normal, double dt);
 };
 
 

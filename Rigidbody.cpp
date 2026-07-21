@@ -109,6 +109,47 @@ void Rigidbody::ApplyFrictionImpulse(Rigidbody& rb1, Rigidbody& rb2, const Vecto
     ApplyImpulsePair(rb1, rb2, tangent * Jt_magnitude, r1, r2);
 }
 
+std::optional<std::tuple<double, Vector3, Vector3, Vector3, double>> Rigidbody::FindImpulse(Rigidbody &rb1, Rigidbody &rb2, const Vector3 &contact_point, const Vector3 &normal, double dt) {
+    rb1.ForceIntegrate(dt);
+    rb2.ForceIntegrate(dt);
+
+    Vector3 r1 = contact_point - rb1.transform->position;
+    Vector3 r2 = contact_point - rb2.transform->position;
+
+    Vector3 v1_at_p = rb1.velocity - rb1.angularVelocity.cross(r1);
+    Vector3 v2_at_p = rb2.velocity - rb2.angularVelocity.cross(r2);
+    Vector3 relative_vel = v2_at_p - v1_at_p;
+    double v_norm = relative_vel.dot(normal);
+
+    if (v_norm >= 0) {
+        return std::nullopt;
+    }
+
+    Vector3 rn1 = r1.cross(normal);
+    Vector3 rn2 = r2.cross(normal);
+    Vector3 term1(0, 0, 0);
+    Vector3 term2(0, 0, 0);
+    if (!rb1.isKinematic) {
+        term1 = (rn1.MatrixMultiplication(*rb1.GetInvertWorld())).cross(r1);
+    }
+    if  (!rb2.isKinematic) {
+        term2 = (rn2.MatrixMultiplication(*rb2.GetInvertWorld())).cross(r2);
+    }
+
+    double restitution = FindRestitution(rb1, rb2);
+    if (rb1.isKinematic) {
+
+    }
+    double kLinear =  (rb1.isKinematic ? 0.0 : rb1.invMass) + (rb2.isKinematic ? 0.0 : rb2.invMass);
+    double kAngular = normal.dot(term1 + term2);
+    double inverseMass = kLinear + kAngular;
+
+    double J = -(1 + restitution) * v_norm / inverseMass;
+
+    return std::make_tuple(J, r1, r2, relative_vel, inverseMass);
+
+}
+
 Rigidbody::Rigidbody() {
     SetName("Rigidbody");
 }
@@ -179,43 +220,14 @@ void Rigidbody::ForceIntegrate(double dt) {
 }
 
 void Rigidbody::SolveImpulse(Rigidbody &rb1, Rigidbody &rb2, const Vector3& contact_point, const Vector3& normal, double penetration, double dt) {
-        rb1.ForceIntegrate(dt);
-        rb2.ForceIntegrate(dt);
-
-        Vector3 r1 = contact_point - rb1.transform->position;
-        Vector3 r2 = contact_point - rb2.transform->position;
-
-        Vector3 v1_at_p = rb1.velocity - rb1.angularVelocity.cross(r1);
-        Vector3 v2_at_p = rb2.velocity - rb2.angularVelocity.cross(r2);
-        Vector3 relative_vel = v2_at_p - v1_at_p;
-        double v_norm = relative_vel.dot(normal);
-
-        if (v_norm >= 0) {
+        auto result = FindImpulse(rb1, rb2, contact_point, normal, dt);
+        if (!result) {
             return;
         }
 
-        Vector3 rn1 = r1.cross(normal);
-        Vector3 rn2 = r2.cross(normal);
-        Vector3 term1(0, 0, 0);
-        Vector3 term2(0, 0, 0);
-        if (!rb1.isKinematic) {
-            term1 = (rn1.MatrixMultiplication(*rb1.GetInvertWorld())).cross(r1);
-        }
-        if  (!rb2.isKinematic) {
-            term2 = (rn2.MatrixMultiplication(*rb2.GetInvertWorld())).cross(r2);
-        }
-
-        double restitution = FindRestitution(rb1, rb2);
-        if (rb1.isKinematic) {
-
-        }
-        double kLinear =  (rb1.isKinematic ? 0.0 : rb1.invMass) + (rb2.isKinematic ? 0.0 : rb2.invMass);
-        double kAngular = normal.dot(term1 + term2);
-        double inverseMass = kLinear + kAngular;
+        auto& [J, r1, r2, relative_vel, inverseMass] = *result;
 
         PositionalCorrection(rb1, rb2, penetration, normal, inverseMass);
-
-        double J = -(1 + restitution) * v_norm / inverseMass;
 
         ApplyImpulsePair(rb1, rb2, normal * J, r1, r2);
 
@@ -281,6 +293,21 @@ void Rigidbody::attach(GameObject& obj) {
     invertInertiaMetrix[2][2] = invertInertia.z;
     UpdateInertiaWorld();
 }
+
+void Rigidbody::SolveFrictionImpulse(Rigidbody &rb1, Rigidbody &rb2, const Vector3 &contact_point,
+    const Vector3 &normal, double dt) {
+    auto result = FindImpulse(rb1, rb2, contact_point, normal, dt);
+    if (!result) {
+        return;
+    }
+
+    auto& [J, r1, r2, relative_vel, inverseMass] = *result;
+
+    ApplyFrictionImpulse(rb1, rb2, relative_vel, normal, J, r1, r2);
+
+}
+
+
 
 
 
