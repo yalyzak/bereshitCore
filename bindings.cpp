@@ -47,19 +47,6 @@ public:
     }
 };
 
-class PyWorld : public World {
-public:
-    using World::World;
-
-    void PythonUpdate(const std::list<GameObject *>& game_objects) const override {
-        PYBIND11_OVERRIDE(
-            void,
-            World,
-            PythonUpdate,
-            game_objects
-        );
-    }
-};
 
 PYBIND11_MODULE(bereshitCore, m) {
     py::class_<Vector3>(m, "Vector3")
@@ -151,9 +138,9 @@ PYBIND11_MODULE(bereshitCore, m) {
 
         return comp;
     })
-    .def_readwrite("components", &GameObject::components);
+    .def_property_readonly("components", &GameObject::GetComponents);
 
-    py::class_<World, PyWorld>(m, "World")
+    py::class_<World>(m, "World")
     .def_readwrite("tick", &World::tick)
     .def_readwrite("speed", &World::speed)
     .def("search_by_component", &World::search_by_component)
@@ -162,7 +149,6 @@ PYBIND11_MODULE(bereshitCore, m) {
     .def("Exit", &World::Exit)
     .def("get_all_children", &World::getAllChildren)
     .def("get_gizmos", &World::getGizmos)
-    .def("PythonUpdate", &World::PythonUpdate)
     .def("update", &World::Update, py::arg("updateComponent") = false);
 
     py::class_<Component, PyComponent, std::shared_ptr<Component>>(m, "Component")
