@@ -8,6 +8,7 @@
 #include "Vector3.h"
 #include "Rigidbody.h"
 #include "RayCastHit.h"
+class World;
 
 class Physics {
 public:

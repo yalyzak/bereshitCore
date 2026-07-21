@@ -8,7 +8,7 @@
 #include "BoxCollider.h"
 #include "Joint.h"
 #include "FixedJoint.h"
-
+#include "World.h"
 // TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 
 int main() {
@@ -52,10 +52,11 @@ int main() {
     bool running = true;
     World world(&running, scene, gimoz, Vector3(0,-9.8,0), 1/60.0, 1, 0);
 
-    double seconds = 60 * 60 * 1;
+    double seconds = 1;
     double dt = 1/60.0;
     for (int i = 0; i++, i< 1/dt * seconds;) {
-        // std::cout << obj1.GetComponent<Collider>()->GetPosition().toString() << std::endl;
+        // std::cout << obj1.GetComponent<Rigidbody>()->velocity.toString() << std::endl;
+        std::cout << obj1.GetComponent<Rigidbody>()->angularVelocity.toString() << std::endl;
 
         world.Update();
 

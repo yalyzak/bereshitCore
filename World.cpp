@@ -10,6 +10,12 @@
 #include "Rigidbody.h"
 #include "Collider.h"
 
+void World::ApplyGravityToAll(const Vector3 &gravity) {
+    for (Rigidbody* rigidbody : GetAllRigidbodys()) {
+        rigidbody->ApplyGravity(gravity);
+    }
+}
+
 void World::GetAllChildren(std::vector<GameObject *> &result) {
     for (GameObject* child : children) {
         result.push_back(child);
@@ -26,9 +32,15 @@ void World::GetAllChildrenPhysics(std::vector<GameObject *> &result) {
     }
 }
 
-void World::GetAllPhysicsColliders(std::vector<Collider*> &result) {
+void World::GetAllColliders(std::vector<Collider*> &result) {
     for (GameObject* child : GetAllChildrenPhysics()) {
             result.push_back(child->GetComponent<Collider>());
+    }
+}
+
+void World::GetAllRigidbodys(std::vector<Rigidbody *> &result) {
+    for (GameObject* child : GetAllChildrenPhysics()) {
+        result.push_back(child->GetComponent<Rigidbody>());
     }
 }
 
@@ -44,16 +56,24 @@ void World::SetCachePhysicsChildren() {
     physicsChildrenDirty = false;
 }
 
-void World::SetCachePhysicsColliders() {
-    cachePhysicsColliders.clear();
-    GetAllPhysicsColliders(cachePhysicsColliders);
+void World::SetCacheColliders() {
+    cacheColliders.clear();
+    GetAllColliders(cacheColliders);
     physicsCollidersDirty = false;
+}
+
+void World::SetCacheRigidbodys() {
+    cacheRigidbodys.clear();
+    GetAllRigidbodys(cacheRigidbodys);
+    physicsCollidersDirty = false;
+
 }
 
 void World::SetCache() {
     SetCacheAllChildren();
     SetCachePhysicsChildren();
-    SetCachePhysicsColliders();
+    SetCacheColliders();
+    SetCacheRigidbodys();
 }
 
 
@@ -96,8 +116,12 @@ std::vector<GameObject *>& World::GetAllChildrenPhysics(){
     return cachePhysicsChildren;
 }
 
-std::vector<Collider*>& World::GetAllPhysicsColliders() {
-    return cachePhysicsColliders;
+std::vector<Collider*>& World::GetAllColliders() {
+    return cacheColliders;
+}
+
+std::vector<Rigidbody *> & World::GetAllRigidbodys() {
+    return cacheRigidbodys;
 }
 
 std::list<GameObject *> World::getGizmos() const {
@@ -185,19 +209,28 @@ std::vector<Contact> World::SolveCollectionsFirstIteration(const std::vector<Col
 void World::Update(bool updateComponen) {
     double dt = tick;
     const auto& allChildren = getAllChildren();
+
     if (updateComponen) {
         CallChildrenUpdate(allChildren, dt, &Component::Update);
     }
-    const auto& PhysicsColliders = GetAllPhysicsColliders();
-    auto collections = SolveCollectionsFirstIteration(PhysicsColliders, dt);
+
+    ApplyGravityToAll(gravity);
 
     const auto& PhysicsChildren = GetAllChildrenPhysics();
+
+    CallChildrenUpdate(PhysicsChildren, dt, &Component::PhysicsUpdateFirstIteration);
+
+    const auto& PhysicsColliders = GetAllColliders();
+    auto collections = SolveCollectionsFirstIteration(PhysicsColliders, dt);
+
+
     for (int i =0; i < physics_epochs + 1; i++) {
         SolveCollections(collections, dt);
         CallChildrenUpdate(PhysicsChildren, dt, &Component::PhysicsUpdate);
     }
-    CallChildrenUpdate(PhysicsChildren, dt, &Component::PhysicsUpdateFirstIteration);
-    
+
+
+
 }
 
 

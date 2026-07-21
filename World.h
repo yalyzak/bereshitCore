@@ -20,20 +20,25 @@ class GameObject;
 
 class World {
     private:
+        void ApplyGravityToAll(const Vector3& gravity);
         std::list<GameObject*> children;
         GameObject* gizmos;
         bool allChildrenDirty = true;
         bool physicsChildrenDirty = true;
         bool physicsCollidersDirty = true;
+        bool physicsRigidbodysDirty = true;
         std::vector<GameObject*> cacheAllChildren;
         std::vector<GameObject*> cachePhysicsChildren;
-        std::vector<Collider*> cachePhysicsColliders;
+        std::vector<Collider*> cacheColliders;
+        std::vector<Rigidbody*> cacheRigidbodys;
         void GetAllChildren(std::vector<GameObject*>& result);
         void GetAllChildrenPhysics(std::vector<GameObject*>& result);
-        void GetAllPhysicsColliders(std::vector<Collider*>& result);
+        void GetAllColliders(std::vector<Collider*>& result);
+        void GetAllRigidbodys(std::vector<Rigidbody*>& result);
         void SetCacheAllChildren();
         void SetCachePhysicsChildren();
-        void SetCachePhysicsColliders();
+        void SetCacheColliders();
+        void SetCacheRigidbodys();
         void SetCache();
 
     public:
@@ -50,7 +55,8 @@ class World {
 
         std::vector<GameObject*>& getAllChildren();
         std::vector<GameObject*>& GetAllChildrenPhysics();
-        std::vector<Collider*>& GetAllPhysicsColliders();
+        std::vector<Collider*>& GetAllColliders();
+        std::vector<Rigidbody*>& GetAllRigidbodys();
         std::list<GameObject*> getGizmos() const;
         std::list<GameObject*> search_by_component(std::string name) const;
         void SolveCollections(const std::vector<Contact>&, double);

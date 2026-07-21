@@ -155,7 +155,9 @@ Rigidbody::Rigidbody() {
     invMass = isKinematic ? 0.0 : 1 / mass;
 }
 
-void Rigidbody::apply_gravity(const Vector3 &gravity) {
+
+
+void Rigidbody::ApplyGravity(const Vector3 &gravity) {
     force += gravity;
 }
 
@@ -166,7 +168,7 @@ void Rigidbody::PhysicsUpdate(double dt) {
 
 void Rigidbody::PhysicsUpdateFirstIteration(double dt) {
     if (!isKinematic) {
-        apply_gravity(this->GetParent()->GetWorld()->gravity);
+        // apply_gravity(this->GetParent()->GetWorld()->gravity);
         integrate(dt);
     }
 }
@@ -180,7 +182,7 @@ void Rigidbody::integrate(double dt) {
         cache->aabbDirty = true;
     }
 
-    transform->position += velocity * dt + acceleration * 0.5 * dt * dt;
+    transform->position += pos;
 
     if (!freezeRotation.x) {
         angularAcceleration.x = torque.x / inertia.x;

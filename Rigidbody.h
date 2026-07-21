@@ -8,11 +8,12 @@
 #include "Component.h"
 #include "Transform.h"
 #include "Vector3.h"
-#include "World.h"
+class World;
 #include <optional>
 
 class Rigidbody : public Component {
 private:
+
     std::array<std::array<double, 3>, 3> InvertWorld;
     static double GetFrictionCoefficient(const Rigidbody&, const Rigidbody&);
     void UpdateInertiaWorld();
@@ -37,6 +38,8 @@ private:
     double invMass = 1.0;
 
 public:
+    void ApplyGravity(const Vector3& gravity);
+
     void IsKinematic(bool state) {
         isKinematic = state;
         invMass = isKinematic ? 0.0 : 1 / mass;
@@ -77,8 +80,6 @@ public:
     Vector3 normal_force;
 
     Rigidbody();
-
-    void apply_gravity(const Vector3& gravity);
     void PhysicsUpdate(double dt) override;
     void PhysicsUpdateFirstIteration(double dt) override;
     void integrate(double dt);
