@@ -152,6 +152,7 @@ std::optional<std::tuple<double, Vector3, Vector3, Vector3, double>> Rigidbody::
 
 Rigidbody::Rigidbody() {
     SetName("Rigidbody");
+    invMass = isKinematic ? 0.0 : 1 / mass;
 }
 
 void Rigidbody::apply_gravity(const Vector3 &gravity) {
@@ -232,7 +233,7 @@ void Rigidbody::SolveImpulse(Rigidbody &rb1, Rigidbody &rb2, const Vector3& cont
         ApplyImpulsePair(rb1, rb2, normal * J, r1, r2);
 
 
-        ApplyFrictionImpulse(rb1, rb2, relative_vel, normal, J, r1, r2);
+        // ApplyFrictionImpulse(rb1, rb2, relative_vel, normal, J, r1, r2);
 }
 
 double Rigidbody::FindRestitution(const Rigidbody &rb1, const Rigidbody &rb2) {

@@ -18,7 +18,7 @@ int main() {
     const auto lang = "C++";
     std::cout << "Hello and welcome to " << lang << "!\n";
 
-    GameObject obj1(Vector3(0,2,0), Vector3(0,0,10), Vector3(1,1,1));
+    GameObject obj1(Vector3(0,2,0), Vector3(0,0,0), Vector3(1,1,1));
     auto rb1 = std::make_shared<Rigidbody>();
     auto col1 = std::make_shared<BoxCollider>();
     obj1.AddComponent(rb1);
@@ -39,24 +39,23 @@ int main() {
     GameObject floor(Vector3(0,-1,0), Vector3(0,0,0), Vector3(10,1,10));
     auto rb3 = std::make_shared<Rigidbody>();
     auto col3 = std::make_shared<BoxCollider>();
-    rb3->isKinematic = true;
+    rb3->IsKinematic(true);
     floor.AddComponent(rb3);
     floor.AddComponent(col3);
     floor.name = "floor";
 
     std::list<GameObject*> scene;
     scene.push_back(&obj1);
-    scene.push_back(&obj2);
+    // scene.push_back(&obj2);
     scene.push_back(&floor);
     GameObject* gimoz{};
     bool running = true;
-    World world(&running, scene, gimoz, Vector3(0,-9.8,0), 1/60.0, 1, 1);
+    World world(&running, scene, gimoz, Vector3(0,-9.8,0), 1/60.0, 1, 0);
 
-    double seconds = 60 * 60 * 24;
+    double seconds = 60 * 60 * 1;
     double dt = 1/60.0;
     for (int i = 0; i++, i< 1/dt * seconds;) {
-        // std::cout <<pos->toString() << std::endl;
-        // std::cout << obj.GetComponent<Collider>()->GetPosition().toString() << std::endl;
+        // std::cout << obj1.GetComponent<Collider>()->GetPosition().toString() << std::endl;
 
         world.Update();
 

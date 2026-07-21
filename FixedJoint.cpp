@@ -12,8 +12,8 @@
 void FixedJoint::SolveLinear(double dt) {
     auto IinvA = rbA->GetInvertWorld();
     auto IinvB = rbB->GetInvertWorld();
-    double invertMassA = rbA->invMass;
-    double invertMassB = rbB->invMass;
+    double invertMassA = rbA->GetInvMass();
+    double invertMassB = rbB->GetInvMass();
     Vector3 rA = transformA->quaternion.RotateConjugated(localAnchorA);
     Vector3 rB = transformB->quaternion.RotateConjugated(localAnchorB);
 

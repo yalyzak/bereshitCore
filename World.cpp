@@ -158,7 +158,7 @@ std::vector<Contact> World::SolveCollectionsFirstIteration(const std::vector<Col
         auto rb1 = Collider1->GetParent()->GetComponent<Rigidbody>();
         auto rb2 = Collider2->GetParent()->GetComponent<Rigidbody>();
 
-         if (rb1->isKinematic & rb2->isKinematic) {
+         if (rb1->GetIsKinematic() && rb2->GetIsKinematic()) {
              continue;
          }
         auto result = Collider1->CheckCollision(Collider2);
@@ -171,9 +171,7 @@ std::vector<Contact> World::SolveCollectionsFirstIteration(const std::vector<Col
             const Vector3& contact_point = result.contact_points[i];
             double depth = result.depth[i];
 
-            Rigidbody::SolveFrictionImpulse(*rb1, *rb2, contact_point, normal, dt);
-            // Rigidbody::SolveImpulse(*rb1, *rb2, contact_point, normal,depth, dt);
-
+            // Rigidbody::SolveFrictionImpulse(*rb1, *rb2, contact_point, normal, dt);
             contacts.push_back({*rb1, *rb2, normal, depth, contact_point});
         }
 
@@ -194,11 +192,12 @@ void World::Update(bool updateComponen) {
     auto collections = SolveCollectionsFirstIteration(PhysicsColliders, dt);
 
     const auto& PhysicsChildren = GetAllChildrenPhysics();
-    CallChildrenUpdate(PhysicsChildren, dt, &Component::PhysicsUpdateFirstIteration);
-    for (int i =0; i< physics_epochs; i++) {
+    for (int i =0; i < physics_epochs + 1; i++) {
         SolveCollections(collections, dt);
         CallChildrenUpdate(PhysicsChildren, dt, &Component::PhysicsUpdate);
     }
+    CallChildrenUpdate(PhysicsChildren, dt, &Component::PhysicsUpdateFirstIteration);
+    
 }
 
 

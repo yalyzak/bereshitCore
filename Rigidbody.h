@@ -32,14 +32,25 @@ private:
     };
     Vector3 invertInertia;
     Vector3 inertia;
+    bool isKinematic = false;
+    double mass = 1.0;
+    double invMass = 1.0;
 
 public:
+    void IsKinematic(bool state) {
+        isKinematic = state;
+        invMass = isKinematic ? 0.0 : 1 / mass;
+    }
+
     [[nodiscard]] double GetRestitution() const {
         return restitution;
     }
-
-    double mass = 1.0;
-    double invMass = 1.0;
+    [[nodiscard]] bool GetIsKinematic() const {
+        return isKinematic;
+    }
+    [[nodiscard]] double GetInvMass() const {
+        return invMass;
+    }
 
 
     std::string material;
@@ -56,7 +67,6 @@ public:
     Vector3 force;
 
 
-    bool isKinematic = false;
     bool useGravity = true;
 
     Vector3 forward;
