@@ -37,15 +37,6 @@ void FixedJoint::SolveLinear(double dt) {
 
     Vector3 impulse = -Solve3x3(dv + bias);
 
-    if (!rbA->IsKinematic()) {
-        rbA->velocity -= impulse * invertMassA;
-        rbA->angularVelocity += rA.cross(impulse).MatrixMultiplication(*IinvA);
-    }
-    if (!rbB->IsKinematic()) {
-        rbB->velocity += impulse * invertMassB;
-        rbB->angularVelocity -= rB.cross(impulse).MatrixMultiplication(*IinvB);
-    }
-
     Rigidbody::ApplyImpulsePair(*rbA, *rbB, impulse, rA, rB);
 }
 
