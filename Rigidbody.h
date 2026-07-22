@@ -46,6 +46,8 @@ public:
 
     void SetIsKinematic(bool state);
 
+    void SetUseGravity(bool state);
+
     [[nodiscard]] double GetRestitution() const {
         return restitution;
     }

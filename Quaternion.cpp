@@ -30,7 +30,7 @@ Quaternion Quaternion::Inverse() const
         w * w;
 
     if (normSq <= 1e-12) {
-        return Quaternion();
+        return {};
     }
 
     return Quaternion(

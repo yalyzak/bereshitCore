@@ -22,6 +22,7 @@ int main() {
     GameObject obj1(Vector3(0,2,0), Vector3(0,0,0), Vector3(1,1,1));
     auto rb1 = std::make_shared<Rigidbody>();
     auto col1 = std::make_shared<BoxCollider>();
+    rb1->SetUseGravity(false);
     obj1.AddComponent(rb1);
     obj1.AddComponent(col1);
     obj1.name = "obj1";
@@ -31,6 +32,7 @@ int main() {
     auto col2 = std::make_shared<BoxCollider>();
     auto joint = std::make_shared<FixedJoint>(&obj1);
 
+    rb2->SetUseGravity(false);
     rb2->angularVelocity = Vector3(10,0,0);
 
     obj2.AddComponent(rb2);
@@ -58,8 +60,9 @@ int main() {
 
     // double seconds = 5;
     double dt = 1/60.0;
-    for (int i = 0; i++, i <=200 ;) {
+    for (int i = 0; i++, i <=10 ;) {
         std::cout << obj1.GetComponent<Rigidbody>()->velocity.toString() << std::endl;
+        // std::cout << obj2.GetComponent<Rigidbody>()->velocity.toString() << std::endl;
         // std::cout << obj1.GetComponent<Rigidbody>()->angularVelocity.toString() << std::endl;
         // std::cout << obj1.transform.rotation.toString() << std::endl;
         // std::cout << obj1.transform.position.toString() << std::endl;

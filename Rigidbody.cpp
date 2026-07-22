@@ -164,6 +164,10 @@ void Rigidbody::SetIsKinematic(bool state) {
     UpdateInertiaWorld();
 }
 
+void Rigidbody::SetUseGravity(bool state) {
+    useGravity = state;
+}
+
 
 Rigidbody::Rigidbody(float mass, bool isKinematic, Vector3 initialVelocity, Vector3 initialAngularVelocity, bool useGravity,
                      float frictionCoefficient, float restitution, Vector3 freezeRotation) : mass(mass), isKinematic(isKinematic),

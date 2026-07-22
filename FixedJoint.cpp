@@ -25,7 +25,7 @@ void FixedJoint::SolveLinear(double dt) {
     Vector3 worldAnchorA = transformA->position + rA;
     Vector3 worldAnchorB = transformB->position + rB;
 
-    Vector3 positionError = worldAnchorA - worldAnchorB;
+    Vector3 positionError = worldAnchorB - worldAnchorA;
 
     Vector3 bias = positionError * (beta / dt);
 
@@ -36,13 +36,20 @@ void FixedJoint::SolveLinear(double dt) {
     BuildEffectiveMassMatrix(invertMass, rA, rB, *IinvA, *IinvB); // finds K
 
     Vector3 impulse = -Solve3x3(dv + bias);
-
-    Rigidbody::ApplyImpulsePair(*rbA, *rbB, impulse, rA, rB);
+    if (!rbA->IsKinematic()) {
+        rbA->velocity -= impulse * invertMassA;
+        rbA->angularVelocity += rA.cross(impulse).MatrixMultiplication(*IinvA);
+    }
+    if (!rbB->IsKinematic()) {
+        rbB->velocity += impulse * invertMassB;
+        rbB->angularVelocity -= rB.cross(impulse).MatrixMultiplication(*IinvB);
+    }
+    // Rigidbody::ApplyImpulsePair(*rbA, *rbB, impulse, rA, rB);
 }
 
 void FixedJoint::SolveAngular(double dt) {
-    auto IA = rbA->GetInvertWorld();
-    auto IB = rbB->GetInvertWorld();
+    auto* IA = rbA->GetInvertWorld();
+    auto* IB = rbB->GetInvertWorld();
 
     Quaternion q_rel = (
             transformA->quaternion.Inverse() *
