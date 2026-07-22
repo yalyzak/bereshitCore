@@ -36,6 +36,9 @@ private:
     bool isKinematic = false;
     double mass = 1.0;
     double invMass = 1.0;
+    double drag = 0.98;
+    double energy = 0.0;
+    double frictionCoefficient = 0.6;
 
 public:
     void ApplyGravity(const Vector3& gravity);
@@ -58,9 +61,7 @@ public:
 
     std::string material;
 
-    double drag = 0.98;
-    double energy = 0.0;
-    double friction_coefficient = 0.6;
+
 
     Vector3 center_of_mass;
     Vector3 velocity;
@@ -79,7 +80,10 @@ public:
     Vector3 angularVelocity;
     Vector3 normal_force;
 
-    Rigidbody();
+    Rigidbody(float mass= 1, Vector3 initialVelocity = Vector3(), Vector3 initialAngularVelocity = Vector3(),
+        bool useGravity = true, float frictionCoefficient=0.6, float restitution=0.6,
+        Vector3 freezeRotation = Vector3());
+
     void PhysicsUpdate(double dt) override;
     void PhysicsUpdateFirstIteration(double dt) override;
     void integrate(double dt);

@@ -150,17 +150,22 @@ std::optional<std::tuple<double, Vector3, Vector3, Vector3, double>> Rigidbody::
 
 }
 
-Rigidbody::Rigidbody() {
-    SetName("Rigidbody");
-    invMass = isKinematic ? 0.0 : 1 / mass;
-}
-
 
 
 void Rigidbody::ApplyGravity(const Vector3 &gravity) {
     force += gravity;
 }
 
+
+Rigidbody::Rigidbody(float mass, Vector3 initialVelocity, Vector3 initialAngularVelocity, bool useGravity,
+    float frictionCoefficient, float restitution, Vector3 freezeRotation) : mass(mass), velocity(initialVelocity),
+    angularVelocity(initialAngularVelocity), useGravity(useGravity), frictionCoefficient(frictionCoefficient),
+    restitution(restitution), freezeRotation(freezeRotation){
+    
+    SetName("Rigidbody");
+    invMass = isKinematic ? 0.0 : 1 / mass;
+
+}
 
 void Rigidbody::PhysicsUpdate(double dt) {
 
