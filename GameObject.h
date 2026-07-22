@@ -41,7 +41,8 @@ class GameObject {
         }
 
 
-        GameObject(const Vector3& position = Vector3(), const Vector3& rotation = Vector3(), const Vector3& scale = Vector3(1, 1, 1),std::list<GameObject*> children= {});
+        GameObject(Vector3 position = Vector3(), Vector3 rotation = Vector3(),
+            Vector3 scale = Vector3(1, 1, 1),const std::list<GameObject*>& children= {}, std::string name = "");
 
         GameObject* AddComponent(std::shared_ptr<Component> comp);
         // GameObject* AddComponent(std::list<std::shared_ptr<Component>> comp);

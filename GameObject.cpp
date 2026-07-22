@@ -8,8 +8,8 @@
 #include "Transform.h"
 
 
-GameObject::GameObject(const Vector3 &position, const Vector3 &rotation, const Vector3 &scale,
-    const std::list<GameObject *> children) : transform(position, rotation, scale), children(children) {}
+GameObject::GameObject(Vector3 position, Vector3 rotation, Vector3 scale,
+    const std::list<GameObject*>& children, std::string name) : transform(position, rotation, scale), children(children), name(name) {}
 
 GameObject* GameObject::AddComponent(std::shared_ptr<Component> comp) {
     components.push_back(comp);
