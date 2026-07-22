@@ -14,6 +14,7 @@
 #include "Component.h"
 #include "Contact.h"
 #include "GameObject.h"
+class Joint;
 
 
 class GameObject;
@@ -26,20 +27,24 @@ class World {
         GameObject* gizmos;
         bool allChildrenDirty = true;
         bool physicsChildrenDirty = true;
-        bool physicsCollidersDirty = true;
-        bool physicsRigidbodysDirty = true;
+        bool CollidersDirty = true;
+        bool RigidbodysDirty = true;
+        bool JointsDirty = true;
         std::vector<GameObject*> cacheAllChildren;
         std::vector<GameObject*> cachePhysicsChildren;
         std::vector<Collider*> cacheColliders;
         std::vector<Rigidbody*> cacheRigidbodys;
+        std::vector<Joint*> cacheJoints;
         void GetAllChildren(std::vector<GameObject*>& result);
         void GetAllChildrenPhysics(std::vector<GameObject*>& result);
         void GetAllColliders(std::vector<Collider*>& result);
         void GetAllRigidbodys(std::vector<Rigidbody*>& result);
+        void GetAllJoints(std::vector<Joint*>& result);
         void SetCacheAllChildren();
         void SetCachePhysicsChildren();
         void SetCacheColliders();
         void SetCacheRigidbodys();
+        void SetCacheJoints();
         void SetCache();
 
     public:
@@ -58,9 +63,11 @@ class World {
         std::vector<GameObject*>& GetAllChildrenPhysics();
         std::vector<Collider*>& GetAllColliders();
         std::vector<Rigidbody*>& GetAllRigidbodys();
+        std::vector<Joint*>& GetAllJoints();
         std::list<GameObject*> getGizmos() const;
         std::list<GameObject*> search_by_component(std::string name) const;
-        void SolveCollections(const std::vector<Contact>&, double);
+        static void SolveCollections(const std::vector<Contact>&, double);
+        void SolveJoints(const std::vector<Joint*>& joints, double dt);
 
         void Start();
         void Exit() {

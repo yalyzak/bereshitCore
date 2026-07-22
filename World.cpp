@@ -9,6 +9,7 @@
 #include "GameObject.h"
 #include "Rigidbody.h"
 #include "Collider.h"
+#include "Joint.h"
 
 void World::ApplyGravityToAll(const Vector3 &gravity) {
     for (Rigidbody* rigidbody : GetAllRigidbodys()) {
@@ -50,6 +51,12 @@ void World::GetAllRigidbodys(std::vector<Rigidbody *> &result) {
     }
 }
 
+void World::GetAllJoints(std::vector<Joint*> &result) {
+    for (GameObject* child : GetAllChildrenPhysics()) {
+        result.push_back(child->GetComponent<Joint>());
+    }
+}
+
 void World::SetCacheAllChildren() {
     cacheAllChildren.clear();
     GetAllChildren(cacheAllChildren);
@@ -65,14 +72,20 @@ void World::SetCachePhysicsChildren() {
 void World::SetCacheColliders() {
     cacheColliders.clear();
     GetAllColliders(cacheColliders);
-    physicsCollidersDirty = false;
+    CollidersDirty = false;
 }
 
 void World::SetCacheRigidbodys() {
     cacheRigidbodys.clear();
     GetAllRigidbodys(cacheRigidbodys);
-    physicsCollidersDirty = false;
+    CollidersDirty = false;
 
+}
+
+void World::SetCacheJoints() {
+    cacheJoints.clear();
+    GetAllJoints(cacheJoints);
+    CollidersDirty = false;
 }
 
 void World::SetCache() {
@@ -129,6 +142,9 @@ std::vector<Collider*>& World::GetAllColliders() {
 std::vector<Rigidbody *> & World::GetAllRigidbodys() {
     return cacheRigidbodys;
 }
+std::vector<Joint*> & World::GetAllJoints() {
+    return cacheJoints;
+}
 
 std::list<GameObject *> World::getGizmos() const {
     return gizmos->GetChildren();
@@ -150,6 +166,13 @@ void World::SolveCollections(const std::vector<Contact> &contacts, double dt) {
         Rigidbody::SolveImpulse(contact.rb1, contact.rb2, contact.contact_point, contact.normal, contact.penetration, dt);
     }
 }
+
+void World::SolveJoints(const std::vector<Joint*>& joints, double dt) {
+    for (auto& joint : joints) {
+        joint->Solve(dt);
+    }
+}
+
 
 void World::Start() {
     auto children = getAllChildren();
@@ -188,7 +211,7 @@ std::vector<Contact> World::SolveCollectionsFirstIteration(const std::vector<Col
         auto rb1 = Collider1->GetParent()->GetComponent<Rigidbody>();
         auto rb2 = Collider2->GetParent()->GetComponent<Rigidbody>();
 
-         if (rb1->GetIsKinematic() && rb2->GetIsKinematic()) {
+         if (rb1->IsKinematic() && rb2->IsKinematic()) {
              continue;
          }
         auto result = Collider1->CheckCollision(Collider2);
@@ -226,15 +249,9 @@ void World::Update(bool updateComponen) {
 
     for (int i =0; i < physics_epochs + 1; i++) {
         SolveCollections(collections, tick);
+        SolveJoints(GetAllJoints(), tick);
     }
     IntegrateAll(tick);
-
-
-
-
-
-
-
 }
 
 

@@ -26,7 +26,7 @@ int main() {
     obj1.AddComponent(col1);
     obj1.name = "obj1";
 
-    GameObject obj2(Vector3(0,5,3));
+    GameObject obj2(Vector3(0,5,0));
     auto rb2 = std::make_shared<Rigidbody>();
     auto col2 = std::make_shared<BoxCollider>();
     auto joint = std::make_shared<FixedJoint>(&obj1);
@@ -35,19 +35,20 @@ int main() {
     obj2.AddComponent(col2);
     obj2.AddComponent(joint);
     obj2.name = "obj2";
+    rb2->SetIsKinematic(true);
 
 
     GameObject floor(Vector3(0,-1,0), Vector3(0,0,0), Vector3(10,1,10));
     auto rb3 = std::make_shared<Rigidbody>();
     auto col3 = std::make_shared<BoxCollider>();
-    rb3->IsKinematic(true);
+    rb3->SetIsKinematic(true);
     floor.AddComponent(rb3);
     floor.AddComponent(col3);
     floor.name = "floor";
 
     std::list<GameObject*> scene;
     scene.push_back(&obj1);
-    // scene.push_back(&obj2);
+    scene.push_back(&obj2);
     scene.push_back(&floor);
     GameObject* gimoz{};
     bool running = true;
