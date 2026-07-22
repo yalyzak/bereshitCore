@@ -3,7 +3,8 @@
 //
 
 #include "Vector3.h"
-
+#include <sstream>
+#include <iomanip>
 #include <cmath>
 #include <math.h>
 
@@ -113,9 +114,15 @@ Vector3 Vector3::MatrixMultiplication(const std::array<std::array<double, 3>, 3>
 
 
 std::string Vector3::toString() const {
-    return "Vector3(" + std::to_string(x) + ", " +
-                 std::to_string(y) + ", " +
-                 std::to_string(z) + ")";
+    std::ostringstream ss;
+    ss << std::setprecision(17); // full double precision
+
+    ss << "Vector3("
+       << x << ", "
+       << y << ", "
+       << z << ")";
+
+    return ss.str();
 }
 
 std::array<double, 3> Vector3::ToArray() const {

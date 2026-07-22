@@ -100,7 +100,7 @@ std::vector<Vector3> BoxCollider::ClipPolygon(const std::vector<Vector3>& poly,c
 
 ContactPoints BoxCollider::CheckCollision(const Collider* collider2)  {
     ContactPoints contact_points;
-  //          contact_points.contact_points.push_back(Vector3(1,1,1));
+
     if (typeid(*collider2) == typeid(BoxCollider)) {
         bool aabb_hit = AabbCollision(collider2);
         if (!aabb_hit) {
@@ -146,7 +146,7 @@ std::optional<Collider::SatResult> BoxCollider::Sat(const Collider* otherCollide
     Vector3 BCenter = otherCollider->GetPosition();
 
     auto aAxes = GetAxes(GetQuaternion(), GetParent()->cache);
-    auto bAxes = GetAxes(otherCollider->GetQuaternion(), otherCollider->GetParent()->cache);
+    auto bAxes = GetAxes(otherCollider->GetQuaternion().Conjugate());
 
     Vector3 aHalf = GetSize() * 0.5;
     Vector3 bHalf = otherCollider->GetSize() * 0.5;

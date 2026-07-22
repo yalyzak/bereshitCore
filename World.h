@@ -21,6 +21,7 @@ class GameObject;
 class World {
     private:
         void ApplyGravityToAll(const Vector3& gravity);
+        void IntegrateAll(double dt);
         std::list<GameObject*> children;
         GameObject* gizmos;
         bool allChildrenDirty = true;
@@ -72,6 +73,7 @@ class World {
 
         void Update(bool updateComponen = false);
         void SetGizmos(const std::list<Contact>&);
+
 
 
 

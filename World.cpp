@@ -16,6 +16,12 @@ void World::ApplyGravityToAll(const Vector3 &gravity) {
     }
 }
 
+void World::IntegrateAll(double dt) {
+    for (Rigidbody* rigidbody : GetAllRigidbodys()) {
+        rigidbody->integrate(dt);
+    }
+}
+
 void World::GetAllChildren(std::vector<GameObject *> &result) {
     for (GameObject* child : children) {
         result.push_back(child);
@@ -207,27 +213,25 @@ std::vector<Contact> World::SolveCollectionsFirstIteration(const std::vector<Col
 
 
 void World::Update(bool updateComponen) {
-    double dt = tick;
-    const auto& allChildren = getAllChildren();
-
     if (updateComponen) {
-        CallChildrenUpdate(allChildren, dt, &Component::Update);
+        CallChildrenUpdate(getAllChildren(), tick, &Component::Update);
     }
+    const auto& PhysicsChildren = GetAllChildrenPhysics();
+
+    CallChildrenUpdate(PhysicsChildren, tick, &Component::PhysicsUpdate);
 
     ApplyGravityToAll(gravity);
 
-    const auto& PhysicsChildren = GetAllChildrenPhysics();
-
-    CallChildrenUpdate(PhysicsChildren, dt, &Component::PhysicsUpdateFirstIteration);
-
-    const auto& PhysicsColliders = GetAllColliders();
-    auto collections = SolveCollectionsFirstIteration(PhysicsColliders, dt);
-
+    auto collections = SolveCollectionsFirstIteration(GetAllColliders(), tick);
 
     for (int i =0; i < physics_epochs + 1; i++) {
-        SolveCollections(collections, dt);
-        CallChildrenUpdate(PhysicsChildren, dt, &Component::PhysicsUpdate);
+        SolveCollections(collections, tick);
     }
+    IntegrateAll(tick);
+
+
+
+
 
 
 

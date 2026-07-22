@@ -52,17 +52,19 @@ int main() {
     bool running = true;
     World world(&running, scene, gimoz, Vector3(0,-9.8,0), 1/60.0, 1, 0);
 
-    double seconds = 1;
+    // double seconds = 5;
     double dt = 1/60.0;
-    for (int i = 0; i++, i< 1/dt * seconds;) {
+    for (int i = 0; i++, i <=100 ;) {
         // std::cout << obj1.GetComponent<Rigidbody>()->velocity.toString() << std::endl;
-        std::cout << obj1.GetComponent<Rigidbody>()->angularVelocity.toString() << std::endl;
+        // std::cout << obj1.GetComponent<Rigidbody>()->angularVelocity.toString() << std::endl;
+        std::cout << obj1.transform.rotation.toString() << std::endl;
+        // std::cout << obj1.transform.position.toString() << std::endl;
 
         world.Update();
 
     }
-    std::cout << obj1.GetComponent<Collider>()->GetPosition().toString() << std::endl;
-    std::cout << obj1.GetComponent<Collider>()->GetQuaternion().ToEuler().toString() << std::endl;
+    // std::cout << obj1.GetComponent<Collider>()->GetPosition().toString() << std::endl;
+    // std::cout << obj1.GetComponent<Collider>()->GetQuaternion().ToEuler().toString() << std::endl;
     auto end = std::chrono::high_resolution_clock::now();
 
     auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
