@@ -88,7 +88,7 @@ public:
     std::array<std::array<double, 3>, 3>* GetInvertWorld() {
         return &InvertWorld;
     }
-    static double FindRestitution(const Rigidbody& rb1, const Rigidbody& rb2);
+    static double FindRestitution(const Rigidbody& rb1, const Rigidbody& rb2, double normalVelocity);
     static void ApplyImpulsePair(Rigidbody& rb1, Rigidbody& rb2, const Vector3& impulseVec, const Vector3& r1, const Vector3& r2);
     void ApplyTorqueImpulse(Vector3 impulse, Vector3 r);
     void attach(GameObject& obj) override;

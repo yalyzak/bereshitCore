@@ -136,7 +136,7 @@ std::optional<std::tuple<double, Vector3, Vector3, Vector3, double>> Rigidbody::
         term2 = (rn2.MatrixMultiplication(*rb2.GetInvertWorld())).cross(r2);
     }
 
-    double restitution = FindRestitution(rb1, rb2);
+    double restitution = FindRestitution(rb1, rb2, v_norm);
     if (rb1.isKinematic) {
 
     }
@@ -238,7 +238,10 @@ void Rigidbody::SolveImpulse(Rigidbody &rb1, Rigidbody &rb2, const Vector3& cont
         // ApplyFrictionImpulse(rb1, rb2, relative_vel, normal, J, r1, r2);
 }
 
-double Rigidbody::FindRestitution(const Rigidbody &rb1, const Rigidbody &rb2) {
+double Rigidbody::FindRestitution(const Rigidbody &rb1, const Rigidbody &rb2, double normalVelocity) {
+    if (normalVelocity < 1){
+        return 0.0;
+    }
     return std::min(rb1.GetRestitution(), rb2.GetRestitution());
 }
 
