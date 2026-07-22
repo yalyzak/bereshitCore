@@ -31,14 +31,16 @@ int main() {
     auto col2 = std::make_shared<BoxCollider>();
     auto joint = std::make_shared<FixedJoint>(&obj1);
 
+    rb2->angularVelocity = Vector3(10,0,0);
+
     obj2.AddComponent(rb2);
     obj2.AddComponent(col2);
     obj2.AddComponent(joint);
     obj2.name = "obj2";
-    rb2->SetIsKinematic(true);
+    // rb2->SetIsKinematic(true);
 
 
-    GameObject floor(Vector3(0,-1,0), Vector3(0,0,0), Vector3(10,1,10));
+    GameObject floor(Vector3(0,-1,0), Vector3(0,0,0), Vector3(100,1,100));
     auto rb3 = std::make_shared<Rigidbody>();
     auto col3 = std::make_shared<BoxCollider>();
     rb3->SetIsKinematic(true);

@@ -70,7 +70,9 @@ void FixedJoint::SolveAngular(double dt) {
     if (!rbA->IsKinematic()) {
         rbA->angularVelocity -= impulse.MatrixMultiplication(*IA);
     }
-    rbB->angularVelocity += impulse.MatrixMultiplication(*IB);
+    if (!rbB->IsKinematic()) {
+        rbB->angularVelocity += impulse.MatrixMultiplication(*IB);
+    }
 }
 
 
