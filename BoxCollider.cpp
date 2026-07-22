@@ -141,6 +141,8 @@ bool BoxCollider::AabbCollision(const Collider* collider2) {
 
 
 
+
+
 std::optional<Collider::SatResult> BoxCollider::Sat(const Collider* otherCollider) const {
     Vector3 ACenter = GetPosition();
     Vector3 BCenter = otherCollider->GetPosition();
@@ -170,7 +172,7 @@ std::optional<Collider::SatResult> BoxCollider::Sat(const Collider* otherCollide
 
 
 
-        float smallest_overlap = std::numeric_limits<float>::max();
+        double smallest_overlap = std::numeric_limits<double>::max();
         Vector3 collision_axis;
         Source collision_type;
         std::variant<int, std::pair<int,int>> collision_axis_indices;
