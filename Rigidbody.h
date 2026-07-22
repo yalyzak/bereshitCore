@@ -39,6 +39,7 @@ private:
     double drag = 0.98;
     double energy = 0.0;
     double frictionCoefficient = 0.6;
+    bool useGravity = true;
 
 public:
     void ApplyGravity(const Vector3& gravity);
@@ -71,7 +72,6 @@ public:
     Vector3 force;
 
 
-    bool useGravity = true;
 
     Vector3 forward;
     Vector3 up;
@@ -80,7 +80,7 @@ public:
     Vector3 angularVelocity;
     Vector3 normal_force;
 
-    Rigidbody(float mass= 1, Vector3 initialVelocity = Vector3(), Vector3 initialAngularVelocity = Vector3(),
+    Rigidbody(float mass= 1, bool isKinematic = false, Vector3 initialVelocity = Vector3(), Vector3 initialAngularVelocity = Vector3(),
         bool useGravity = true, float frictionCoefficient=0.6, float restitution=0.6,
         Vector3 freezeRotation = Vector3());
 
