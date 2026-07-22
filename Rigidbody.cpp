@@ -153,7 +153,7 @@ std::optional<std::tuple<double, Vector3, Vector3, Vector3, double>> Rigidbody::
 
 
 void Rigidbody::ApplyGravity(const Vector3 &gravity) {
-    if (!isKinematic) {
+    if (!isKinematic && useGravity) {
         force += gravity;
     }
 }
