@@ -156,11 +156,17 @@ void Rigidbody::ApplyGravity(const Vector3 &gravity) {
     force += gravity;
 }
 
+void Rigidbody::SetIsKinematic(bool state) {
+    isKinematic = state;
+    invMass = isKinematic ? 0.0 : 1 / mass;
+    UpdateInertiaWorld();
+}
+
 
 Rigidbody::Rigidbody(float mass, bool isKinematic, Vector3 initialVelocity, Vector3 initialAngularVelocity, bool useGravity,
-    float frictionCoefficient, float restitution, Vector3 freezeRotation) : mass(mass), isKinematic(isKinematic),
-    velocity(initialVelocity), angularVelocity(initialAngularVelocity), useGravity(useGravity),
-    frictionCoefficient(frictionCoefficient), restitution(restitution), freezeRotation(freezeRotation){
+                     float frictionCoefficient, float restitution, Vector3 freezeRotation) : mass(mass), isKinematic(isKinematic),
+                                                                                             velocity(initialVelocity), angularVelocity(initialAngularVelocity), useGravity(useGravity),
+                                                                                             frictionCoefficient(frictionCoefficient), restitution(restitution), freezeRotation(freezeRotation){
 
     SetName("Rigidbody");
     invMass = isKinematic ? 0.0 : 1 / mass;

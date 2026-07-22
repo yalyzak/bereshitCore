@@ -18,14 +18,14 @@ void FixedJoint::SolveLinear(double dt) {
     Vector3 rB = transformB->quaternion.RotateConjugated(localAnchorB);
 
     Vector3 vA = rbA->velocity + rbA->angularVelocity.cross(-rA);
-    Vector3 vB = rbA->velocity + rbA->angularVelocity.cross(-rA);
+    Vector3 vB = rbB->velocity + rbB->angularVelocity.cross(-rB);
 
     Vector3 dv = vB - vA;
 
     Vector3 worldAnchorA = transformA->position + rA;
     Vector3 worldAnchorB = transformB->position + rB;
 
-    Vector3 positionError = worldAnchorA + worldAnchorB;
+    Vector3 positionError = worldAnchorA - worldAnchorB;
 
     Vector3 bias = positionError * (beta / dt);
 
@@ -49,37 +49,37 @@ void FixedJoint::SolveLinear(double dt) {
     Rigidbody::ApplyImpulsePair(*rbA, *rbB, impulse, rA, rB);
 }
 
-void FixedJoint::SolveAngular(double dt) {
-    auto IA = rbA->GetInvertWorld();
-    auto IB = rbB->GetInvertWorld();
-
-    Quaternion q_rel = (
-            transformA->quaternion.Inverse() *
-            transformB->quaternion
-    );
-
-    Quaternion q_error = q_rel * initialRelativeRotation.Inverse();
-
-    Vector3 error = {q_error.x, q_error.y, q_error.z};
-    if (q_error.w < 0) {
-        error = error * -1;
-
-    }
-
-    Vector3 angular_error = error * 2.0;
-
-    Vector3 bias = angular_error * (beta / dt);
-
-    Vector3 rel_w = rbB->angularVelocity - rbA->angularVelocity;
-
-    AddMatrix(*IA, *IB); // result is in K
-
-    Vector3 impulse = -Solve3x3((rel_w + bias));
-
-    if (!rbA->IsKinematic()) {
-        rbA->angularVelocity -= impulse.MatrixMultiplication(*IA);
-    }
-    rbB->angularVelocity += impulse.MatrixMultiplication(*IB);
-}
-
+// void FixedJoint::SolveAngular(double dt) {
+//     auto IA = rbA->GetInvertWorld();
+//     auto IB = rbB->GetInvertWorld();
+//
+//     Quaternion q_rel = (
+//             transformA->quaternion.Inverse() *
+//             transformB->quaternion
+//     );
+//
+//     Quaternion q_error = q_rel * initialRelativeRotation.Inverse();
+//
+//     Vector3 error = {q_error.x, q_error.y, q_error.z};
+//     if (q_error.w < 0) {
+//         error = error * -1;
+//
+//     }
+//
+//     Vector3 angular_error = error * 2.0;
+//
+//     Vector3 bias = angular_error * (beta / dt);
+//
+//     Vector3 rel_w = rbB->angularVelocity - rbA->angularVelocity;
+//
+//     AddMatrix(*IA, *IB); // result is in K
+//
+//     Vector3 impulse = -Solve3x3((rel_w + bias));
+//
+//     if (!rbA->IsKinematic()) {
+//         rbA->angularVelocity -= impulse.MatrixMultiplication(*IA);
+//     }
+//     rbB->angularVelocity += impulse.MatrixMultiplication(*IB);
+// }
+//
 

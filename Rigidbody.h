@@ -44,10 +44,7 @@ private:
 public:
     void ApplyGravity(const Vector3& gravity);
 
-    void SetIsKinematic(bool state) {
-        isKinematic = state;
-        invMass = isKinematic ? 0.0 : 1 / mass;
-    }
+    void SetIsKinematic(bool state);
 
     [[nodiscard]] double GetRestitution() const {
         return restitution;

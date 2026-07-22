@@ -53,7 +53,10 @@ void World::GetAllRigidbodys(std::vector<Rigidbody *> &result) {
 
 void World::GetAllJoints(std::vector<Joint*> &result) {
     for (GameObject* child : GetAllChildrenPhysics()) {
-        result.push_back(child->GetComponent<Joint>());
+        Joint* joint = child->GetComponent<Joint>();
+        if (joint) {
+            result.push_back(joint);
+        }
     }
 }
 
@@ -93,6 +96,7 @@ void World::SetCache() {
     SetCachePhysicsChildren();
     SetCacheColliders();
     SetCacheRigidbodys();
+    SetCacheJoints();
 }
 
 

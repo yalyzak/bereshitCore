@@ -54,7 +54,7 @@ void Joint::SetAngular(const Vector3 &R,
 
     // Column X
     double cx_y = R.z;
-    double cx_z = -R.z;
+    double cx_z = -R.y;
 
 
     double ix_y = iyy * R.z - iyz * R.y;
@@ -76,7 +76,7 @@ void Joint::SetAngular(const Vector3 &R,
 
     // K += C^T * I * C
 
-    K[0][0] += cx_y * ix_y + cx_z * ix_z;
+    K[0][0] += cx_y * cx_y + cx_z * ix_z;
     K[0][1] = cx_z * iy_z;
     K[0][2] = cx_y * iz_y;
 
@@ -114,7 +114,7 @@ void Joint::AddAngular(const Vector3 & R,
 
     // Column X
     double cx_y = R.z;
-    double cx_z = -R.z;
+    double cx_z = -R.y;
 
 
     double ix_y = iyy * R.z - iyz * R.y;
@@ -241,7 +241,7 @@ void Joint::Solve(double dt) {
 }
 
 void Joint::PhysicsUpdate(double dt) {
-    Solve(dt);
+
 }
 
 
