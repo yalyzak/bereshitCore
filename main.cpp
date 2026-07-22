@@ -54,7 +54,7 @@ int main() {
 
     // double seconds = 5;
     double dt = 1/60.0;
-    for (int i = 0; i++, i <=122 ;) {
+    for (int i = 0; i++, i <=99222 ;) {
         // std::cout << obj1.GetComponent<Rigidbody>()->velocity.toString() << std::endl;
         // std::cout << obj1.GetComponent<Rigidbody>()->angularVelocity.toString() << std::endl;
         std::cout << obj1.transform.rotation.toString() << std::endl;

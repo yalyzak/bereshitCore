@@ -3,6 +3,7 @@ project(bereshitCore)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_BUILD_TYPE RelWithDebInfo)
+set(CMAKE_BUILD_TYPE Debug)
 
 add_executable(bereshitCore main.cpp
         Vector3.cpp
