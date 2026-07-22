@@ -239,7 +239,7 @@ void Rigidbody::SolveImpulse(Rigidbody &rb1, Rigidbody &rb2, const Vector3& cont
 }
 
 double Rigidbody::FindRestitution(const Rigidbody &rb1, const Rigidbody &rb2, double normalVelocity) {
-    if (normalVelocity < 1){
+    if (normalVelocity > -1){
         return 0.0;
     }
     return std::min(rb1.GetRestitution(), rb2.GetRestitution());
