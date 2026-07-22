@@ -10,7 +10,7 @@
 class FixedJoint : public Joint {
 private:
     void SolveLinear(double dt) override;
-    // void SolveAngular(double dt) override;
+    void SolveAngular(double dt) override;
 public:
     using Joint::Joint;
 };
