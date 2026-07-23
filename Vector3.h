@@ -37,8 +37,11 @@ public:
     [[nodiscard]] bool operator!=(const Vector3& other) const;
 
     [[nodiscard]] Vector3 cross(const Vector3& other) const;
+    void crossSelf(const Vector3& other);
     [[nodiscard]] Vector3 normalized() const;
+    void normalizedSelf();
     [[nodiscard]] Vector3 MatrixMultiplication(const std::array<std::array<double, 3>, 3>& matrix) const;
+    [[nodiscard]] Vector3 MatrixMultiplication(const double (&matrix)[3][3]) const;
     [[nodiscard]] double dot(const Vector3& other) const;
     [[nodiscard]] double magnitude() const;
     [[nodiscard]] Vector3 Inverse() const;

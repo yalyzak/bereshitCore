@@ -6,6 +6,21 @@
 
 #include "Rigidbody.h"
 
+HingeJoint::HingeJoint(GameObject* bodyB, Vector3* axis, Vector3* anchor, double beta) : Joint(bodyB, anchor, beta) {
+    axisLocal = axis->normalized();
+}
+
+Vector3 HingeJoint::perp(Vector3 & axis) {
+        Vector3 helper;
+       if (std::abs(axis.x) < 0.9) {
+           helper = Vector3(1.0, 0.0, 0.0);
+       }else {
+           helper = Vector3(0.0, 1.0, 0.0);
+
+       }
+        return axis.cross(helper).normalized();
+}
+
 void HingeJoint::SolveLinear(double dt) {
     auto IinvA = rbA->GetInvertWorld();
     auto IinvB = rbB->GetInvertWorld();
@@ -38,4 +53,64 @@ void HingeJoint::SolveLinear(double dt) {
 }
 
 void HingeJoint::SolveAngular(double dt) {
+    auto IinvA = rbA->GetInvertWorld();
+    auto IinvB = rbB->GetInvertWorld();
+
+    Vector3 axis_world = transformA->quaternion.RotateConjugated(axisLocal).normalized();
+
+    Vector3 t1 = perp(axis_world);
+    Vector3 t2 = axis_world.cross(t1).normalized();
+
+    Vector3 rel_w = rbB->angularVelocity - rbA->angularVelocity;
+
+    // Construct the 2-row Jacobian: J = [t1^T; t2^T]
+    // Effective mass:  K_ang = J * (IinvA + IinvB) * J^T   (2x2)
+
+    AddMatrix(*IinvA, *IinvB); // result is in K
+    
+    Vector3 Kt1 = t1.MatrixMultiplication(K);
+    Vector3 Kt2 = t2.MatrixMultiplication(K);
+
+    // J @ K_full @ J.T
+    Vector2 K_ang[2];
+    K_ang[0] = Vector2(t1.dot(Kt1), t1.dot(Kt2));
+    K_ang[1] = Vector2(t2.dot(Kt1), t2.dot(Kt2));
+
+
+    Vector2 vel_error(t1.dot(rel_w), t2.dot(rel_w));
+
+    Quaternion q_rel = transformA->quaternion.Inverse() * transformB->quaternion;
+
+    // self.clamp_rotation(q_rel, IinvA, IinvB, a, b)
+
+    Quaternion q_error = q_rel * initialRelativeRotation.Inverse();
+
+    Vector3 err_vec(q_error.x, q_error.y, q_error.z);
+    if (q_error.w < 0) {
+        err_vec = err_vec * -1;
+    }
+    Vector3 ang_error = err_vec * 2.0;
+
+
+    Vector2 bias = (t1.dot(ang_error) * (beta / dt), t2.dot(ang_error) * (beta / dt));
+
+    Vector2 K[2];
+
+    Vector2 ang_impulse2d = -Solve2x2(vel_error + bias, K);
+
+    Vector3 ang_impulse;
+
+    ang_impulse.x = Vector2(t1.x, t2.x).dot(ang_impulse2d);
+    ang_impulse.y = Vector2(t1.y, t2.y).dot(ang_impulse2d);
+    ang_impulse.z = Vector2(t1.z, t2.z).dot(ang_impulse2d);
+
+
+    if (!rbA->IsKinematic()) {
+        rbA->angularVelocity -= ang_impulse.MatrixMultiplication(*IinvA);
+
+    }
+    if (!rbB->IsKinematic()) {
+        rbB->angularVelocity += ang_impulse.MatrixMultiplication(*IinvB);
+
+    }
 }

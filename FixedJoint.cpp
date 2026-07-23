@@ -51,7 +51,7 @@ void FixedJoint::SolveAngular(double dt) {
 
     Quaternion q_error = q_rel * initialRelativeRotation.Inverse();
 
-    Vector3 error = {q_error.x, q_error.y, q_error.z};
+    Vector3 error(q_error.x, q_error.y, q_error.z);
     if (q_error.w < 0) {
         error = error * -1;
 

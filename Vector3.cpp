@@ -94,6 +94,13 @@ Vector3 Vector3::cross(const Vector3& other) const {
             x * other.y - y * other.x};
 }
 
+void Vector3::crossSelf(const Vector3 &other)  {
+    x =  y * other.z - z * other.y;
+    y = z * other.x - x * other.z;
+    z = x * other.y - y * other.x;
+
+}
+
 
 Vector3 Vector3::normalized() const {
     double mag = magnitude();
@@ -104,7 +111,26 @@ Vector3 Vector3::normalized() const {
     return {x/mag, y/mag, z/mag};
 }
 
+void Vector3::normalizedSelf()  {
+    double mag = magnitude();
+    if (mag == 0) {
+        return;
+    }
+
+    x = x/mag;
+    y = y/mag;
+    z = z/mag;
+}
+
 Vector3 Vector3::MatrixMultiplication(const std::array<std::array<double, 3>, 3>& matrix) const {
+    return {
+        matrix[0][0] * x + matrix[0][1] * y + matrix[0][2] * z,
+        matrix[1][0] * x + matrix[1][1] * y + matrix[1][2] * z,
+        matrix[2][0] * x + matrix[2][1] * y + matrix[2][2] * z
+    };
+}
+
+Vector3 Vector3::MatrixMultiplication(const double(&matrix)[3][3]) const {
     return {
         matrix[0][0] * x + matrix[0][1] * y + matrix[0][2] * z,
         matrix[1][0] * x + matrix[1][1] * y + matrix[1][2] * z,

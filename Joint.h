@@ -12,6 +12,7 @@
 class GameObject;
 class Transform;
 #include "Vector3.h"
+#include "Vector2.h"
 #include "Quaternion.h"
 #include "Collider.h"
 
@@ -34,14 +35,16 @@ class Joint : public Component{
         double K[3][3];
 
         void AddMatrix(const std::array<std::array<double, 3>, 3> &IA, const std::array<std::array<double, 3>, 3> &IB);
+        void AddMatrix(const double (&IA)[3][3], const double (&IB)[3][3]);
 
-        void BuildEffectiveMassMatrix(double invertMass, const Vector3& rA, const Vector3& rB, const std::array<std::array<double, 3>, 3>& IinvA,
-            const std::array<std::array<double, 3>, 3>& IinvB);
+        void BuildEffectiveMassMatrix(double invertMass, const Vector3& rA, const Vector3& rB, const double (&IinvA)[3][3],
+            const double (&IinvB)[3][3]);
 
-        void SetAngular(const Vector3&, const std::array<std::array<double, 3>, 3> &);
-        void AddAngular(const Vector3&, const std::array<std::array<double, 3>, 3> &I);
+        void SetAngular(const Vector3& R, const double (&I)[3][3]);
+        void AddAngular(const Vector3& R, const double (&I)[3][3]);
 
         Vector3 Solve3x3(const Vector3&);
+        Vector2 Solve2x2(const Vector2 &beta, Vector2(&K)[2]);
 
     private:
 

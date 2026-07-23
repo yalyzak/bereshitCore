@@ -14,7 +14,7 @@ class World;
 class Rigidbody : public Component {
 private:
 
-    std::array<std::array<double, 3>, 3> InvertWorld;
+    double InvertWorld[3][3];
     static double GetFrictionCoefficient(const Rigidbody&, const Rigidbody&);
     void UpdateInertiaWorld();
     double restitution = 0.6;
@@ -88,7 +88,7 @@ public:
     void integrate(double dt);
     void ForceIntegrate(double dt);
     static void SolveImpulse(Rigidbody& rb1, Rigidbody& rb2, const Vector3& contact_point, const Vector3& normal, double penetration, double dt);
-    std::array<std::array<double, 3>, 3>* GetInvertWorld() {
+    double (*GetInvertWorld())[3][3] {
         return &InvertWorld;
     }
     static double FindRestitution(const Rigidbody& rb1, const Rigidbody& rb2, double normalVelocity);

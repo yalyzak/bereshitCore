@@ -17,8 +17,16 @@ void Joint::AddMatrix(const std::array<std::array<double, 3>, 3> &IA,
     }
 }
 
-void Joint::BuildEffectiveMassMatrix(double invertMass, const Vector3 &rA, const Vector3 &rB,
-                                     const std::array<std::array<double, 3>, 3> &IinvA, const std::array<std::array<double, 3>, 3> &IinvB) {
+void Joint::AddMatrix(const double(&IA)[3][3], const double(&IB)[3][3]) {
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            K[i][j] = (IA)[i][j] + (IB)[i][j];
+        }
+    }
+}
+
+void Joint::BuildEffectiveMassMatrix(double invertMass, const Vector3& rA, const Vector3& rB, const double (&IinvA)[3][3],
+                                     const double (&IinvB)[3][3]) {
 
     K[0][0] = invertMass;
     K[1][1] = invertMass;
@@ -30,8 +38,7 @@ void Joint::BuildEffectiveMassMatrix(double invertMass, const Vector3 &rA, const
     AddAngular(rB, IinvB);
 }
 
-void Joint::SetAngular(const Vector3 &R,
-    const std::array<std::array<double, 3>, 3> &I) {
+void Joint::SetAngular(const Vector3& R, const double (&I)[3][3]) {
     // Cross-product matrix columns:
     //
     // cx = (0,  rz, -ry)
@@ -90,8 +97,7 @@ void Joint::SetAngular(const Vector3 &R,
 
 }
 
-void Joint::AddAngular(const Vector3 & R,
-    const std::array<std::array<double, 3>, 3> &I) {
+void Joint::AddAngular(const Vector3& R, const double (&I)[3][3]) {
     // Cross-product matrix columns:
     //
     // cx = (0,  rz, -ry)
@@ -192,6 +198,27 @@ Vector3 Joint::Solve3x3(const Vector3 &b) {
         return  {m00 * b[0] + m01 * b[1] + m02 * b[2], m10 * b[0] + m11 * b[1] + m12 * b[2], m20 * b[0] + m21 * b[1] + m22 * b[2]};
 
 }
+
+Vector2 Joint::Solve2x2(const Vector2 &beta, Vector2(&K)[2]) {
+    double a = K[0].x;
+    double c = K[0].y;
+
+    double d = K[1].x;
+    double e = K[1].y;
+
+    double det = a * e - c * d;
+
+    if (std::abs(det) < 1e-12) {
+        throw "Singular matrix";
+    }
+
+    double inv_det = 1.0 / det;
+
+    // inverse(K) * b
+    K[0] = (e * beta.x - c * beta.y) * inv_det;
+    K[1] = (-d * beta.x + a * beta.y) * inv_det;
+}
+
 
 void Joint::CastAnchorDefault() {
     worldAnchor = &transformB->position;
