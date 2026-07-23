@@ -177,10 +177,10 @@ void Collider::CallCollisionEvent(
 ) const {
     for (const auto& component : GetParent()->GetComponents()) {
         // Skip this collider and every other Collider component
-        if (dynamic_cast<Collider*>(component.get()) != nullptr)
+        if (dynamic_cast<Collider*>(component) != nullptr)
             continue;
 
-        (component.get()->*function)(collision);
+        (component->*function)(collision);
     }
 }
 

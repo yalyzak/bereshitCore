@@ -20,35 +20,35 @@ int main() {
     std::cout << "Hello and welcome to " << lang << "!\n";
 
 
-    GameObject obj1(Vector3(2,0,0), Vector3(0,0,0), Vector3(1,1,1));
-    auto rb1 = std::make_shared<Rigidbody>();
-    auto col1 = std::make_shared<BoxCollider>();
-    rb1->SetUseGravity(false);
-    obj1.AddComponent(rb1);
-    obj1.AddComponent(col1);
+    GameObject obj1(Vector3(2,5,0), Vector3(0,0,0), Vector3(1,1,1));
+    auto rb1 = Rigidbody();
+    auto col1 = BoxCollider();
+    rb1.SetUseGravity(true);
+    obj1.AddComponent(&rb1);
+    obj1.AddComponent(&col1);
     obj1.name = "obj1";
 
     GameObject obj2(Vector3(5,0,0));
-    auto rb2 = std::make_shared<Rigidbody>();
-    auto col2 = std::make_shared<BoxCollider>();
-    auto joint = std::make_shared<FixedJoint>(&obj1);
+    auto rb2 = Rigidbody();
+    auto col2 =BoxCollider();
+    auto joint = FixedJoint(&obj1);
 
-    rb2->SetUseGravity(false);
-    rb2->angularVelocity = Vector3(10,0,0);
+    rb2.SetUseGravity(false);
+    rb2.angularVelocity = Vector3(10,0,0);
 
-    obj2.AddComponent(rb2);
-    obj2.AddComponent(col2);
-    obj2.AddComponent(joint);
+    obj2.AddComponent(&rb2);
+    obj2.AddComponent(&col2);
+    obj2.AddComponent(&joint);
     obj2.name = "obj2";
     // rb2->SetIsKinematic(true);
 
 
     GameObject floor(Vector3(0,-1,0), Vector3(0,0,0), Vector3(100,1,100));
-    auto rb3 = std::make_shared<Rigidbody>();
-    auto col3 = std::make_shared<BoxCollider>();
-    rb3->SetIsKinematic(true);
-    floor.AddComponent(rb3);
-    floor.AddComponent(col3);
+    auto rb3 = Rigidbody();
+    auto col3 = BoxCollider();
+    rb3.SetIsKinematic(true);
+    floor.AddComponent(&rb3);
+    floor.AddComponent(&col3);
     floor.name = "floor";
 
     auto floor2 = floor.DeepCopy();
@@ -61,10 +61,10 @@ int main() {
     bool running = true;
     World world(&running, scene, gimoz, Vector3(0,-9.8,0), 1/60.0, 1, 0);
 
-    double seconds = 60 * 60 * 24;
+    double seconds = 2;
     double dt = 1/60.0;
     for (int i = 0; i++, i <=1/dt * seconds;) {
-        // std::cout << obj1.GetComponent<Rigidbody>()->velocity.toString() << std::endl;
+        std::cout << obj1.GetComponent<Rigidbody>()->velocity.toString() << std::endl;
         // std::cout << obj2.GetComponent<Rigidbody>()->velocity.toString() << std::endl;
         // std::cout << obj1.GetComponent<Rigidbody>()->angularVelocity.toString() << std::endl;
         // std::cout << obj1.transform.rotation.toString() << std::endl;

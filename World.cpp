@@ -173,16 +173,18 @@ std::vector<Joint*> & World::GetAllJoints() {
     return cacheJoints;
 }
 
-std::list<GameObject *> World::getGizmos() const {
+std::vector<GameObject *> World::getGizmos() const {
     return gizmos->GetChildren();
 }
 
-std::list<GameObject*> World::search_by_component(std::string name) const{
-    std::list<GameObject*> results;
+std::vector<GameObject*> World::search_by_component(std::string name) const {
+    std::vector<GameObject*> results;
 
     for (GameObject* child : children) {
         auto child_results = child->search_by_component(name);
-        results.splice(results.end(), child_results);
+        results.insert(results.end(),
+                       child_results.begin(),
+                       child_results.end());
     }
 
     return results;
@@ -216,7 +218,7 @@ void World::CallChildrenUpdate(const std::vector<GameObject *> &list, double dt,
     for (const auto& child : list) {
         for (auto component : child->GetComponents()) {
             try {
-                (component.get()->*func)(dt);
+                (component->*func)(dt);
             }
             catch (const std::exception& e) {
                 std::cerr << "Error in component Update: " << component->GetName() << ": " << e.what() << std::endl;

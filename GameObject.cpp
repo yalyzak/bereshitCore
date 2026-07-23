@@ -10,22 +10,14 @@
 
 
 GameObject::GameObject(Vector3 position, Vector3 rotation, Vector3 scale,
-                       const std::list<GameObject*>& children, std::string name) : transform(position, rotation, scale), children(children), name(name) {}
+                       const std::vector<GameObject*>& children, std::string name) : transform(position, rotation, scale), children(children), name(name) {}
 
-GameObject* GameObject::AddComponent(std::shared_ptr<Component> comp) {
+
+GameObject* GameObject::AddComponent(Component* comp) {
     components.push_back(comp);
     comp->SetParent(this);
     comp->attach(*this);
     std::string comp_name = comp->GetName();
-    return this;
-}
-
-GameObject* GameObject::AddComponent(Component* comp) {
-    auto newComponent = std::make_shared<Component>(*comp);
-    components.push_back(newComponent);
-    newComponent->SetParent(this);
-    newComponent->attach(*this);
-    std::string comp_name = newComponent->GetName();
     return this;
 }
 
@@ -139,9 +131,9 @@ std::list<GameObject*> GameObject::search_by_component(std::string name) {
     return results;
 }
 
-std::shared_ptr<Component> GameObject::GetComponent(const std::string& name) {
-    for (auto& comp : components) {
-        if (comp && comp->GetName() == name) {
+Component* GameObject::GetComponent(const std::string& name) {
+    for (auto* comp : components) {
+        if (comp->GetName() == name) {
             return comp;
         }
     }
@@ -150,7 +142,7 @@ std::shared_ptr<Component> GameObject::GetComponent(const std::string& name) {
 
 
 
-const std::list<std::shared_ptr<Component>>& GameObject::GetComponents() const {
+const std::vector<Component*>& GameObject::GetComponents() const {
     return components;
 }
 

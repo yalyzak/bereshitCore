@@ -65,8 +65,8 @@ class World {
         std::vector<Collider*>& GetAllColliders();
         std::vector<Rigidbody*>& GetAllRigidbodys();
         std::vector<Joint*>& GetAllJoints();
-        std::list<GameObject*> getGizmos() const;
-        std::list<GameObject*> search_by_component(std::string name) const;
+        std::vector<GameObject*> getGizmos() const;
+        std::vector<GameObject*> search_by_component(std::string name) const;
         static void SolveCollections(const std::vector<Contact>&, double);
         void SolveJoints(const std::vector<Joint*>& joints, double dt);
 

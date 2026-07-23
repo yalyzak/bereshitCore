@@ -13,9 +13,6 @@ Component* Component::Copy() const{
     // throw std::runtime_error("this Component does not have a copy function");
 }
 
-std::shared_ptr<Component *> * Component::CopyShared() const {
-    return nullptr;
-}
 
 void Component::Start() {
 }
