@@ -15,4 +15,6 @@ from bereshitCore import Rigidbody
 from bereshitCore import Collider
 from bereshitCore import BoxCollider
 from bereshitCore import Quaternion
+from bereshitCore import Joint
+from bereshitCore import FixedJoint
 

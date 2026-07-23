@@ -13,6 +13,8 @@
 #include "Rigidbody.h"
 #include "BoxCollider.h"
 #include "Collider.h"
+#include "Joint.h"
+#include "FixedJoint.h"
 
 
 namespace py = pybind11;
@@ -54,6 +56,8 @@ PYBIND11_MODULE(bereshitCore, m) {
         .def(py::init<>())
         .def("magnitude", &Vector3::magnitude)
         .def("normalized", &Vector3::normalized)
+         .def("__str__", &Vector3::toString)
+        .def("__repr__", &Vector3::toString)
         .def("to_np", [](const Vector3& v) {
             auto a = v.ToArray();
             return py::array_t<double>(a.size(), a.data());
@@ -106,17 +110,9 @@ PYBIND11_MODULE(bereshitCore, m) {
 
 
     py::class_<GameObject>(m, "GameObject")
-    .def(py::init<
-        const Vector3&,
-        const Vector3&,
-        const Vector3&,
-        const std::list<GameObject*>
-    >(),
-        py::arg("position") = Vector3(),
-        py::arg("rotation") = Vector3(),
-        py::arg("scale") = Vector3(),
-        py::arg("children") = std::list<GameObject*>()
-    )
+    .def(py::init<Vector3, Vector3, Vector3, std::list<GameObject*>, std::string>(),
+    py::arg("position") = Vector3(), py::arg("rotation") = Vector3(), py::arg("size") = Vector3(1, 1, 1),
+     py::arg("children") = std::list<GameObject*>{}, py::arg("name") = "" )
     .def("search_by_component", &GameObject::search_by_component)
     .def("search_by_component", &GameObject::search_by_component)
     .def_property_readonly("get_all_children", &GameObject::GetComponents)
@@ -161,14 +157,57 @@ PYBIND11_MODULE(bereshitCore, m) {
     py::class_<Cache>(m, "Cache")
     .def("SetDirty", &Cache::SetDirty);
     py::class_<Rigidbody, Component, std::shared_ptr<Rigidbody>>(m, "Rigidbody")
-    .def_readwrite("isKinematic", &Rigidbody::isKinematic)
+    .def_property("isKinematic", &Rigidbody::IsKinematic, &Rigidbody::SetIsKinematic)
     .def_readwrite("Freeze_Rotation", &Rigidbody::freezeRotation)
-    .def(py::init<>());
+    .def_readwrite("velocity", &Rigidbody::velocity)
+    .def(
+    py::init<
+        float,
+        bool,
+        Vector3,
+        Vector3,
+        bool,
+        float,
+        float,
+        Vector3
+    >(),
+    py::arg("mass") = 1.0f,
+    py::arg("isKinematic") = false,
+    py::arg("velocity") = Vector3(),
+    py::arg("angular_velocity") = Vector3(),
+    py::arg("useGravity") = true,
+    py::arg("friction_coefficient") = 0.6f,
+    py::arg("restitution") = 0.6f,
+    py::arg("Freeze_Rotation") = Vector3());
 
     py::class_<Collider, Component, std::shared_ptr<Collider>>(m, "Collider")
      .def(py::init<bool>(), py::arg("is_trigger") = false);
     py::class_<BoxCollider, Collider, std::shared_ptr<BoxCollider>>(m, "BoxCollider")
     .def(py::init<>());
+    py::class_<Joint, Component, std::shared_ptr<Joint>>(m, "Joint")
+    .def(
+    py::init<
+        GameObject*,
+        Vector3*,
+        double
+    >(),
+    py::arg("bodyB"),
+    py::arg("anchor") = nullptr,
+    py::arg("beta") = 0.2
+);
+    py::class_<FixedJoint, Joint, std::shared_ptr<FixedJoint>>(m, "FixedJoint")
+    .def(
+    py::init<
+        GameObject*,
+        Vector3*,
+        double
+    >(),
+    py::arg("bodyB"),
+    py::arg("anchor") = nullptr,
+    py::arg("beta") = 0.2
+);
+
+
 
 
 
