@@ -2,10 +2,11 @@ cmake_minimum_required(VERSION 3.20)
 project(bereshitCore)
 
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_BUILD_TYPE RelWithDebInfo)
-set(CMAKE_BUILD_TYPE Debug)
 
-add_executable(bereshitCore main.cpp
+find_package(pybind11 CONFIG REQUIRED)
+
+pybind11_add_module(bereshitCore
+        bindings.cpp
         Vector3.cpp
         Vector3.h
         Rigidbody.cpp
@@ -38,8 +39,8 @@ add_executable(bereshitCore main.cpp
         RayCastHit.h
         FixedJoint.cpp
         FixedJoint.h
-        HingeJoint.cpp
-        HingeJoint.h
         Vector2.cpp
         Vector2.h
+        HingeJoint.cpp
+        HingeJoint.h
 )
