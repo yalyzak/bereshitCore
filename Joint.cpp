@@ -200,6 +200,7 @@ Vector3 Joint::Solve3x3(const Vector3 &b) {
 }
 
 Vector2 Joint::Solve2x2(const Vector2 &beta, Vector2(&K)[2]) {
+    Vector2 vec;
     double a = K[0].x;
     double c = K[0].y;
 
@@ -215,8 +216,10 @@ Vector2 Joint::Solve2x2(const Vector2 &beta, Vector2(&K)[2]) {
     double inv_det = 1.0 / det;
 
     // inverse(K) * b
-    K[0] = (e * beta.x - c * beta.y) * inv_det;
-    K[1] = (-d * beta.x + a * beta.y) * inv_det;
+    vec.x = (e * beta.x - c * beta.y) * inv_det;
+    vec.y = (-d * beta.x + a * beta.y) * inv_det;
+    
+    return vec;
 }
 
 

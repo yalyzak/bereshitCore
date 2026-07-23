@@ -20,6 +20,14 @@ Vector2 Vector2::operator-(const Vector2 &other) const {
 
 }
 
+Vector2 Vector2::operator*(double scalar) const {
+    return {x * scalar, y * scalar};
+}
+
+Vector2 Vector2::operator*(const Vector2 &other) const {
+    return {x * other.x, y * other.y};
+}
+
 Vector2 Vector2::operator-() const {
     return {-x, -y};
 }

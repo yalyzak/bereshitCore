@@ -67,7 +67,7 @@ void HingeJoint::SolveAngular(double dt) {
     // Effective mass:  K_ang = J * (IinvA + IinvB) * J^T   (2x2)
 
     AddMatrix(*IinvA, *IinvB); // result is in K
-    
+
     Vector3 Kt1 = t1.MatrixMultiplication(K);
     Vector3 Kt2 = t2.MatrixMultiplication(K);
 
@@ -91,8 +91,7 @@ void HingeJoint::SolveAngular(double dt) {
     }
     Vector3 ang_error = err_vec * 2.0;
 
-
-    Vector2 bias = (t1.dot(ang_error) * (beta / dt), t2.dot(ang_error) * (beta / dt));
+    Vector2 bias(t1.dot(ang_error) * (beta / dt), t2.dot(ang_error) * (beta / dt));
 
     Vector2 K[2];
 

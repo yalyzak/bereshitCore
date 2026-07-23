@@ -11,11 +11,13 @@ class Vector2 {
         double x;
         double y;
 
-        Vector2(double x = 0.0, double y = 0.0);
+        Vector2();
+        Vector2(double x, double y);
 
         [[nodiscard]] Vector2 operator+(const Vector2& other) const;
         [[nodiscard]] Vector2 operator-(const Vector2& other) const;
-
+        [[nodiscard]] Vector2 operator*(double scalar) const;
+        [[nodiscard]] Vector2 operator*(const Vector2& other) const;
 
 
         [[nodiscard]] Vector2 operator-() const;

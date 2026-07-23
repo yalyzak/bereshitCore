@@ -38,4 +38,8 @@ add_executable(bereshitCore main.cpp
         RayCastHit.h
         FixedJoint.cpp
         FixedJoint.h
+        HingeJoint.cpp
+        HingeJoint.h
+        Vector2.cpp
+        Vector2.h
 )
