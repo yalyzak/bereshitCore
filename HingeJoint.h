@@ -17,7 +17,7 @@ class HingeJoint : public Joint {
         Vector3 axisLocal;
         static Vector3 perp(Vector3&);
         void SolveLinear(double dt) override;
-        void SolveAngular(double dt) override;
+        // void SolveAngular(double dt) override;
 
 };
 
