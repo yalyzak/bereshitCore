@@ -5,6 +5,7 @@
 #include <pybind11/numpy.h>
 
 #include "Vector3.h"
+#include "Vector2.h"
 #include "GameObject.h"
 #include "World.h"
 #include "Component.h"
@@ -15,6 +16,7 @@
 #include "Collider.h"
 #include "Joint.h"
 #include "FixedJoint.h"
+#include "HingeJoint.h"
 
 
 namespace py = pybind11;
@@ -51,6 +53,10 @@ public:
 
 
 PYBIND11_MODULE(bereshitCore, m) {
+    py::class_<Vector2>(m, "Vector2")
+        .def(py::init<float, float>())
+        .def(py::init<>());
+
     py::class_<Vector3>(m, "Vector3")
         .def(py::init<float, float, float>())
         .def(py::init<>())
@@ -206,6 +212,9 @@ PYBIND11_MODULE(bereshitCore, m) {
     py::arg("anchor") = nullptr,
     py::arg("beta") = 0.2
 );
+    py::class_<HingeJoint, Joint, std::shared_ptr<HingeJoint>>(m, "HingeJoint")
+    .def(py::init<GameObject*, Vector3, Vector3*, double>(),py::arg("bodyB"), py::arg("axis"),
+        py::arg("anchor") = nullptr,py::arg("beta") = 0.2);
 
 
 
