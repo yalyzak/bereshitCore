@@ -20,7 +20,7 @@ public:
     double z;
 
     Quaternion();
-    Quaternion(double w, double x, double y, double z);
+    Quaternion(double x, double y, double z, double w);
 
     Quaternion Conjugate() const;
     Quaternion Inverse() const;

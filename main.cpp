@@ -19,7 +19,7 @@ int main() {
     std::cout << "Hello and welcome to " << lang << "!\n";
 
 
-    GameObject obj1(Vector3(0,2,0), Vector3(0,0,0), Vector3(1,1,1));
+    GameObject obj1(Vector3(2,0,0), Vector3(0,0,0), Vector3(1,1,1));
     auto rb1 = std::make_shared<Rigidbody>();
     auto col1 = std::make_shared<BoxCollider>();
     rb1->SetUseGravity(false);
@@ -27,7 +27,7 @@ int main() {
     obj1.AddComponent(col1);
     obj1.name = "obj1";
 
-    GameObject obj2(Vector3(0,5,0));
+    GameObject obj2(Vector3(5,0,0));
     auto rb2 = std::make_shared<Rigidbody>();
     auto col2 = std::make_shared<BoxCollider>();
     auto joint = std::make_shared<FixedJoint>(&obj1);

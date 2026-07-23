@@ -10,15 +10,15 @@ constexpr double DegToRad(double deg) {
 }
 
 Quaternion::Quaternion()
-    : w(1), x(0), y(0), z(0) {
+    : x(0), y(0), z(0), w(1) {
 }
 
-Quaternion::Quaternion(double w, double x, double y, double z)
-    : w(w), x(x), y(y), z(z) {
+Quaternion::Quaternion(double x, double y, double z, double w)
+    : x(x), y(y), z(z), w(w) {
 }
 
 Quaternion Quaternion::Conjugate() const {
-    return {w, -x, -y, -z};
+    return {-x, -y, -z, w};
 }
 
 Quaternion Quaternion::Inverse() const
@@ -34,10 +34,10 @@ Quaternion Quaternion::Inverse() const
     }
 
     return Quaternion(
-         w / normSq,
         -x / normSq,
         -y / normSq,
-        -z / normSq
+        -z / normSq,
+         w / normSq
     );
 }
 
@@ -193,7 +193,7 @@ Quaternion Quaternion::Euler(Vector3 vec) {
     double y = c1 * s2 * c3 + s1 * c2 * s3;
     double z = s1 * c2 * c3 - c1 * s2 * s3;
 
-    return Quaternion(w, x, y, z);
+    return Quaternion(x, y, z, w);
 }
 
 Quaternion Quaternion::EulerRadians(Vector3 vec) {
@@ -213,7 +213,7 @@ Quaternion Quaternion::EulerRadians(Vector3 vec) {
     double y = c1 * s2 * c3 + s1 * c2 * s3;
     double z = s1 * c2 * c3 - c1 * s2 * s3;
 
-    return Quaternion(w, x, y, z);
+    return Quaternion(x, y, z, w);
 }
 
 Quaternion Quaternion::AxisAngle(const Vector3& axis, double angleRad)
@@ -224,10 +224,10 @@ Quaternion Quaternion::AxisAngle(const Vector3& axis, double angleRad)
     Vector3 axisN = axis.normalized();
 
     return Quaternion(
-        std::cos(halfAngle),
         axisN.x * sinHalf,
         axisN.y * sinHalf,
-        axisN.z * sinHalf
+        axisN.z * sinHalf,
+        std::cos(halfAngle)
     );
 }
 
@@ -235,46 +235,46 @@ Quaternion Quaternion::AxisAngle(const Vector3& axis, double angleRad)
 Quaternion Quaternion::operator+(const Quaternion& other) const
 {
     return Quaternion(
-        w + other.w,
         x + other.x,
         y + other.y,
-        z + other.z
+        z + other.z,
+        w + other.w
     );
 }
 
 Quaternion Quaternion::operator-(const Quaternion& other) const{
     return Quaternion(
-        w - other.w,
         x - other.x,
         y - other.y,
-        z - other.z
+        z - other.z,
+        w - other.w
     );
 }
 
 Quaternion Quaternion::operator*(const Quaternion& other) const{
     return Quaternion(
-        w * other.w - x * other.x - y * other.y - z * other.z,
         w * other.x + x * other.w + y * other.z - z * other.y,
         w * other.y - x * other.z + y * other.w + z * other.x,
-        w * other.z + x * other.y - y * other.x + z * other.w
+        w * other.z + x * other.y - y * other.x + z * other.w,
+        w * other.w - x * other.x - y * other.y - z * other.z
     );
 }
 
 Quaternion Quaternion::operator*(double scalar) const{
     return Quaternion(
-        w * scalar,
         x * scalar,
         y * scalar,
-        z * scalar
+        z * scalar,
+        w * scalar
     );
 }
 
 Quaternion Quaternion::operator/(double scalar) const{
     return Quaternion(
-        w / scalar,
         x / scalar,
         y / scalar,
-        z / scalar
+        z / scalar,
+        w / scalar
     );
 }
 
