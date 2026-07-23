@@ -20,8 +20,8 @@ GameObject* GameObject::AddComponent(std::shared_ptr<Component> comp) {
     return this;
 }
 
-GameObject * GameObject::AddComponent(Component comp) {
-    auto newComponent = std::make_shared<Component>(comp);
+GameObject* GameObject::AddComponent(Component* comp) {
+    auto newComponent = std::make_shared<Component>(*comp);
     components.push_back(newComponent);
     newComponent->SetParent(this);
     newComponent->attach(*this);
@@ -99,7 +99,10 @@ GameObject GameObject::DeepCopy() const {
     );
 
     for (const auto& component : components) {
-        obj.AddComponent(component->Copy());
+        auto* copyComponent = component->Copy();
+        if (copyComponent != nullptr) {
+            obj.AddComponent(copyComponent);
+        }
     }
 
     for (const GameObject* child : children) {
@@ -115,6 +118,7 @@ GameObject GameObject::DeepCopy() const {
 void GameObject::AddChild(GameObject *child) {
     world->AddChild(child);
     children.push_back(child);
+    child->parent = this;
 }
 
 std::list<GameObject*> GameObject::search_by_component(std::string name) {

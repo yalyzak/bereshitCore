@@ -149,6 +149,12 @@ std::optional<std::tuple<double, Vector3, Vector3, Vector3, double>> Rigidbody::
 }
 
 
+Rigidbody* Rigidbody::Copy() const {
+    Rigidbody* rigidbody = new Rigidbody(mass, isKinematic, velocity, angularVelocity,
+        useGravity, frictionCoefficient, restitution, freezeRotation);
+
+    return rigidbody;
+}
 
 void Rigidbody::ApplyGravity(const Vector3 &gravity) {
     if (!isKinematic && useGravity) {

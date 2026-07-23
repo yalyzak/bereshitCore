@@ -48,7 +48,7 @@ class GameObject {
             Vector3 scale = Vector3(1, 1, 1),const std::list<GameObject*>& children= {}, std::string name = "");
 
         GameObject* AddComponent(std::shared_ptr<Component> comp);
-        GameObject* AddComponent(Component comp);
+        GameObject* AddComponent(Component* comp);
         // GameObject* AddComponent(std::list<std::shared_ptr<Component>> comp);
 
         void setParent(GameObject* p) {
@@ -90,6 +90,7 @@ class GameObject {
 
     [[nodiscard]] GameObject DeepCopy() const;
     void AddChild(GameObject*);
+
 
 };
 

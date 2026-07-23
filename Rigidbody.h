@@ -42,6 +42,7 @@ private:
     bool useGravity = true;
 
 public:
+    Rigidbody *Copy() const override;
     void ApplyGravity(const Vector3& gravity);
 
     void SetIsKinematic(bool state);

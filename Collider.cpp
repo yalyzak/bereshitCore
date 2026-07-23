@@ -246,5 +246,12 @@ RayCastHit Collider::RayCast(const Vector3 &origin, const Vector3 &direction, do
     return {};
 }
 
+Collider* Collider::Copy() const {
+    Collider* collider = new Collider(isTrigger);
+    return collider;
+}
+
+
+
 
 

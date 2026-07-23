@@ -98,6 +98,11 @@ std::vector<Vector3> BoxCollider::ClipPolygon(const std::vector<Vector3>& poly,c
     return result;
 }
 
+BoxCollider * BoxCollider::Copy() const {
+    BoxCollider* box_collider = new BoxCollider(isTrigger);
+    return box_collider;
+}
+
 ContactPoints BoxCollider::CheckCollision(const Collider* collider2)  {
     ContactPoints contact_points;
 

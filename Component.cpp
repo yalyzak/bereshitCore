@@ -8,8 +8,13 @@
 void Component::OnConstructed() {
 }
 
-Component Component::Copy() {
-    throw std::runtime_error("this Component does not have a copy function");
+Component* Component::Copy() const{
+    return  nullptr;
+    // throw std::runtime_error("this Component does not have a copy function");
+}
+
+std::shared_ptr<Component *> * Component::CopyShared() const {
+    return nullptr;
 }
 
 void Component::Start() {

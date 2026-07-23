@@ -38,8 +38,7 @@ class Collider : public Component{
             std::variant<int, std::pair<int, int>> indices;
             Vector3 axis;
         };
-
-    private:
+    protected:
         mutable bool isTrigger;
         Transform* transform;
         Vector3 halfSize = Vector3();
@@ -49,6 +48,8 @@ class Collider : public Component{
         const Collider* other;
         mutable Vector3 cachedMin;
         mutable Vector3 cachedMax;
+    private:
+
 
 
 
@@ -84,7 +85,7 @@ public:
     virtual void HandleCollisionEvents(Collider*, ContactPoints*);
     virtual RayCastHit RayCast(const Vector3 &origin, const Vector3 &direction, double maxDistance) const;
 
-
+    virtual Collider* Copy() const override;
 };
 
 

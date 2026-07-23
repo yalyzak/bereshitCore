@@ -51,6 +51,8 @@ int main() {
     floor.AddComponent(col3);
     floor.name = "floor";
 
+    auto floor2 = floor.DeepCopy();
+
     std::list<GameObject*> scene;
     scene.push_back(&obj1);
     // scene.push_back(&obj2);

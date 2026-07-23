@@ -15,8 +15,8 @@ class Component {
         std::string name = "Component";
         void OnConstructed();
 public:
-    virtual Component Copy();
-    virtual std::string GetName() const {
+    virtual Component* Copy() const;
+    [[nodiscard]] virtual std::string GetName() const {
         return name;
     }
     void SetName(std::string name) {
