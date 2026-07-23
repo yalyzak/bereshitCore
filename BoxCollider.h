@@ -24,7 +24,7 @@ class BoxCollider : public Collider {
     static std::vector<Vector3> ClipPolygon(const std::vector<Vector3>& poly,const Vector3& planePoint,const Vector3& planeNormal);
 
     public:
-
+    explicit BoxCollider(bool isTrigger = false);
     [[nodiscard]] auto CheckCollision(const Collider* collider2) -> ContactPoints override;
     bool AabbCollision(const Collider* collider2) override;
     std::optional<SatResult> Sat(const Collider* otherCollider) const override;
