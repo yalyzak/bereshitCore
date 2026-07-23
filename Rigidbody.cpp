@@ -250,7 +250,7 @@ void Rigidbody::SolveImpulse(Rigidbody &rb1, Rigidbody &rb2, const Vector3& cont
         ApplyImpulsePair(rb1, rb2, normal * J, r1, r2);
 
 
-        ApplyFrictionImpulse(rb1, rb2, relative_vel, normal, J, r1, r2);
+        // ApplyFrictionImpulse(rb1, rb2, relative_vel, normal, J, r1, r2);
 }
 
 double Rigidbody::FindRestitution(const Rigidbody &rb1, const Rigidbody &rb2, double normalVelocity) {
