@@ -1,15 +1,12 @@
 //
-// Created by User on 20/07/2026.
+// Created by yaly on 23/07/2026.
 //
 
-#include "FixedJoint.h"
+#include "HingeJoint.h"
 
 #include "Rigidbody.h"
 
-
-
-
-void FixedJoint::SolveLinear(double dt) {
+void HingeJoint::SolveLinear(double dt) {
     auto IinvA = rbA->GetInvertWorld();
     auto IinvB = rbB->GetInvertWorld();
     double invertMassA = rbA->GetInvMass();
@@ -40,39 +37,5 @@ void FixedJoint::SolveLinear(double dt) {
     Rigidbody::ApplyImpulsePair(*rbA, *rbB, impulse, rA, rB);
 }
 
-void FixedJoint::SolveAngular(double dt) {
-    auto* IA = rbA->GetInvertWorld();
-    auto* IB = rbB->GetInvertWorld();
-
-    Quaternion q_rel = (
-            transformA->quaternion.Inverse() *
-            transformB->quaternion
-    );
-
-    Quaternion q_error = q_rel * initialRelativeRotation.Inverse();
-
-    Vector3 error = {q_error.x, q_error.y, q_error.z};
-    if (q_error.w < 0) {
-        error = error * -1;
-
-    }
-
-    Vector3 angular_error = error * 2.0;
-
-    Vector3 bias = angular_error * (beta / dt);
-
-    Vector3 rel_w = rbB->angularVelocity - rbA->angularVelocity;
-
-    AddMatrix(*IA, *IB); // result is in K
-
-    Vector3 impulse = -Solve3x3((rel_w + bias));
-
-    if (!rbA->IsKinematic()) {
-        rbA->angularVelocity -= impulse.MatrixMultiplication(*IA);
-    }
-    if (!rbB->IsKinematic()) {
-        rbB->angularVelocity += impulse.MatrixMultiplication(*IB);
-    }
+void HingeJoint::SolveAngular(double dt) {
 }
-
-
