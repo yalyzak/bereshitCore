@@ -3,7 +3,6 @@
 //
 
 #include "GameObject.h"
-#include "Rigidbody.h"
 #include "Collider.h"
 #include "Transform.h"
 #include "World.h"
@@ -21,22 +20,13 @@ GameObject* GameObject::AddComponent(Component* comp) {
     return this;
 }
 
-// GameObject * GameObject::AddComponent(std::list<std::shared_ptr<Component>> comp) {
-//     for (auto& component : comp) {
-//         AddComponent(component);
-//     }
-// }
 
-
-
-std::list<GameObject *> GameObject::GetAllChildren() {
-    std::list<GameObject*> allChildren;
+std::vector<GameObject*> GameObject::GetAllChildren() {
+    std::vector<GameObject*> allChildren;
 
     for (GameObject* child : children) {
         allChildren.push_back(child);
-
-        auto descendants = child->GetAllChildren();
-        allChildren.splice(allChildren.end(), descendants);
+        child->GetAllChildren(allChildren);
     }
 
     return allChildren;
@@ -81,6 +71,29 @@ void GameObject::GetAllChildren(std::vector<GameObject *> &result) {
     }
 }
 
+std::vector<GameObject *> GameObject::SearchByComponent(const std::string &name) {
+    std::vector<GameObject*> results;
+
+    for (auto& component : components) {
+        if (component->GetName() == name) {
+            results.push_back(this);
+            break; // prevent duplicates
+        }
+    }
+
+    for (GameObject* child : children) {
+        auto child_results = child->SearchByComponent(name);
+        child->search_by_component(name, results);
+    }
+
+    return results;
+
+}
+
+void GameObject::search_by_component(const std::string &name, std::vector<GameObject *> &results) {
+
+}
+
 GameObject GameObject::DeepCopy() const {
     GameObject obj(
         transform.position,
@@ -113,23 +126,6 @@ void GameObject::AddChild(GameObject *child) {
     child->parent = this;
 }
 
-std::list<GameObject*> GameObject::search_by_component(std::string name) {
-    std::list<GameObject*> results;
-
-    for (auto& component : components) {
-        if (component->GetName() == name) {
-            results.push_back(this);
-            break; // prevent duplicates
-        }
-    }
-
-    for (GameObject* child : children) {
-        auto child_results = child->search_by_component(name);
-        results.splice(results.end(), child_results);
-    }
-
-    return results;
-}
 
 Component* GameObject::GetComponent(const std::string& name) {
     for (auto* comp : components) {

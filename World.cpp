@@ -181,7 +181,7 @@ std::vector<GameObject*> World::search_by_component(std::string name) const {
     std::vector<GameObject*> results;
 
     for (GameObject* child : children) {
-        auto child_results = child->search_by_component(name);
+        auto child_results = child->SearchByComponent(name);
         results.insert(results.end(),
                        child_results.begin(),
                        child_results.end());

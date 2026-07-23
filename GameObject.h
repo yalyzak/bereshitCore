@@ -6,7 +6,6 @@
 #define BERESHITCORE_GAMEOBJECT_H
 
 
-#include <list>
 #include <memory>
 
 
@@ -25,6 +24,7 @@ class GameObject {
         GameObject* parent = nullptr;
         std::vector<GameObject*> children;
         std::vector<Component*> components;
+        void search_by_component(const std::string& name, std::vector<GameObject*>& results);
 
     public:
         Transform transform;
@@ -48,7 +48,6 @@ class GameObject {
             Vector3 scale = Vector3(1, 1, 1),const std::vector<GameObject*>& children= {}, std::string name = "");
 
         GameObject* AddComponent(Component* comp);
-        // GameObject* AddComponent(std::list<std::shared_ptr<Component>> comp);
 
         void setParent(GameObject* p) {
             parent = p;
@@ -57,8 +56,9 @@ class GameObject {
     std::vector<GameObject*> GetChildren() {
         return children;
     };
-    std::list<GameObject*> GetAllChildren();
-    std::list<GameObject*> search_by_component(std::string name);
+    void GetAllChildren(std::vector<GameObject*>&);
+    std::vector<GameObject*> GetAllChildren();
+    std::vector<GameObject*> SearchByComponent(const std::string& name);
     Component* GetComponent(const std::string& name);
     template<typename T> T* GetComponent() const {
         for (auto* component : components) {
@@ -71,7 +71,6 @@ class GameObject {
     void GetAllChildrenPhysics(std::vector<GameObject*>& result);
     void GetAllChildrenColliders(std::vector<Collider*>& result);
     void GetAllChildrenJoints(std::vector<Joint*>& result);
-    void GetAllChildren(std::vector<GameObject*>& result);
     [[nodiscard]] bool isPhysicsObject()  const{
         return (GetComponent<Rigidbody>() != nullptr && GetComponent<Collider>() != nullptr);
     }
