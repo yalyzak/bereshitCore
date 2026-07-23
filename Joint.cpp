@@ -6,7 +6,7 @@
 #include "GameObject.h"
 #include "Rigidbody.h"
 #include "Physics.h"
-
+#include <stdexcept>
 
 void Joint::AddMatrix(const std::array<std::array<double, 3>, 3> &IA,
     const std::array<std::array<double, 3>, 3> &IB) {
@@ -177,7 +177,7 @@ Vector3 Joint::Solve3x3(const Vector3 &b) {
         );
 
         if (std::abs(det) < 1e-12) {
-            throw "Singular matrix";
+            throw std::runtime_error("Singular matrix");
         }
 
         double inv_det = 1.0 / det;
@@ -210,7 +210,7 @@ Vector2 Joint::Solve2x2(const Vector2 &beta, Vector2(&K)[2]) {
     double det = a * e - c * d;
 
     if (std::abs(det) < 1e-12) {
-        throw "Singular matrix";
+        throw std::runtime_error("Singular matrix");
     }
 
     double inv_det = 1.0 / det;

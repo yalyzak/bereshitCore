@@ -6,8 +6,8 @@
 
 #include "Rigidbody.h"
 
-HingeJoint::HingeJoint(GameObject* bodyB, Vector3* axis, Vector3* anchor, double beta) : Joint(bodyB, anchor, beta) {
-    axisLocal = axis->normalized();
+HingeJoint::HingeJoint(GameObject* bodyB, Vector3 axis, Vector3* anchor, double beta) : Joint(bodyB, anchor, beta) {
+    axisLocal = axis.normalized();
 }
 
 Vector3 HingeJoint::perp(Vector3 & axis) {
@@ -93,9 +93,7 @@ void HingeJoint::SolveAngular(double dt) {
 
     Vector2 bias(t1.dot(ang_error) * (beta / dt), t2.dot(ang_error) * (beta / dt));
 
-    Vector2 K[2];
-
-    Vector2 ang_impulse2d = -Solve2x2(vel_error + bias, K);
+    Vector2 ang_impulse2d = -Solve2x2(vel_error + bias, K_ang);
 
     Vector3 ang_impulse;
 

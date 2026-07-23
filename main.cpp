@@ -7,7 +7,7 @@
 #include "Collider.h"
 #include "BoxCollider.h"
 #include "Joint.h"
-#include "FixedJoint.h"
+#include "HingeJoint.h"
 #include "World.h"
 // TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 
@@ -30,7 +30,7 @@ int main() {
     GameObject obj2(Vector3(5,0,0));
     auto rb2 = std::make_shared<Rigidbody>();
     auto col2 = std::make_shared<BoxCollider>();
-    auto joint = std::make_shared<FixedJoint>(&obj1);
+    auto joint = std::make_shared<HingeJoint>(&obj1, Vector3(1,0,0));
 
     rb2->SetUseGravity(false);
     rb2->angularVelocity = Vector3(10,0,0);

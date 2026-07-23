@@ -11,7 +11,7 @@ class GameObject;
 
 class HingeJoint : public Joint {
     public:
-        HingeJoint(GameObject* bodyB, Vector3* axis, Vector3* anchor = nullptr, double beta = 0.2);
+        HingeJoint(GameObject* bodyB, Vector3 axis, Vector3* anchor = nullptr, double beta = 0.2);
 
     private:
         Vector3 axisLocal;
