@@ -57,7 +57,8 @@ class World {
         std::list<GameObject*> getChildren() {
             return children;
         };
-        void AddChild(GameObject *child);
+        void AddChild(GameObject *child) ;
+        void SetChildWorld(GameObject *child) ;
 
         std::vector<GameObject*>& getAllChildren();
         std::vector<GameObject*>& GetAllChildrenPhysics();

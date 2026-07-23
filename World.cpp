@@ -105,10 +105,7 @@ void World::SetCache() {
 
 World::World(bool *running_flag, std::list<GameObject *> children, GameObject* gizmos, Vector3 gravity,
              double tick, double speed, int physics_epochs) : gravity(gravity), tick(tick), physics_epochs(physics_epochs), speed(speed), gizmos(gizmos), children(children) {
-    for (auto i = children.begin(); i != children.end(); ++i) {
-        GameObject* child = *i;
-        child->setWorld(this);
-    }
+
     this->gizmos = (new GameObject(Vector3(100000,100000,10000),Vector3(),Vector3(0.1,0.1,0.1)));
 
     for (int i = 0; i < 100; i++) {
@@ -118,18 +115,44 @@ World::World(bool *running_flag, std::list<GameObject *> children, GameObject* g
     Vector3(0.1,0.1,0.1)));
         }
     SetCache();
+    for (auto child : getAllChildren()) {
+        child->setWorld(this);
+    }
 }
 
 void World::AddChild(GameObject *child) {
+    SetChildWorld(child);
     cacheAllChildren.push_back(child);
     child->GetAllChildren(cacheAllChildren);
+    child->GetAllChildrenPhysics(cachePhysicsChildren);
+    child->GetAllChildrenColliders(cacheColliders);
+    child->GetAllChildrenJoints(cacheJoints);
 
-    if (child->GetComponent<Rigidbody>()) {
+    Rigidbody* rigidbody = child->GetComponent<Rigidbody>();
+    if (rigidbody != nullptr) {
         cachePhysicsChildren.push_back(child);
     }
-    child->GetAllChildrenPhysics(cachePhysicsChildren);
+
+    Collider* collider = child->GetComponent<Collider>();
+    if (collider != nullptr) {
+        cacheColliders.push_back(collider);
+    }
+
+    Joint* joint = child->GetComponent<Joint>();
+    if (joint != nullptr) {
+        cacheJoints.push_back(joint);
+    }
+
+
     allChildrenDirty = false;
     physicsChildrenDirty = false;
+}
+
+void World::SetChildWorld(GameObject *object) {
+    object->setWorld(this);
+    for (auto child : object->GetAllChildren()) {
+        child->setWorld(this);
+    }
 }
 
 std::vector<GameObject*>& World::getAllChildren(){
@@ -272,6 +295,8 @@ void World::SetGizmos(const std::list<Contact>& contacts) {
         ++contactIt;
     }
 }
+
+
 
 
 

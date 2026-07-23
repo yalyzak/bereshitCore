@@ -12,8 +12,11 @@
 
 #include "Transform.h"
 #include "Component.h"
+#include "Joint.h"
 class World;
 #include "Cache.h"
+#include "Rigidbody.h"
+#include "Collider.h"
 
 
 class GameObject {
@@ -36,7 +39,7 @@ class GameObject {
             world = p;
         }
 
-        World* GetWorld() const {
+        [[nodiscard]] World* GetWorld() const {
             return world;
         }
 
@@ -45,6 +48,7 @@ class GameObject {
             Vector3 scale = Vector3(1, 1, 1),const std::list<GameObject*>& children= {}, std::string name = "");
 
         GameObject* AddComponent(std::shared_ptr<Component> comp);
+        GameObject* AddComponent(Component comp);
         // GameObject* AddComponent(std::list<std::shared_ptr<Component>> comp);
 
         void setParent(GameObject* p) {
@@ -67,7 +71,7 @@ class GameObject {
         return nullptr;
     }
     template<typename T>
-    T* GetComponent() const {
+    [[nodiscard]] T* GetComponent() const {
         for (const auto& component : components) {
             if (auto casted = std::dynamic_pointer_cast<T>(component)) {
                 return casted.get();
@@ -75,9 +79,17 @@ class GameObject {
         }
         return nullptr;
     }
-    const std::list<std::shared_ptr<Component>>& GetComponents() const;
+    [[nodiscard]] const std::list<std::shared_ptr<Component>>& GetComponents() const;
     void GetAllChildrenPhysics(std::vector<GameObject*>& result);
+    void GetAllChildrenColliders(std::vector<Collider*>& result);
+    void GetAllChildrenJoints(std::vector<Joint*>& result);
     void GetAllChildren(std::vector<GameObject*>& result);
+    [[nodiscard]] bool isPhysicsObject()  const{
+        return (GetComponent<Rigidbody>() != nullptr && GetComponent<Collider>() != nullptr);
+    }
+
+    [[nodiscard]] GameObject DeepCopy() const;
+    void AddChild(GameObject*);
 
 };
 

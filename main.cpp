@@ -8,6 +8,7 @@
 #include "BoxCollider.h"
 #include "Joint.h"
 #include "HingeJoint.h"
+#include "FixedJoint.h"
 #include "World.h"
 // TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 
@@ -30,7 +31,7 @@ int main() {
     GameObject obj2(Vector3(5,0,0));
     auto rb2 = std::make_shared<Rigidbody>();
     auto col2 = std::make_shared<BoxCollider>();
-    auto joint = std::make_shared<HingeJoint>(&obj1, Vector3(1,0,0));
+    auto joint = std::make_shared<FixedJoint>(&obj1);
 
     rb2->SetUseGravity(false);
     rb2->angularVelocity = Vector3(10,0,0);
@@ -52,16 +53,16 @@ int main() {
 
     std::list<GameObject*> scene;
     scene.push_back(&obj1);
-    scene.push_back(&obj2);
+    // scene.push_back(&obj2);
     scene.push_back(&floor);
     GameObject* gimoz{};
     bool running = true;
     World world(&running, scene, gimoz, Vector3(0,-9.8,0), 1/60.0, 1, 0);
 
-    // double seconds = 5;
+    double seconds = 60 * 60 * 24;
     double dt = 1/60.0;
-    for (int i = 0; i++, i <=10 ;) {
-        std::cout << obj1.GetComponent<Rigidbody>()->velocity.toString() << std::endl;
+    for (int i = 0; i++, i <=1/dt * seconds;) {
+        // std::cout << obj1.GetComponent<Rigidbody>()->velocity.toString() << std::endl;
         // std::cout << obj2.GetComponent<Rigidbody>()->velocity.toString() << std::endl;
         // std::cout << obj1.GetComponent<Rigidbody>()->angularVelocity.toString() << std::endl;
         // std::cout << obj1.transform.rotation.toString() << std::endl;
@@ -70,7 +71,7 @@ int main() {
         world.Update();
 
     }
-    // std::cout << obj1.GetComponent<Collider>()->GetPosition().toString() << std::endl;
+    std::cout << obj1.GetComponent<Collider>()->GetPosition().toString() << std::endl;
     // std::cout << obj1.GetComponent<Collider>()->GetQuaternion().ToEuler().toString() << std::endl;
     auto end = std::chrono::high_resolution_clock::now();
 

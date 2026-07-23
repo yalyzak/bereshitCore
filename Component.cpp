@@ -3,10 +3,13 @@
 //
 #include <typeinfo>
 #include <iostream>
-
 #include "Component.h"
 
 void Component::OnConstructed() {
+}
+
+Component Component::Copy() {
+    throw std::runtime_error("this Component does not have a copy function");
 }
 
 void Component::Start() {

@@ -15,6 +15,7 @@ class Component {
         std::string name = "Component";
         void OnConstructed();
 public:
+    virtual Component Copy();
     virtual std::string GetName() const {
         return name;
     }
@@ -49,6 +50,7 @@ public:
     GameObject* GetParent() const {
         return parent;
     }
+
 };
 
 
