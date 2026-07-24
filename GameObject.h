@@ -25,6 +25,8 @@ class GameObject {
         std::vector<GameObject*> children;
         std::vector<Component*> components;
         void search_by_component(const std::string& name, std::vector<GameObject*>& results);
+        void _SearchByName(const std::string& name, std::vector<GameObject*>& results);
+
 
     public:
         Transform transform;
@@ -59,6 +61,7 @@ class GameObject {
     void GetAllChildren(std::vector<GameObject*>&);
     std::vector<GameObject*> GetAllChildren();
     std::vector<GameObject*> SearchByComponent(const std::string& name);
+    std::vector<GameObject*> SearchByName(const std::string& name);
     Component* GetComponent(const std::string& name);
     template<typename T> T* GetComponent() const {
         for (auto* component : components) {

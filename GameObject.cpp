@@ -82,12 +82,24 @@ std::vector<GameObject *> GameObject::SearchByComponent(const std::string &name)
     }
 
     for (GameObject* child : children) {
-        auto child_results = child->SearchByComponent(name);
         child->search_by_component(name, results);
     }
 
     return results;
 
+}
+
+std::vector<GameObject *> GameObject::SearchByName(const std::string &name) {
+    std::vector<GameObject*> results;
+
+    for (GameObject* child : children) {
+        if (child->name == name) {
+            results.push_back(child);
+        }
+        child->_SearchByName(name, results);
+    }
+
+    return results;
 }
 
 void GameObject::search_by_component(const std::string &name, std::vector<GameObject *> &results) {
@@ -103,6 +115,15 @@ void GameObject::search_by_component(const std::string &name, std::vector<GameOb
         child->search_by_component(name, results);
     }
 
+}
+
+void GameObject::_SearchByName(const std::string &name, std::vector<GameObject *> &results) {
+    for (const auto& child : children) {
+        if (child->name == name) {
+            results.push_back(child);
+        }
+        child->_SearchByName(name, results);
+    }
 }
 
 GameObject GameObject::DeepCopy() const {
