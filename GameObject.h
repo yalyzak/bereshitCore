@@ -42,7 +42,7 @@ class GameObject {
 
 
         void setWorld(World* p) {
-            if (world != nullptr) {
+            if (world != nullptr && world != p) {
                 throw std::runtime_error("World already set");
             }
             world = p;
