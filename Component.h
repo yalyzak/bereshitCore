@@ -15,6 +15,10 @@ class Component {
         std::string name = "Component";
         void OnConstructed();
 public:
+    virtual bool IsPythonComponent() const {
+        return false;
+    }
+    
     virtual Component* Copy() const;
     [[nodiscard]] virtual std::string GetName() const {
         return name;
