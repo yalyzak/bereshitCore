@@ -59,6 +59,7 @@ int main() {
     scene.push_back(&obj1);
     // scene.push_back(&obj2);
     scene.push_back(&floor);
+    scene.push_back(floor2);
     GameObject* gimoz{};
     bool running = true;
     World world(&running, scene, gimoz, Vector3(0,-9.8,0), 1/60.0, 1, 0);
