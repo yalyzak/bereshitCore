@@ -91,6 +91,17 @@ std::vector<GameObject *> GameObject::SearchByComponent(const std::string &name)
 }
 
 void GameObject::search_by_component(const std::string &name, std::vector<GameObject *> &results) {
+    for (auto& component : components) {
+        if (component->GetName() == name) {
+            results.push_back(this);
+            break; // prevent duplicates
+        }
+    }
+
+    for (GameObject* child : children) {
+        auto child_results = child->SearchByComponent(name);
+        child->search_by_component(name, results);
+    }
 
 }
 
