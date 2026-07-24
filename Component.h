@@ -5,10 +5,12 @@
 #ifndef BERESHITCORE_COMPONENT_H
 #define BERESHITCORE_COMPONENT_H
 #include <stdexcept>
+#include <unordered_map>
+
 #include "Collision.h"
 
 class GameObject;  // forward declaration
-
+using GameObjectMap = std::unordered_map<const GameObject*, GameObject*>;
 class Component {
     private:
         GameObject* parent = nullptr;
@@ -18,7 +20,7 @@ public:
     virtual bool IsPythonComponent() const {
         return false;
     }
-    
+
     virtual Component* Copy() const;
     [[nodiscard]] virtual std::string GetName() const {
         return name;
@@ -53,6 +55,10 @@ public:
     };
     GameObject* GetParent() const {
         return parent;
+    }
+    virtual void RemapReferences(const GameObjectMap& objectMap)
+    {
+        // Most components have no GameObject references.
     }
 
 };

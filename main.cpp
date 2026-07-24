@@ -32,13 +32,13 @@ int main() {
     auto rb2 = Rigidbody();
     auto col2 =BoxCollider();
     auto joint = FixedJoint(&obj1);
-
+    auto copiedjoint = joint.Copy();
     rb2.SetUseGravity(false);
     rb2.angularVelocity = Vector3(10,0,0);
 
     obj2.AddComponent(&rb2);
     obj2.AddComponent(&col2);
-    obj2.AddComponent(&joint);
+    obj2.AddComponent(copiedjoint);
     obj2.name = "obj2";
     // rb2->SetIsKinematic(true);
 

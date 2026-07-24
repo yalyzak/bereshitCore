@@ -126,30 +126,90 @@ void GameObject::_SearchByName(const std::string &name, std::vector<GameObject *
     }
 }
 
-GameObject GameObject::DeepCopy() const {
-    GameObject obj(
-        transform.position,
-        transform.rotation,
-        transform.scale,
+GameObject* GameObject::CopyHierarchy(const GameObject* original,GameObjectMap& objectMap){
+    auto* copied = new GameObject(
+        original->transform.position,
+        original->transform.rotation,
+        original->transform.scale,
         {},
-        name
+        original->name
     );
 
-    for (const auto& component : components) {
-        auto* copyComponent = component->Copy();
-        if (copyComponent != nullptr) {
-            obj.AddComponent(copyComponent);
+    objectMap.emplace(original, copied);
+
+    for (Component* component : original->components) {
+        Component* copiedComponent = component->Copy();
+
+        copied->components.push_back(copiedComponent);
+        copiedComponent->SetParent(copied);
+
+        // Do not call attach() yet.
+    }
+
+    for (GameObject* child : original->children) {
+        GameObject* copiedChild = CopyHierarchy(child, objectMap);
+
+        copied->children.push_back(copiedChild);
+        copiedChild->parent = copied;
+    }
+
+    return copied;
+}
+
+void GameObject::RemapHierarchyReferences(
+    GameObject* object,
+    const GameObjectMap& objectMap)
+{
+    if (object == nullptr) {
+        return;
+    }
+
+    for (Component* component : object->components) {
+        if (component != nullptr) {
+            component->RemapReferences(objectMap);
         }
     }
 
-    for (const GameObject* child : children) {
-        if (child != nullptr) {
-            auto* copiedChild = new GameObject(child->DeepCopy());
-            obj.AddChild(copiedChild);
-        }
+    for (GameObject* child : object->children) {
+        RemapHierarchyReferences(child, objectMap);
+    }
+}
+
+void GameObject::RemapHierarchy(
+    GameObject* object,
+    const GameObjectMap& objectMap)
+{
+    for (Component* component : object->components) {
+        component->RemapReferences(objectMap);
     }
 
-    return obj;
+    for (GameObject* child : object->children) {
+        RemapHierarchy(child, objectMap);
+    }
+}
+
+void GameObject::AddComponentWithoutAttach(Component *component) {
+    components.push_back(component);
+    component->SetParent(this);
+}
+void GameObject::AttachHierarchy(GameObject* object)
+{
+    for (Component* component : object->components) {
+        component->attach(*object);
+    }
+
+    for (GameObject* child : object->children) {
+        AttachHierarchy(child);
+    }
+}
+GameObject* GameObject::DeepCopy() const {
+    GameObjectMap objectMap;
+
+    GameObject* result = CopyHierarchy(this, objectMap);
+    RemapHierarchy(result, objectMap);
+    AttachHierarchy(result);
+
+    return result;
 }
 
 void GameObject::AddChild(GameObject *child) {

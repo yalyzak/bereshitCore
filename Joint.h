@@ -19,6 +19,8 @@ class Transform;
 
 class Joint : public Component{
     protected:
+        void RemapReferences(const GameObjectMap& objectMap) override;
+
         Transform* transformA;
         Transform* transformB;
         Rigidbody* rbB = nullptr;
@@ -67,7 +69,7 @@ class Joint : public Component{
         }
 
     public:
-        Joint* Copy() const override;
+        virtual Joint* Copy() const override;
         Joint(GameObject* bodyB, Vector3* anchor = nullptr, double beta = 0.2);
 
 

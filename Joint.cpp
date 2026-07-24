@@ -8,8 +8,24 @@
 #include "Physics.h"
 #include <stdexcept>
 
+void Joint::RemapReferences(const GameObjectMap& objectMap)
+{
+    if (bodyB == nullptr) {
+        return;
+    }
+
+    auto it = objectMap.find(bodyB);
+
+    if (it != objectMap.end()) {
+        bodyB = it->second;
+    } else {
+        // bodyB was outside the copied hierarchy.
+        bodyB = nullptr;
+    }
+}
+
 void Joint::AddMatrix(const std::array<std::array<double, 3>, 3> &IA,
-    const std::array<std::array<double, 3>, 3> &IB) {
+                      const std::array<std::array<double, 3>, 3> &IB) {
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 3; ++j) {
             K[i][j] = (IA)[i][j] + (IB)[i][j];
@@ -227,13 +243,16 @@ void Joint::CastAnchorDefault() {
     worldAnchor = &transformB->position;
 }
 
-Joint * Joint::Copy() const {
-    Joint* joint = new Joint(nullptr, worldAnchor, beta);
-    return joint;
+Joint* Joint::Copy() const
+{
+    return new Joint(bodyB, worldAnchor, beta);
 }
+
 
 Joint::Joint(GameObject *bodyB, Vector3* anchor, double beta) : bodyB(bodyB), worldAnchor(anchor), beta(beta) {
 }
+
+
 
 void Joint::attach(GameObject &obj) {
     bodyA = &obj;

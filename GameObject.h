@@ -7,6 +7,7 @@
 
 
 #include <memory>
+#include <unordered_map>
 
 
 #include "Transform.h"
@@ -26,7 +27,13 @@ class GameObject {
         std::vector<Component*> components;
         void search_by_component(const std::string& name, std::vector<GameObject*>& results);
         void _SearchByName(const std::string& name, std::vector<GameObject*>& results);
+        using CopyMap = std::unordered_map<const GameObject*, GameObject*>;
+        static GameObject* CopyHierarchy(const GameObject* original,CopyMap& copies);
+        static void RemapHierarchy(GameObject* object,const GameObjectMap& objectMap);
+        static void RemapHierarchyReferences(GameObject* object, const CopyMap& copies);
+        void AddComponentWithoutAttach(Component* component);
 
+        static void AttachHierarchy(GameObject *object);
 
     public:
         Transform transform;
@@ -78,7 +85,7 @@ class GameObject {
         return (GetComponent<Rigidbody>() != nullptr && GetComponent<Collider>() != nullptr);
     }
 
-    [[nodiscard]] GameObject DeepCopy() const;
+    [[nodiscard]] GameObject* DeepCopy() const;
     void AddChild(GameObject*);
 
 
