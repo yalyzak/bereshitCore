@@ -121,6 +121,7 @@ World::World(bool *running_flag, std::vector<GameObject *> children, GameObject*
 }
 
 void World::AddChild(GameObject *child) {
+    child->setWorld(this);
     SetChildWorld(child);
     cacheAllChildren.push_back(child);
     child->GetAllChildren(cacheAllChildren);

@@ -153,7 +153,9 @@ GameObject GameObject::DeepCopy() const {
 }
 
 void GameObject::AddChild(GameObject *child) {
-    world->AddChild(child);
+    if (world) {
+        world->AddChild(child);
+    }
     children.push_back(child);
     child->parent = this;
 }
