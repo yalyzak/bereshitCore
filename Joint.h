@@ -67,6 +67,7 @@ class Joint : public Component{
         }
 
     public:
+        Joint* Copy() const override;
         Joint(GameObject* bodyB, Vector3* anchor = nullptr, double beta = 0.2);
 
 

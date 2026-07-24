@@ -227,6 +227,11 @@ void Joint::CastAnchorDefault() {
     worldAnchor = &transformB->position;
 }
 
+Joint * Joint::Copy() const {
+    Joint* joint = new Joint(nullptr, worldAnchor, beta);
+    return joint;
+}
+
 Joint::Joint(GameObject *bodyB, Vector3* anchor, double beta) : bodyB(bodyB), worldAnchor(anchor), beta(beta) {
 }
 
