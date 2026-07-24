@@ -134,7 +134,7 @@ GameObject* GameObject::CopyHierarchy(const GameObject* original,GameObjectMap& 
         {},
         original->name
     );
-
+    copied->world = nullptr;
     objectMap.emplace(original, copied);
 
     for (Component* component : original->components) {
