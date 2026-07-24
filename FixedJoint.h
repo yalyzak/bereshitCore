@@ -11,6 +11,9 @@ class FixedJoint : public Joint {
 private:
     void SolveLinear(double dt) override;
     void SolveAngular(double dt) override;
+
+    FixedJoint *Copy() const;
+
 public:
     using Joint::Joint;
 };

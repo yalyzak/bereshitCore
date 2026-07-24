@@ -75,6 +75,9 @@ void FixedJoint::SolveAngular(double dt) {
     }
 }
 
-
+FixedJoint * FixedJoint::Copy() const {
+    FixedJoint* fixed_joint = new FixedJoint(nullptr, worldAnchor, beta);
+    return fixed_joint;
+}
 
 
