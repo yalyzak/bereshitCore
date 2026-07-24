@@ -53,7 +53,7 @@ int main() {
 
     auto floor2 = floor.DeepCopy();
 
-    std::list<GameObject*> scene;
+    std::vector<GameObject*> scene;
     scene.push_back(&obj1);
     // scene.push_back(&obj2);
     scene.push_back(&floor);

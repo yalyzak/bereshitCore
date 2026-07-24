@@ -103,7 +103,7 @@ void World::SetCache() {
 
 
 
-World::World(bool *running_flag, std::list<GameObject *> children, GameObject* gizmos, Vector3 gravity,
+World::World(bool *running_flag, std::vector<GameObject *> children, GameObject* gizmos, Vector3 gravity,
              double tick, double speed, int physics_epochs) : gravity(gravity), tick(tick), physics_epochs(physics_epochs), speed(speed), gizmos(gizmos), children(children) {
 
     this->gizmos = (new GameObject(Vector3(100000,100000,10000),Vector3(),Vector3(0.1,0.1,0.1)));
@@ -285,7 +285,7 @@ void World::Update(bool updateComponen) {
 
 
 
-void World::SetGizmos(const std::list<Contact>& contacts) {
+void World::SetGizmos(const std::vector<Contact>& contacts) {
     auto gizmoObjects = gizmos->GetAllChildren();
 
     auto gizmoIt = gizmoObjects.begin();

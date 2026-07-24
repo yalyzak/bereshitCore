@@ -5,7 +5,6 @@
 #ifndef BERESHITCORE_WORLD_H
 #define BERESHITCORE_WORLD_H
 
-#include <list>
 #include <memory>
 #include <cstdlib>
 #include <array>
@@ -23,7 +22,7 @@ class World {
     private:
         void ApplyGravityToAll(const Vector3& gravity);
         void IntegrateAll(double dt);
-        std::list<GameObject*> children;
+        std::vector<GameObject*> children;
         GameObject* gizmos;
         bool allChildrenDirty = true;
         bool physicsChildrenDirty = true;
@@ -53,8 +52,8 @@ class World {
         int physics_epochs = 10;
         Vector3 gravity = Vector3(0.0f, -9.8f, 0.0f);
 
-        World(bool* running_flag, std::list<GameObject*> children, GameObject* gizmos, Vector3 gravity, double tick, double speed, int physics_epochs);
-        std::list<GameObject*> getChildren() {
+        World(bool* running_flag, std::vector<GameObject*> children, GameObject* gizmos, Vector3 gravity, double tick, double speed, int physics_epochs);
+        std::vector<GameObject*> getChildren() {
             return children;
         };
         void AddChild(GameObject *child) ;
@@ -80,7 +79,7 @@ class World {
         [[nodiscard]] std::vector<Contact> SolveCollectionsFirstIteration(const std::vector<Collider*>& colliders, double dt) const;
 
         void Update(bool updateComponen = false);
-        void SetGizmos(const std::list<Contact>&);
+        void SetGizmos(const std::vector<Contact>&);
 
 
 
