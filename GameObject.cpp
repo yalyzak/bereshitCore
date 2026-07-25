@@ -33,7 +33,7 @@ std::vector<GameObject*> GameObject::GetAllChildren() {
 }
 
 
-void GameObject::GetAllChildrenPhysics(std::vector<GameObject*>& result) {
+void GameObject::GetAllChildrenPhysics(std::vector<GameObject*>& result) const {
     for (GameObject* child : children) {
         if (child->isPhysicsObject()) {
             result.push_back(child);
@@ -41,6 +41,11 @@ void GameObject::GetAllChildrenPhysics(std::vector<GameObject*>& result) {
 
         child->GetAllChildrenPhysics(result);
     }
+}
+
+std::vector<GameObject *> GameObject::GetAllChildrenPhysics() const {
+    std::vector<GameObject *> result;
+    GetAllChildrenPhysics(result);
 }
 
 void GameObject::GetAllChildrenColliders(std::vector<Collider *> &result) {

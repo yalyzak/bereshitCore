@@ -80,7 +80,8 @@ class GameObject {
         return nullptr;
     }
     [[nodiscard]] const std::vector<Component*>& GetComponents() const;
-    void GetAllChildrenPhysics(std::vector<GameObject*>& result);
+    void GetAllChildrenPhysics(std::vector<GameObject*>& result) const;
+    std::vector<GameObject*> GetAllChildrenPhysics() const;
     void GetAllChildrenColliders(std::vector<Collider*>& result);
     void GetAllChildrenJoints(std::vector<Joint*>& result);
     [[nodiscard]] bool isPhysicsObject()  const{
