@@ -243,7 +243,7 @@ void GameObject::ResetToDefault() {
 
     CallResetToDefault();
     for (auto* child : children) {
-        child->resetToDefault();
+        child->ResetToDefault();
     }
 
     cache.SetDirty();
