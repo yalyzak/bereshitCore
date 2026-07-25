@@ -7,6 +7,8 @@
 
 #include "Vector3.h"
 #include "Quaternion.h"
+class GameObject;
+#include "Cache.h"
 class Transform {
     public:
         Vector3 position;
@@ -14,29 +16,27 @@ class Transform {
         Vector3 scale;
         Quaternion quaternion;
 
-        [[nodiscard]] Vector3 GetLocalPosition() const {
-            return localPosition;
-        }[[nodiscard]] Vector3 GetLocalRotation() const {
-            return localRotation;
-        }[[nodiscard]] Vector3 GetLocalScale() const {
-            return localScale;
-        }
+        [[nodiscard]] Vector3 GetLocalPosition();
+
+        [[nodiscard]] Vector3 GetLocalRotation();
 
         void SetLocalPosition(const Vector3& vec) {
             localPosition = vec;
         }void SetLocalRotation(const Vector3& vec) {
             localRotation = vec;
-        }void SetLocalScale(const Vector3& vec) {
-            localScale = vec;
+        }
+        void SetParentTransform(Transform* transform) {
+            parentTransform = transform;
         }
 
 
-        Transform(const Vector3& position = Vector3(), const Vector3& rotation = Vector3(),const Vector3& scale = Vector3(), const Quaternion& quaternion = Quaternion());
+        Transform(Cache& cache, const Vector3& position = Vector3(), const Vector3& rotation = Vector3(),const Vector3& scale = Vector3(), const Quaternion& quaternion = Quaternion());
 
     private:
         Vector3 localPosition;
         Vector3 localRotation;
-        Vector3 localScale;
+        Transform* parentTransform;
+        Cache& cache;
 };
 
 

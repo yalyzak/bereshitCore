@@ -10,7 +10,7 @@
 #include <unordered_map>
 
 
-#include "Transform.h"
+class Transform;
 #include "Component.h"
 #include "Joint.h"
 class World;

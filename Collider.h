@@ -12,7 +12,7 @@
 #include <variant>
 
 #include "Component.h"
-#include "Transform.h"
+class Transform;
 #include "Vector3.h"
 #include "Quaternion.h"
 #include "RayCastHit.h"
@@ -39,10 +39,16 @@ class Collider : public Component{
             Vector3 axis;
         };
     protected:
+        struct ColliderTransform {
+            Vector3 position;
+            Vector3 rotation;
+            Vector3 scale;
+            Quaternion quaternion;
+        };
         mutable bool isTrigger;
         Transform* transform;
         Vector3 halfSize = Vector3();
-        Transform deltaTransform;
+        ColliderTransform deltaTransform;
         mutable bool enter;
         mutable bool stay;
         const Collider* other;
