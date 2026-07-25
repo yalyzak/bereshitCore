@@ -63,7 +63,7 @@ Transform::Transform(
     if (rotation.magnitude() > 0) {
         this->quaternion = Quaternion::Euler(rotation);
     }
-    setDefault();
+    SetDefault();
 
 }
 
