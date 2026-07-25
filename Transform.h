@@ -16,9 +16,9 @@ class Transform {
         Vector3 scale;
         Quaternion quaternion;
 
-        [[nodiscard]] Vector3 GetLocalPosition();
+        Vector3 GetLocalPosition();
 
-        [[nodiscard]] Vector3 GetLocalRotation();
+        Vector3 GetLocalRotation();
 
         void SetLocalPosition(const Vector3 vec) {
             localPosition = vec;
