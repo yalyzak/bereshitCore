@@ -98,6 +98,7 @@ public:
     void attach(GameObject& obj) override;
 
     static void SolveFrictionImpulse(Rigidbody& rb1, Rigidbody& rb2, const Vector3& contact_point, const Vector3& normal, double dt);
+    void ResetToDefault() override;
 };
 
 

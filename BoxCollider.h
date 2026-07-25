@@ -27,7 +27,7 @@ class BoxCollider : public Collider {
     using Collider::Collider;
     BoxCollider* Copy() const override;
 
-    [[nodiscard]] auto CheckCollision(const Collider* collider2) -> ContactPoints override;
+    [[nodiscard]] auto CheckCollision(Collider* collider2) -> ContactPoints override;
     bool AabbCollision(const Collider* collider2) override;
     std::optional<SatResult> Sat(const Collider* otherCollider) const override;
 

@@ -51,7 +51,7 @@ class Collider : public Component{
         ColliderTransform deltaTransform;
         mutable bool enter;
         mutable bool stay;
-        const Collider* other;
+        mutable Collider* other;
         mutable Vector3 cachedMin;
         mutable Vector3 cachedMax;
     private:
@@ -77,7 +77,7 @@ public:
     void attach(GameObject& obj) override;
 
 
-    virtual ContactPoints CheckCollision(const Collider* collider2);
+    virtual ContactPoints CheckCollision(Collider* collider2);
     virtual bool AabbCollision(const Collider* collider2);
     virtual ContactPoints GenerateContacts(SatResult&) const;
     virtual void HandleCollisionExit() const;

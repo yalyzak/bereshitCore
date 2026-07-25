@@ -5,10 +5,6 @@
 #include "Transform.h"
 
 Vector3 Transform::GetLocalPosition() {
-    if (!cache.localPositionDirty) {
-        return localPosition;
-    }
-    cache.localPositionDirty = false;
     if (parentTransform == nullptr) {
         localPosition = position;
         return localPosition;
@@ -21,10 +17,6 @@ Vector3 Transform::GetLocalPosition() {
 }
 
 Vector3 Transform::GetLocalRotation() {
-    if (!cache.localRotationDirty) {
-        return localRotation;
-    }
-    cache.localRotationDirty = false;
     if (parentTransform == nullptr) {
         localRotation = rotation;
         return localRotation;

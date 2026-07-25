@@ -91,6 +91,8 @@ class GameObject {
     [[nodiscard]] GameObject* DeepCopy() const;
     void AddChild(GameObject*);
     void SetDefault();
+    void resetToDefault();
+    void CallResetToDefault();
 
 
 };

@@ -13,16 +13,11 @@ class Cache {
         bool rotationDirty = true;
         bool rotationDirtyAbs = true;
         bool aabbDirty = true;
-        bool localPositionDirty = true;
-        bool localRotationDirty = true;
 
         void SetDirty() {
             rotationDirty = true;
             rotationDirtyAbs = true;
             aabbDirty = true;
-            localPositionDirty = true;
-            localRotationDirty = true;
-
 
         }
 };

@@ -334,6 +334,14 @@ void Rigidbody::SolveFrictionImpulse(Rigidbody &rb1, Rigidbody &rb2, const Vecto
 
 }
 
+void Rigidbody::ResetToDefault() {
+    acceleration.Zero();
+    velocity.Zero();
+    angularVelocity.Zero();
+    angularAcceleration.Zero();
+    cache->SetDirty();
+}
+
 
 
 

@@ -103,7 +103,7 @@ BoxCollider * BoxCollider::Copy() const {
     return box_collider;
 }
 
-ContactPoints BoxCollider::CheckCollision(const Collider* collider2)  {
+ContactPoints BoxCollider::CheckCollision(Collider* collider2)  {
     ContactPoints contact_points;
 
     if (typeid(*collider2) == typeid(BoxCollider)) {
@@ -123,8 +123,8 @@ ContactPoints BoxCollider::CheckCollision(const Collider* collider2)  {
         SatResult result = *sat_result;
         contact_points = GenerateContacts(result);
 
-        // HandleCollisionEvents(collider2.get(), &contact_points);
-        // collider2->HandleCollisionEvents(this, &contact_points);
+        HandleCollisionEvents(collider2, &contact_points);
+        collider2->HandleCollisionEvents(this, &contact_points);
 
         if (GetIsTrigger() || collider2->GetIsTrigger()) {
             return contact_points;

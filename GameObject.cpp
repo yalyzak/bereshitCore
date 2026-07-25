@@ -234,6 +234,28 @@ void GameObject::AddChild(GameObject *child) {
 void GameObject::SetDefault() {
 }
 
+void GameObject::resetToDefault() {
+    transform.ResetToDefault();
+    auto* rb = this->GetComponent<Rigidbody>();
+    if (rb != nullptr) {
+        rb->ResetToDefault();
+    }
+
+    CallResetToDefault();
+    for (auto* child : children) {
+        child->resetToDefault();
+    }
+
+    cache.SetDirty();
+
+}
+
+void GameObject::CallResetToDefault() {
+    for (auto* component : components) {
+        component->ResetToDefault();
+    }
+}
+
 
 Component* GameObject::GetComponent(const std::string& name) {
     for (auto* comp : components) {

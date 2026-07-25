@@ -138,7 +138,7 @@ void Collider::attach(GameObject& obj) {
     halfSize = (obj.transform.scale + deltaTransform.scale) * 0.5;
 }
 
-ContactPoints Collider::CheckCollision(const Collider* collider2) {
+ContactPoints Collider::CheckCollision(Collider* collider2) {
     return {};
 }
 
