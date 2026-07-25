@@ -31,17 +31,17 @@ Vector3 Transform::GetLocalRotation() {
 }
 
 void Transform::SetLocalPosition(const Vector3 vec) {
+    Vector3 oldPosition = position.Copy();
     if (parentTransform == nullptr) {
         position = vec;
         cache.SetDirty();
     }else {
-        std::cout << "asd" << std::endl;
         Vector3 worldOffset = parentTransform->quaternion.Rotate(vec);
         position = parentTransform->position + worldOffset;
         cache.SetDirty();
 
     }
-    Vector3 worldDelta = position - vec;
+    Vector3 worldDelta =  position - oldPosition;
 
     worldDelta = position - vec;
 
