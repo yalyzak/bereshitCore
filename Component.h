@@ -60,7 +60,7 @@ public:
     {
         // Most components have no GameObject references.
     }
-    virtual void ResetToDefault();
+    virtual void ResetToDefault(){}
 
 };
 
