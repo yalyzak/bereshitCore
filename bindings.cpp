@@ -33,6 +33,10 @@ public:
 
         return py::str(self.attr("__class__").attr("__name__"));
     }
+    bool IsPythonComponent() const override {
+        return true;
+    }
+
     void Update(double dt) override {
         PYBIND11_OVERRIDE(
             void,       // Return type
@@ -49,6 +53,15 @@ public:
             Start
         );
     }
+    Component* Copy() const override {
+        PYBIND11_OVERRIDE(Component*, Component, Copy);
+    }
+    virtual void ResetToDefault() override {
+        PYBIND11_OVERRIDE(void, Component, ResetToDefault);
+    }
+    virtual void OnCollisionEnter(const Collision& collision) override {
+    PYBIND11_OVERRIDE(void, Component,OnCollisionEnter,collision);
+}
 };
 
 
@@ -73,7 +86,8 @@ PYBIND11_MODULE(bereshitCore, m) {
     })
         .def("__mul__",
         py::overload_cast<double>(&Vector3::operator*, py::const_))
-
+        .def("__sub__",
+            py::overload_cast<const Vector3&>(&Vector3::operator-, py::const_))
         .def("__mul__",
             py::overload_cast<const Vector3&>(&Vector3::operator*, py::const_))
         .def("__add__",
@@ -112,23 +126,33 @@ PYBIND11_MODULE(bereshitCore, m) {
         .def_readwrite("position", &Transform::position)
         .def_readwrite("rotation", &Transform::rotation)
         .def_readwrite("size", &Transform::scale)
-        .def_readwrite("quaternion", &Transform::quaternion);
+        .def_readwrite("quaternion", &Transform::quaternion)
+        .def("set_default", &Transform::SetDefault)
+        .def_property("local_position", &Transform::GetLocalPosition, &Transform::SetLocalPosition)
+        .def_property("local_rotation", &Transform::GetLocalRotation, &Transform::SetLocalRotation);
 
 
     py::class_<GameObject>(m, "GameObject")
-    .def(py::init<Vector3, Vector3, Vector3, std::list<GameObject*>, std::string>(),
+    .def_property("parent", &GameObject::GetParent, &GameObject::SetParent)
+
+    .def(py::init<Vector3, Vector3, Vector3, std::vector<GameObject*>, std::string>(),
     py::arg("position") = Vector3(), py::arg("rotation") = Vector3(), py::arg("size") = Vector3(1, 1, 1),
-     py::arg("children") = std::list<GameObject*>{}, py::arg("name") = "" )
-    .def("search_by_component", &GameObject::search_by_component)
-    .def("search_by_component", &GameObject::search_by_component)
-    .def_property_readonly("get_all_children", &GameObject::GetComponents)
-    .def("get_component",static_cast<std::shared_ptr<Component> (GameObject::*)(const std::string&)>(&GameObject::GetComponent))
+     py::arg("children") = std::vector<GameObject*>{}, py::arg("name") = "" )
+    .def("search_by_component", &GameObject::SearchByComponent)
+    .def_property_readonly("children",&GameObject::GetChildren, py::return_value_policy::reference_internal)
+    .def("get_component",static_cast<Component* (GameObject::*)(const std::string&)>(&GameObject::GetComponent),py::return_value_policy::reference)
     .def("add_component", &GameObject::AddComponent,
          py::return_value_policy::reference)
     .def_property("World", &GameObject::GetWorld, &GameObject::setWorld)
     .def_readwrite("name", &GameObject::name)
+    .def("reset_to_default", &GameObject::ResetToDefault)
+    .def("set_default", &GameObject::SetDefault)
     .def_readwrite("Cache", &GameObject::cache)
-    .def_readwrite("transform", &GameObject::transform)
+    .def_readonly("transform", &GameObject::transform)
+    .def("deep_copy", &GameObject::DeepCopy)
+    .def("get_all_children_physics",py::overload_cast<>(&GameObject::GetAllChildrenPhysics, py::const_))
+    .def("search_by_name", &GameObject::SearchByName)
+    .def("add_child",&GameObject::AddChild, py::keep_alive<1, 2>())
     .def("__getattr__", [](GameObject& self, const std::string& name) {
         auto comp = self.GetComponent(name); // returns std::shared_ptr<Component>
 
@@ -146,19 +170,27 @@ PYBIND11_MODULE(bereshitCore, m) {
     .def_readwrite("tick", &World::tick)
     .def_readwrite("speed", &World::speed)
     .def("search_by_component", &World::search_by_component)
-    .def(py::init<bool*,std::list<GameObject*>,GameObject*,Vector3,double,double,int>())
+    .def(py::init<bool*,std::vector<GameObject*>,GameObject*,Vector3,double,double,int>())
     .def("Start", &World::Start)
     .def("Exit", &World::Exit)
     .def("get_all_children", &World::getAllChildren)
     .def("get_gizmos", &World::getGizmos)
     .def("update", &World::Update, py::arg("updateComponent") = false);
 
-    py::class_<Component, PyComponent, std::shared_ptr<Component>>(m, "Component")
+   py::class_<Component, PyComponent, std::shared_ptr<Component>>(m, "Component")
+    .def("is_python_component", &Component::IsPythonComponent)
+    .def("copy", &Component::Copy,
+         py::return_value_policy::take_ownership)
+    .def("__copy__", [](const Component& self) {
+        return self.Copy();
+    }, py::return_value_policy::take_ownership)
     .def(py::init<>())
     .def_property("name", &Component::GetName, &Component::SetName)
     .def_property_readonly("parent", &Component::GetParent)
+    .def("OnCollisionEnter", &Component::OnCollisionEnter)
     .def("Update", &Component::Update)
     .def("Start", &Component::Start)
+    .def("reset_to_default", &Component::ResetToDefault)
     .def("attach", &Component::attach);
     py::class_<Cache>(m, "Cache")
     .def("SetDirty", &Cache::SetDirty);
@@ -189,8 +221,10 @@ PYBIND11_MODULE(bereshitCore, m) {
     py::class_<Collider, Component, std::shared_ptr<Collider>>(m, "Collider")
      .def(py::init<bool>(), py::arg("is_trigger") = false);
     py::class_<BoxCollider, Collider, std::shared_ptr<BoxCollider>>(m, "BoxCollider")
-    .def(py::init<>());
+    .def(py::init<bool>(), py::arg("is_trigger") = false);
     py::class_<Joint, Component, std::shared_ptr<Joint>>(m, "Joint")
+    .def("cast_anchor", &Joint::CastAnchor)
+
     .def(
     py::init<
         GameObject*,
@@ -217,6 +251,9 @@ PYBIND11_MODULE(bereshitCore, m) {
         py::arg("anchor") = nullptr,py::arg("beta") = 0.2);
 
 
+    py::class_<Collision>(m, "Collision")
+    .def_readonly("other", &Collision::other)
+    .def_readonly("contact_points", &Collision::contact_points);
 
 
 
