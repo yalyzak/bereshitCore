@@ -35,9 +35,7 @@ class GameObject {
 
         static void AttachHierarchy(GameObject *object);
 
-        void SetDefaultQuaternion();
-        void SetDefaultPosition();
-        void SetDefaultScale();
+
 
     public:
         Transform transform;

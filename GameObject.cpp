@@ -203,8 +203,7 @@ void GameObject::AttachHierarchy(GameObject* object)
     }
 }
 
-void GameObject::SetDefaultQuaternion() {
-}
+
 
 
 GameObject* GameObject::DeepCopy() const {
