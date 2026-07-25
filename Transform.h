@@ -10,6 +10,16 @@
 class GameObject;
 #include "Cache.h"
 class Transform {
+    private:
+        Vector3 localPosition;
+        Vector3 localRotation;
+        Vector3 defaultPosition;
+        Quaternion defaultQuaternion;
+        Vector3 defaultScale;
+        Transform* parentTransform = nullptr;
+        Cache& cache;
+        GameObject& parent;
+
     public:
         Vector3 position;
         Vector3 rotation;
@@ -51,15 +61,7 @@ class Transform {
 
         Transform(GameObject& parent,Cache& cache, const Vector3& position = Vector3(), const Vector3& rotation = Vector3(),const Vector3& scale = Vector3(), const Quaternion& quaternion = Quaternion());
 
-    private:
-        Vector3 localPosition;
-        Vector3 localRotation;
-        Vector3 defaultPosition;
-        Quaternion defaultQuaternion;
-        Vector3 defaultScale;
-        Transform* parentTransform = nullptr;
-        Cache& cache;
-        GameObject& parent;
+
 };
 
 
