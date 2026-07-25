@@ -30,29 +30,38 @@ Vector3 Transform::GetLocalRotation() {
     return localRotation;
 }
 
-void Transform::SetLocalPosition(const Vector3 vec) {
-    Vector3 oldPosition = position.Copy();
+void Transform::SetLocalPosition(const Vector3 newLocalPosition) {
+    const Vector3 oldWorldPosition = position.Copy();
+
     if (parentTransform == nullptr) {
-        position = vec;
-        cache.SetDirty();
-    }else {
-        Vector3 worldOffset = parentTransform->quaternion.Rotate(vec);
+        position = newLocalPosition;
+    } else {
+        // Convert local position to world position
+        const Vector3 worldOffset =
+            parentTransform->quaternion.Rotate(newLocalPosition);
+
         position = parentTransform->position + worldOffset;
-        cache.SetDirty();
-
     }
-    Vector3 worldDelta =  position - oldPosition;
 
-    worldDelta = position - vec;
+    cache.SetDirty();
 
-    auto joint = parent.GetComponent<Joint>();
-    if (joint != nullptr) {
+    // World-space movement delta
+    const Vector3 worldDelta = position - oldWorldPosition;
+
+    if (auto joint = parent.GetComponent<Joint>(); joint != nullptr) {
         joint->CastAnchor();
-
     }
-    for (auto child : parent.GetChildren()) {
-        Vector3 localDelta = child->GetParent()->transform.quaternion.Inverse().Rotate(worldDelta);
-        child->transform.SetLocalPosition(localDelta);
+
+    // Update each child's local position
+    for (GameObject* child : parent.GetChildren()) {
+        Transform& childTransform = child->transform;
+
+        const Vector3 localDelta =
+            quaternion.Inverse().Rotate(worldDelta);
+
+        childTransform.SetLocalPosition(
+            childTransform.GetLocalPosition() + localDelta
+        );
     }
 }
 
