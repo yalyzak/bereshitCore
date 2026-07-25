@@ -60,7 +60,7 @@ class GameObject {
 
         GameObject* AddComponent(Component* comp);
 
-        void setParent(GameObject* p) {
+        void SetParent(GameObject* p) {
             parent = p;
         };
         GameObject* GetParent() {
