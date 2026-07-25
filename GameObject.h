@@ -63,6 +63,9 @@ class GameObject {
         void setParent(GameObject* p) {
             parent = p;
         };
+        GameObject* GetParent() {
+            return parent;
+        }
 
     std::vector<GameObject*> GetChildren() {
         return children;
