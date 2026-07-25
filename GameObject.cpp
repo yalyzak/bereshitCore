@@ -202,6 +202,11 @@ void GameObject::AttachHierarchy(GameObject* object)
         AttachHierarchy(child);
     }
 }
+
+void GameObject::SetDefaultQuaternion() {
+}
+
+
 GameObject* GameObject::DeepCopy() const {
     GameObjectMap objectMap;
 
@@ -219,6 +224,9 @@ void GameObject::AddChild(GameObject *child) {
     children.push_back(child);
     child->parent = this;
     child->transform.SetParentTransform(&transform);
+}
+
+void GameObject::SetDefault() {
 }
 
 

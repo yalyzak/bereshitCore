@@ -20,13 +20,25 @@ class Transform {
 
         [[nodiscard]] Vector3 GetLocalRotation();
 
-        void SetLocalPosition(const Vector3& vec) {
+        void SetLocalPosition(const Vector3 vec) {
             localPosition = vec;
-        }void SetLocalRotation(const Vector3& vec) {
+        }void SetLocalRotation(const Vector3 vec) {
             localRotation = vec;
         }
         void SetParentTransform(Transform* transform) {
             parentTransform = transform;
+        }
+        void SetdefaultPosition() {
+            defaultPosition = position.Copy();
+        }void SetdefaultScale() {
+            defaultScale = scale.Copy();
+        }void SetdefaultQuaternion() {
+            quaternion = quaternion.Copy();
+        }
+        void setDefault() {
+            SetdefaultPosition();
+            SetdefaultQuaternion();
+            SetdefaultScale();
         }
 
 
@@ -35,6 +47,9 @@ class Transform {
     private:
         Vector3 localPosition;
         Vector3 localRotation;
+        Vector3 defaultPosition;
+        Quaternion defaultQuaternion;
+        Vector3 defaultScale;
         Transform* parentTransform;
         Cache& cache;
 };

@@ -12,7 +12,7 @@
 
 class Vector3 {
 public:
-    Vector3 Copy();
+    Vector3 Copy() const;
     double x, y, z;
     Vector3();
     Vector3(double x, double y, double z);

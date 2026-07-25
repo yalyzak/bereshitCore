@@ -35,6 +35,10 @@ class GameObject {
 
         static void AttachHierarchy(GameObject *object);
 
+        void SetDefaultQuaternion();
+        void SetDefaultPosition();
+        void SetDefaultScale();
+
     public:
         Transform transform;
         std::string name;
@@ -87,6 +91,7 @@ class GameObject {
 
     [[nodiscard]] GameObject* DeepCopy() const;
     void AddChild(GameObject*);
+    void SetDefault();
 
 
 };

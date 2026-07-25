@@ -8,7 +8,7 @@
 #include <cmath>
 #include <math.h>
 
-Vector3 Vector3::Copy() {
+Vector3 Vector3::Copy()  const{
     return {x, y, z};
 }
 

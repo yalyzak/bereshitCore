@@ -9,7 +9,7 @@ constexpr double DegToRad(double deg) {
     return deg * (std::numbers::pi / 180.0);
 }
 
-Quaternion Quaternion::Copy() {
+Quaternion Quaternion::Copy() const {
     return {x,y,z,w};
 }
 

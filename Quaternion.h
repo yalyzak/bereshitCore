@@ -18,8 +18,8 @@ public:
     double x;
     double y;
     double z;
-    Quaternion Copy();
-    
+    Quaternion Copy() const;
+
     Quaternion();
     Quaternion(double x, double y, double z, double w);
 
