@@ -234,7 +234,7 @@ void GameObject::AddChild(GameObject *child) {
 void GameObject::SetDefault() {
 }
 
-void GameObject::resetToDefault() {
+void GameObject::ResetToDefault() {
     transform.ResetToDefault();
     auto* rb = this->GetComponent<Rigidbody>();
     if (rb != nullptr) {
