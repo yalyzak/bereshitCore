@@ -232,8 +232,6 @@ void GameObject::AddChild(GameObject *child) {
 }
 
 
-void GameObject::SetDefault() {
-}
 
 void GameObject::ResetToDefault() {
     transform.ResetToDefault();

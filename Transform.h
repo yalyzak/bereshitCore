@@ -35,7 +35,7 @@ class Transform {
         }void SetdefaultQuaternion() {
             quaternion = quaternion.Copy();
         }
-        void setDefault() {
+        void SetDefault() {
             SetdefaultPosition();
             SetdefaultQuaternion();
             SetdefaultScale();
