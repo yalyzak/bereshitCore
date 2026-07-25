@@ -46,6 +46,7 @@ void GameObject::GetAllChildrenPhysics(std::vector<GameObject*>& result) const {
 std::vector<GameObject *> GameObject::GetAllChildrenPhysics() const {
     std::vector<GameObject *> result;
     GetAllChildrenPhysics(result);
+    return result;
 }
 
 void GameObject::GetAllChildrenColliders(std::vector<Collider *> &result) {
