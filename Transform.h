@@ -57,7 +57,7 @@ class Transform {
         Vector3 defaultPosition;
         Quaternion defaultQuaternion;
         Vector3 defaultScale;
-        Transform* parentTransform;
+        Transform* parentTransform = nullptr;
         Cache& cache;
 };
 

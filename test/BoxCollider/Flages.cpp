@@ -27,10 +27,9 @@ namespace Flages {
         std::vector<GameObject*> scene;
         GameObject* gimoz{};
 
-
         scene.push_back(&floor);
         scene.push_back(&obj);
-
+        floor.transform.GetLocalPosition();
         World world(&running, scene, gimoz, Vector3(0,-9.8,0), 1/60.0, 1, 0);
 
 
