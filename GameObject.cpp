@@ -9,7 +9,7 @@
 
 
 GameObject::GameObject(Vector3 position, Vector3 rotation, Vector3 scale,
-                       const std::vector<GameObject*>& children, std::string name) : transform(cache, position, rotation, scale), children(children), name(name) {}
+                       const std::vector<GameObject*>& children, std::string name) : transform(*this, cache, position, rotation, scale), children(children), name(name) {}
 
 
 GameObject* GameObject::AddComponent(Component* comp) {
