@@ -4,6 +4,9 @@
 
 #include "Transform.h"
 
+#include <algorithm>
+#include <iostream>
+
 #include "GameObject.h"
 
 Vector3 Transform::GetLocalPosition() {
@@ -32,6 +35,7 @@ void Transform::SetLocalPosition(const Vector3 vec) {
         position = vec;
         cache.SetDirty();
     }else {
+        std::cout << "asd" << std::endl;
         Vector3 worldOffset = parentTransform->quaternion.Rotate(vec);
         position = parentTransform->position + worldOffset;
         cache.SetDirty();
