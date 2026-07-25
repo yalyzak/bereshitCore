@@ -20,9 +20,11 @@ namespace Flages {
         Rigidbody rb2;
         BoxCollider box_collider2(true);
         Debug debug;
+        obj.AddChild(obj.DeepCopy());
+        obj.transform.SetLocalPosition(Vector3(10,1,1));
         obj.AddComponent(&rb2);
         obj.AddComponent(&box_collider2);
-        obj.AddComponent(&debug);
+        // obj.AddComponent(&debug);
         bool running = true;
         std::vector<GameObject*> scene;
         GameObject* gimoz{};
@@ -33,7 +35,7 @@ namespace Flages {
         World world(&running, scene, gimoz, Vector3(0,-9.8,0), 1/60.0, 1, 0);
 
 
-        double seconds = 2.1;
+        double seconds = 60 * 60;
         double dt = 1/60.0;
         for (int i = 0; i++, i <=1/dt * seconds;) {
             world.Update();
