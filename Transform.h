@@ -20,9 +20,9 @@ class Transform {
 
         Vector3 GetLocalRotation();
 
-        void SetLocalPosition(const Vector3 vec) {
-            localPosition = vec;
-        }void SetLocalRotation(const Vector3 vec) {
+        void SetLocalPosition(const Vector3 vec);
+
+        void SetLocalRotation(const Vector3 vec) {
             localRotation = vec;
         }
         void SetParentTransform(Transform* transform) {
@@ -49,7 +49,7 @@ class Transform {
 
 
 
-        Transform(Cache& cache, const Vector3& position = Vector3(), const Vector3& rotation = Vector3(),const Vector3& scale = Vector3(), const Quaternion& quaternion = Quaternion());
+        Transform(GameObject& parent,Cache& cache, const Vector3& position = Vector3(), const Vector3& rotation = Vector3(),const Vector3& scale = Vector3(), const Quaternion& quaternion = Quaternion());
 
     private:
         Vector3 localPosition;
@@ -59,6 +59,7 @@ class Transform {
         Vector3 defaultScale;
         Transform* parentTransform = nullptr;
         Cache& cache;
+        GameObject& parent;
 };
 
 

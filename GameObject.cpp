@@ -231,6 +231,7 @@ void GameObject::AddChild(GameObject *child) {
     child->transform.SetParentTransform(&transform);
 }
 
+
 void GameObject::SetDefault() {
 }
 
