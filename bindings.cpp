@@ -134,15 +134,13 @@ PYBIND11_MODULE(bereshitCore, m) {
 
     py::class_<GameObject>(m, "GameObject")
     .def_property("parent", &GameObject::GetParent, &GameObject::SetParent)
-
     .def(py::init<Vector3, Vector3, Vector3, std::vector<GameObject*>, std::string>(),
     py::arg("position") = Vector3(), py::arg("rotation") = Vector3(), py::arg("size") = Vector3(1, 1, 1),
      py::arg("children") = std::vector<GameObject*>{}, py::arg("name") = "" )
     .def("search_by_component", &GameObject::SearchByComponent)
     .def_property_readonly("children",&GameObject::GetChildren, py::return_value_policy::reference_internal)
     .def("get_component",static_cast<Component* (GameObject::*)(const std::string&)>(&GameObject::GetComponent),py::return_value_policy::reference)
-    .def("add_component", &GameObject::AddComponent,
-         py::return_value_policy::reference)
+    .def("add_component", &GameObject::AddComponent,py::return_value_policy::reference_internal, py::keep_alive<1, 2>())
     .def_property("World", &GameObject::GetWorld, &GameObject::setWorld)
     .def_readwrite("name", &GameObject::name)
     .def("reset_to_default", &GameObject::ResetToDefault)
@@ -154,7 +152,7 @@ PYBIND11_MODULE(bereshitCore, m) {
     .def("search_by_name", &GameObject::SearchByName)
     .def("add_child",&GameObject::AddChild, py::keep_alive<1, 2>())
     .def("__getattr__", [](GameObject& self, const std::string& name) {
-        auto comp = self.GetComponent(name); // returns std::shared_ptr<Component>
+        auto comp = self.GetComponent(name);
 
         if (!comp) {
             throw py::attribute_error(
