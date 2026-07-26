@@ -158,7 +158,7 @@ Rigidbody* Rigidbody::Copy() const {
 
 void Rigidbody::ApplyGravity(const Vector3 &gravity) {
     if (!isKinematic && useGravity) {
-        force += gravity;
+        force += gravity * mass;
     }
 }
 
