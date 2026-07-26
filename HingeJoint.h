@@ -11,6 +11,8 @@ class GameObject;
 
 class HingeJoint : public Joint {
     public:
+        Vector3 GetWorldAxis();
+
         HingeJoint(GameObject* bodyB, Vector3 axis, Vector3* anchor = nullptr, double beta = 0.2);
         HingeJoint *Copy() const override;
     private:

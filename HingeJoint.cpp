@@ -7,6 +7,10 @@
 #include "Rigidbody.h"
 #include "World.h"
 
+Vector3 HingeJoint::GetWorldAxis() {
+    return transformA->quaternion.RotateConjugated(axisLocal).normalized();
+}
+
 HingeJoint::HingeJoint(GameObject* bodyB, Vector3 axis, Vector3* anchor, double beta) : Joint(bodyB, anchor, beta) {
     axisLocal = axis.normalized();
 }
@@ -25,6 +29,9 @@ Vector3 HingeJoint::perp(Vector3 & axis) {
        }
         return axis.cross(helper).normalized();
 }
+
+
+
 
 void HingeJoint::SolveLinear(double dt) {
     auto IinvA = rbA->GetInvertWorld();
