@@ -35,9 +35,10 @@ class GameObject {
 
         static void AttachHierarchy(GameObject *object);
 
-        Vector3 FindTheCenterOfMass();
 
     public:
+        Vector3 FindTheCenterOfMass();
+
         Transform transform;
         std::string name;
         Cache cache;
