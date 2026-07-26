@@ -69,6 +69,8 @@ public:
     }
     bool GetStay() const {
         return stay;
+    }bool GetEnter() const {
+        return enter;
     }
 
     Collider(bool is_trigger =false);
