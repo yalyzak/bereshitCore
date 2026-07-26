@@ -13,6 +13,9 @@
 
 
 class Quaternion {
+private:
+    [[nodiscard]] double Norm() const;
+
 public:
     double w;
     double x;
@@ -26,6 +29,8 @@ public:
     Quaternion Conjugate() const;
     Quaternion Inverse() const;
     [[nodiscard]] double magnitude() const;
+    [[nodiscard]] Quaternion normalized() const;
+
     Vector3 ToEuler() const;
     Vector3 Rotate(const Vector3& v) const;
     Vector3 RotateConjugated(const Vector3& v) const;

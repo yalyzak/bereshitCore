@@ -9,6 +9,10 @@ constexpr double DegToRad(double deg) {
     return deg * (std::numbers::pi / 180.0);
 }
 
+double Quaternion::Norm() const {
+    return std::sqrt(x * x + y * y + z * z + w * w);
+}
+
 Quaternion Quaternion::Copy() const {
     return {x,y,z,w};
 }
@@ -47,6 +51,15 @@ Quaternion Quaternion::Inverse() const
 
 double Quaternion::magnitude() const {
     return std::sqrt(x * x + y * y + z * z + w * w);
+}
+
+Quaternion Quaternion::normalized() const {
+    const double normSq = Norm();
+
+    if (normSq == 0) {
+        return {};
+    }
+    return *this / normSq;
 }
 
 Vector3 Quaternion::ToEuler() const {
