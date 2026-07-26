@@ -213,7 +213,25 @@ void GameObject::AttachHierarchy(GameObject* object)
     }
 }
 
+Vector3 GameObject::FindTheCenterOfMass() {
+    double totalMass = 0;
+    Vector3 weightedSum = Vector3();
+    if (isPhysicsObject()) {
+        const double mass = GetComponent<Rigidbody>()->GetMass();
+        weightedSum += transform.position * mass;
+        totalMass += mass;
+    }
+    auto objs = GetAllChildrenPhysics();
+    for (auto obj : objs) {
+        const double mass = obj->GetComponent<Rigidbody>()->GetMass();
+        weightedSum += obj->transform.position * mass;
+        totalMass += mass;
 
+    }
+    if (totalMass == 0.0)
+        return transform.position; // or Vector3()
+    return weightedSum / totalMass;
+}
 
 
 GameObject* GameObject::DeepCopy() const {

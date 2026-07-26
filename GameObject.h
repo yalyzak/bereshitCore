@@ -35,7 +35,7 @@ class GameObject {
 
         static void AttachHierarchy(GameObject *object);
 
-
+        Vector3 FindTheCenterOfMass();
 
     public:
         Transform transform;

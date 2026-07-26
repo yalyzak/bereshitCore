@@ -67,6 +67,9 @@ public:
     bool GetIsTrigger() const {
         return isTrigger;
     }
+    bool GetStay() const {
+        return stay;
+    }
 
     Collider(bool is_trigger =false);
     std::pair<Vector3, Vector3> GetAabb() const;
