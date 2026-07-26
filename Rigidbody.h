@@ -55,7 +55,9 @@ public:
     [[nodiscard]] bool IsKinematic() const {
         return isKinematic;
     }
-    [[nodiscard]] double GetInvMass() const {
+    [[nodiscard]] double GetMass() const {
+        return mass;
+    }[[nodiscard]] double GetInvMass() const {
         return invMass;
     }
 
