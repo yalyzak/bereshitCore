@@ -144,8 +144,10 @@ GameObject* GameObject::CopyHierarchy(const GameObject* original,GameObjectMap& 
         {},
         original->name
     );
+    std::cout << "2" << std::endl;
 
     objectMap.emplace(original, copied);
+    std::cout << "3" << std::endl;
 
     for (Component* component : original->components) {
         Component* copiedComponent = component->Copy();
@@ -155,6 +157,7 @@ GameObject* GameObject::CopyHierarchy(const GameObject* original,GameObjectMap& 
 
         // Do not call attach() yet.
     }
+    std::cout << "4" << std::endl;
 
     for (GameObject* child : original->children) {
         GameObject* copiedChild = CopyHierarchy(child, objectMap);
@@ -162,6 +165,7 @@ GameObject* GameObject::CopyHierarchy(const GameObject* original,GameObjectMap& 
         copied->children.push_back(copiedChild);
         copiedChild->parent = copied;
     }
+    std::cout << "5" << std::endl;
 
     return copied;
 }
