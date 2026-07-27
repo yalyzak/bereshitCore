@@ -46,6 +46,15 @@ public:
         );
     }
 
+    void PhysicsUpdate(double dt) override {
+        PYBIND11_OVERRIDE(
+            void,       // Return type
+            Component,  // Parent class
+            PhysicsUpdate,     // Function name
+            dt          // Arguments
+        );
+    }
+
     void Start() override {
         PYBIND11_OVERRIDE(
             void,
@@ -75,6 +84,7 @@ PYBIND11_MODULE(bereshitCore, m) {
         .def(py::init<>())
         .def("magnitude", &Vector3::magnitude)
         .def("normalized", &Vector3::normalized)
+        .def("dot", &Vector3::dot)
          .def("__str__", &Vector3::toString)
         .def("__repr__", &Vector3::toString)
         .def("to_np", [](const Vector3& v) {
@@ -86,10 +96,18 @@ PYBIND11_MODULE(bereshitCore, m) {
     })
         .def("__mul__",
         py::overload_cast<double>(&Vector3::operator*, py::const_))
+        .def("__rmul__",
+    [](const Vector3& vec, double scalar) {
+        return vec * scalar;
+    })
         .def("__sub__",
             py::overload_cast<const Vector3&>(&Vector3::operator-, py::const_))
         .def("__mul__",
             py::overload_cast<const Vector3&>(&Vector3::operator*, py::const_))
+        .def("__truediv__",
+            py::overload_cast<const Vector3&>(&Vector3::operator/, py::const_))
+        .def("__truediv__",
+            py::overload_cast<double>(&Vector3::operator/, py::const_))
         .def("__add__",
         py::overload_cast<const Vector3&>(
             &Vector3::operator+, py::const_
@@ -119,7 +137,9 @@ PYBIND11_MODULE(bereshitCore, m) {
         .def("rotate", &Quaternion::Rotate)
         .def("to_matrix3",py::overload_cast<std::array<std::array<double, 3>, 3>&>(&Quaternion::ToMatrix3,py::const_))
         .def("axis_angle", &Quaternion::AxisAngle)
+        .def("to_euler", &Quaternion::ToEuler)
         .def("conjugate", &Quaternion::Conjugate)
+        .def("normalized", &Quaternion::normalized)
         .def_readwrite("w", &Quaternion::w);
 
     py::class_<Transform>(m, "Transform")
@@ -148,6 +168,7 @@ PYBIND11_MODULE(bereshitCore, m) {
     .def_readwrite("Cache", &GameObject::cache)
     .def_readonly("transform", &GameObject::transform)
     .def("deep_copy", &GameObject::DeepCopy)
+    .def("findTheCenterOfMass", &GameObject::FindTheCenterOfMass)
     .def("get_all_children_physics",py::overload_cast<>(&GameObject::GetAllChildrenPhysics, py::const_))
     .def("search_by_name", &GameObject::SearchByName)
     .def("add_child",&GameObject::AddChild, py::keep_alive<1, 2>())
@@ -187,6 +208,7 @@ PYBIND11_MODULE(bereshitCore, m) {
     .def_property_readonly("parent", &Component::GetParent)
     .def("OnCollisionEnter", &Component::OnCollisionEnter)
     .def("Update", &Component::Update)
+    .def("PhysicsUpdate", &Component::PhysicsUpdate)
     .def("Start", &Component::Start)
     .def("reset_to_default", &Component::ResetToDefault)
     .def("attach", &Component::attach);
@@ -194,8 +216,28 @@ PYBIND11_MODULE(bereshitCore, m) {
     .def("SetDirty", &Cache::SetDirty);
     py::class_<Rigidbody, Component, std::shared_ptr<Rigidbody>>(m, "Rigidbody")
     .def_property("isKinematic", &Rigidbody::IsKinematic, &Rigidbody::SetIsKinematic)
+    .def_property_readonly("mass", &Rigidbody::GetMass)
+
+    .def("apply_angular_impulse", &Rigidbody::ApplyTorqueImpulse)
+
+    .def_property_readonly("Iinv_world", [](Rigidbody& self) {
+    double (*matrix)[3][3] = self.GetInvertWorld();
+
+    py::array_t<double> result({3, 3});
+    auto out = result.mutable_unchecked<2>();
+
+    for (py::ssize_t row = 0; row < 3; ++row) {
+        for (py::ssize_t column = 0; column < 3; ++column) {
+            out(row, column) = (*matrix)[row][column];
+        }
+    }
+
+        return result;
+    })
+
     .def_readwrite("Freeze_Rotation", &Rigidbody::freezeRotation)
     .def_readwrite("velocity", &Rigidbody::velocity)
+    .def_readwrite("angular_velocity", &Rigidbody::angularVelocity)
     .def(
     py::init<
         float,
@@ -217,6 +259,8 @@ PYBIND11_MODULE(bereshitCore, m) {
     py::arg("Freeze_Rotation") = Vector3());
 
     py::class_<Collider, Component, std::shared_ptr<Collider>>(m, "Collider")
+     .def_property_readonly("stay", &Collider::GetStay)
+     .def_property_readonly("enter", &Collider::GetEnter)
      .def(py::init<bool>(), py::arg("is_trigger") = false);
     py::class_<BoxCollider, Collider, std::shared_ptr<BoxCollider>>(m, "BoxCollider")
     .def(py::init<bool>(), py::arg("is_trigger") = false);
@@ -246,7 +290,8 @@ PYBIND11_MODULE(bereshitCore, m) {
 );
     py::class_<HingeJoint, Joint, std::shared_ptr<HingeJoint>>(m, "HingeJoint")
     .def(py::init<GameObject*, Vector3, Vector3*, double>(),py::arg("bodyB"), py::arg("axis"),
-        py::arg("anchor") = nullptr,py::arg("beta") = 0.2);
+        py::arg("anchor") = nullptr,py::arg("beta") = 0.2)
+    .def_property_readonly("axis_world", &HingeJoint::GetWorldAxis);
 
 
     py::class_<Collision>(m, "Collision")
