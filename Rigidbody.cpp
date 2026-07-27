@@ -301,6 +301,31 @@ void Rigidbody::ApplyTorqueImpulse(Vector3 impulse, Vector3 r) {
     }
 }
 
+void Rigidbody::ApplyAngularImpulse(const Vector3& angularImpulse) {
+    // Convert world-space angular impulse to local space
+    Vector3 localAngularImpulse =
+        transform->quaternion.RotateConjugated(angularImpulse);
+
+    // Local inverse inertia is diagonal
+    Vector3 localDeltaW = localAngularImpulse * invertInertia;
+
+    // Convert angular-velocity change back to world space
+    Vector3 deltaW =
+        transform->quaternion.Rotate(localDeltaW);
+
+    if (!freezeRotation.x) {
+        angularVelocity.x += deltaW.x;
+    }
+
+    if (!freezeRotation.y) {
+        angularVelocity.y += deltaW.y;
+    }
+
+    if (!freezeRotation.z) {
+        angularVelocity.z += deltaW.z;
+    }
+}
+
 void Rigidbody::attach(GameObject& obj) {
     Component::attach(obj);
     transform = &obj.transform;
