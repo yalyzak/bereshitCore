@@ -151,9 +151,14 @@ GameObject* GameObject::CopyHierarchy(const GameObject* original,GameObjectMap& 
 
     for (Component* component : original->components) {
         Component* copiedComponent = component->Copy();
+        std::cout << "A" << std::endl;
 
         copied->components.push_back(copiedComponent);
+        std::cout << "B" << std::endl;
+
         copiedComponent->SetParent(copied);
+        std::cout << "C" << std::endl;
+
 
         // Do not call attach() yet.
     }
