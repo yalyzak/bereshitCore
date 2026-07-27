@@ -144,25 +144,20 @@ GameObject* GameObject::CopyHierarchy(const GameObject* original,GameObjectMap& 
         {},
         original->name
     );
-    std::cout << "2" << std::endl;
 
     objectMap.emplace(original, copied);
-    std::cout << "3" << std::endl;
 
     for (Component* component : original->components) {
+        if (component->IsPythonComponent()) {
+            continue;
+        }
         Component* copiedComponent = component->Copy();
-        std::cout << "A" << std::endl;
 
         copied->components.push_back(copiedComponent);
-        std::cout << "B" << std::endl;
-
         copiedComponent->SetParent(copied);
-        std::cout << "C" << std::endl;
-
 
         // Do not call attach() yet.
     }
-    std::cout << "4" << std::endl;
 
     for (GameObject* child : original->children) {
         GameObject* copiedChild = CopyHierarchy(child, objectMap);
@@ -170,7 +165,6 @@ GameObject* GameObject::CopyHierarchy(const GameObject* original,GameObjectMap& 
         copied->children.push_back(copiedChild);
         copiedChild->parent = copied;
     }
-    std::cout << "5" << std::endl;
 
     return copied;
 }
@@ -246,17 +240,10 @@ Vector3 GameObject::FindTheCenterOfMass() {
 
 GameObject* GameObject::DeepCopy() const {
     GameObjectMap objectMap;
-    std::cout << "1" << std::endl;
 
     GameObject* result = CopyHierarchy(this, objectMap);
-    std::cout << "2" << std::endl;
-
     RemapHierarchy(result, objectMap);
-    std::cout << "3" << std::endl;
-
     AttachHierarchy(result);
-    std::cout << "4" << std::endl;
-
 
     return result;
 }
