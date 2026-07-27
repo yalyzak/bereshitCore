@@ -237,10 +237,17 @@ Vector3 GameObject::FindTheCenterOfMass() {
 
 GameObject* GameObject::DeepCopy() const {
     GameObjectMap objectMap;
+    std::cout << "1" << std::endl;
 
     GameObject* result = CopyHierarchy(this, objectMap);
+    std::cout << "2" << std::endl;
+
     RemapHierarchy(result, objectMap);
+    std::cout << "3" << std::endl;
+
     AttachHierarchy(result);
+    std::cout << "4" << std::endl;
+
 
     return result;
 }
