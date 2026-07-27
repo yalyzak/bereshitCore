@@ -45,4 +45,6 @@ add_executable(bereshitCore main.cpp
         test/BoxCollider/Flages.cpp
         test/BoxCollider/Debug.cpp
         test/BoxCollider/Debug.h
+        test/RigidBody/diffrent_masses.cpp
+        test/Joint/FixedJoint/angularVelocity.cpp
 )
