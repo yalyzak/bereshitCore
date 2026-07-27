@@ -258,6 +258,7 @@ GameObject* Joint::GetOther() {
 
 
 void Joint::attach(GameObject &obj) {
+    SetName("Joint");
     bodyA = &obj;
     rbA = bodyA->GetComponent<Rigidbody>();
     rbB = bodyB->GetComponent<Rigidbody>();

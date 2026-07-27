@@ -75,6 +75,12 @@ void FixedJoint::SolveAngular(double dt) {
     }
 }
 
+void FixedJoint::attach(GameObject &obj) {
+    Joint::attach(obj);
+    SetName("FixedJoint");
+
+}
+
 
 
 

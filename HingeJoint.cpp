@@ -7,6 +7,11 @@
 #include "Rigidbody.h"
 #include "World.h"
 
+void HingeJoint::attach(GameObject &obj) {
+    Joint::attach(obj);
+    SetName("HingeJoint");
+}
+
 Vector3 HingeJoint::GetWorldAxis() {
     return transformB->quaternion.RotateConjugated(axisLocal).normalized();
 }

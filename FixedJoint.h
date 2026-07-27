@@ -13,6 +13,7 @@ private:
     void SolveAngular(double dt) override;
 
 public:
+    void attach(GameObject &obj) override;
     using Joint::Joint;
 };
 
