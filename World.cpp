@@ -53,8 +53,8 @@ void World::GetAllRigidbodys(std::vector<Rigidbody *> &result) {
 
 void World::GetAllJoints(std::vector<Joint*> &result) {
     for (GameObject* child : GetAllChildrenPhysics()) {
-        Joint* joint = child->GetComponent<Joint>();
-        if (joint) {
+        auto joints = child->GetComponents<Joint>();
+        for (auto* joint : joints) {
             result.push_back(joint);
         }
     }
