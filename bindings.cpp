@@ -85,6 +85,7 @@ PYBIND11_MODULE(bereshitCore, m) {
         .def("magnitude", &Vector3::magnitude)
         .def("normalized", &Vector3::normalized)
         .def("dot", &Vector3::dot)
+        .def("prep", &Vector3::Perpendicular)
          .def("__str__", &Vector3::toString)
         .def("__repr__", &Vector3::toString)
         .def("to_np", [](const Vector3& v) {
@@ -167,7 +168,7 @@ PYBIND11_MODULE(bereshitCore, m) {
     .def("set_default", &GameObject::SetDefault)
     .def_readwrite("Cache", &GameObject::cache)
     .def_readonly("transform", &GameObject::transform)
-    .def("deep_copy", &GameObject::DeepCopy)
+    .def("deep_copy",&GameObject::DeepCopy,py::return_value_policy::reference_internal)
     .def("findTheCenterOfMass", &GameObject::FindTheCenterOfMass)
     .def("get_all_children_physics",py::overload_cast<>(&GameObject::GetAllChildrenPhysics, py::const_))
     .def("search_by_name", &GameObject::SearchByName)
@@ -218,7 +219,7 @@ PYBIND11_MODULE(bereshitCore, m) {
     .def_property("isKinematic", &Rigidbody::IsKinematic, &Rigidbody::SetIsKinematic)
     .def_property_readonly("mass", &Rigidbody::GetMass)
 
-    .def("apply_angular_impulse", &Rigidbody::ApplyTorqueImpulse)
+    .def("apply_angular_impulse", &Rigidbody::ApplyAngularImpulse)
 
     .def_property_readonly("Iinv_world", [](Rigidbody& self) {
     double (*matrix)[3][3] = self.GetInvertWorld();
@@ -266,6 +267,7 @@ PYBIND11_MODULE(bereshitCore, m) {
     .def(py::init<bool>(), py::arg("is_trigger") = false);
     py::class_<Joint, Component, std::shared_ptr<Joint>>(m, "Joint")
     .def("cast_anchor", &Joint::CastAnchor)
+    .def_property_readonly("other", &Joint::GetOther)
 
     .def(
     py::init<
