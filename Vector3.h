@@ -62,6 +62,7 @@ public:
         return *this;
     }
     static Vector3 Average(const std::vector<Vector3>&);
+    Vector3 Perpendicular() const;
 };
 
 

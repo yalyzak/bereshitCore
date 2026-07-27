@@ -19,16 +19,7 @@ HingeJoint * HingeJoint::Copy() const {
     return new HingeJoint(bodyB, axisLocal ,worldAnchor, beta);
 }
 
-Vector3 HingeJoint::perp(Vector3 & axis) {
-        Vector3 helper;
-       if (std::abs(axis.x) < 0.9) {
-           helper = Vector3(1.0, 0.0, 0.0);
-       }else {
-           helper = Vector3(0.0, 1.0, 0.0);
 
-       }
-        return axis.cross(helper).normalized();
-}
 
 
 
@@ -70,7 +61,7 @@ void HingeJoint::SolveAngular(double dt) {
 
     Vector3 axis_world = transformA->quaternion.RotateConjugated(axisLocal).normalized();
 
-    Vector3 t1 = perp(axis_world);
+    Vector3 t1 = axis_world.Perpendicular();
     Vector3 t2 = axis_world.cross(t1).normalized();
 
     Vector3 rel_w = rbB->angularVelocity - rbA->angularVelocity;

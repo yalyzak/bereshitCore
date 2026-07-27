@@ -6,7 +6,6 @@
 #include <sstream>
 #include <iomanip>
 #include <cmath>
-#include <math.h>
 
 Vector3 Vector3::Copy()  const{
     return {x, y, z};
@@ -85,7 +84,7 @@ Vector3 Vector3::Inverse() const {
     if (x == 0 || y == 0 || z == 0) {
         throw std::runtime_error("Cannot invert zero component");
     }
-    return Vector3(1 / x, 1 / y, 1 / z);
+    return {1 / x, 1 / y, 1 / z};
 }
 
 double Vector3::dot(const Vector3& other) const {
@@ -168,5 +167,14 @@ Vector3 Vector3::Average(const std::vector<Vector3> & Vectors) {
     }
     return size/len;
 }
+
+Vector3 Vector3::Perpendicular() const {
+    if (std::abs(x) > std::abs(z))
+        return Vector3(-y, x, 0).normalized();
+    else
+        return Vector3(0, -z, y).normalized();
+}
+
+
 
 
