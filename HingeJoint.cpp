@@ -8,7 +8,7 @@
 #include "World.h"
 
 Vector3 HingeJoint::GetWorldAxis() {
-    return transformB->quaternion.Rotate(axisLocal).normalized();
+    return transformB->quaternion.RotateConjugated(axisLocal).normalized();
 }
 
 HingeJoint::HingeJoint(GameObject* bodyB, Vector3 axis, Vector3* anchor, double beta) : Joint(bodyB, anchor, beta) {
