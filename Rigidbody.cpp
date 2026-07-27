@@ -301,6 +301,25 @@ void Rigidbody::ApplyTorqueImpulse(Vector3 impulse, Vector3 r) {
     }
 }
 
+void Rigidbody::ApplyAngularImpulse(const Vector3& angularImpulse) {
+    Vector3 localImpulse =
+        transform->quaternion.RotateConjugated(angularImpulse);
+
+    Vector3 localDeltaW = localImpulse * invertInertia;
+
+    Vector3 deltaW =
+        transform->quaternion.Rotate(localDeltaW);
+
+    if (!freezeRotation.x)
+        angularVelocity.x += deltaW.x;
+
+    if (!freezeRotation.y)
+        angularVelocity.y += deltaW.y;
+
+    if (!freezeRotation.z)
+        angularVelocity.z += deltaW.z;
+}
+
 void Rigidbody::attach(GameObject& obj) {
     Component::attach(obj);
     transform = &obj.transform;
@@ -341,6 +360,7 @@ void Rigidbody::ResetToDefault() {
     angularAcceleration.Zero();
     cache->SetDirty();
 }
+
 
 
 
