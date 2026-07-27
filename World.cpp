@@ -139,9 +139,11 @@ void World::AddChild(GameObject *child) {
         cacheColliders.push_back(collider);
     }
 
-    Joint* joint = child->GetComponent<Joint>();
-    if (joint != nullptr) {
-        cacheJoints.push_back(joint);
+    auto joints = child->GetComponents<Joint>();
+    if (!joints.empty()) {
+        for (auto* joint : joints) {
+            cacheJoints.push_back(joint);
+        }
     }
 
 

@@ -83,6 +83,18 @@ class GameObject {
         }
         return nullptr;
     }
+    template<typename T> std::vector<T*> GetComponents() const {
+        std::vector<T*> result;
+
+        for (auto* component : components) {
+            if (auto* casted = dynamic_cast<T*>(component)) {
+                result.push_back(casted);
+            }
+        }
+
+        return result;
+    }
+
     [[nodiscard]] const std::vector<Component*>& GetComponents() const;
     void GetAllChildrenPhysics(std::vector<GameObject*>& result) const;
     std::vector<GameObject*> GetAllChildrenPhysics() const;
