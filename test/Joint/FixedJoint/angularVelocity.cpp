@@ -29,10 +29,14 @@ namespace TestFixedJoint {
         Rigidbody rb3(1, false, Vector3(), Vector3(0,1000,0),false);
         BoxCollider box_collider3;
         FixedJoint fixed_joint(&obj);
+        FixedJoint fixed_joint2(&floor);
 
         obj2.AddComponent(&rb3);
         obj2.AddComponent(&box_collider3);
+        obj2.AddComponent(&fixed_joint2);
         obj2.AddComponent(&fixed_joint);
+
+        auto list = obj2.GetComponents<Joint>();
 
         bool running = true;
         std::vector<GameObject*> scene;
