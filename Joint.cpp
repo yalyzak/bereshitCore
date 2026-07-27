@@ -99,7 +99,7 @@ void Joint::SetAngular(const Vector3& R, const double (&I)[3][3]) {
 
     // K += C^T * I * C
 
-    K[0][0] += cx_y * cx_y + cx_z * ix_z;
+    K[0][0] += cx_y * ix_y + cx_z * ix_z;
     K[0][1] = cx_z * iy_z;
     K[0][2] = cx_y * iz_y;
 

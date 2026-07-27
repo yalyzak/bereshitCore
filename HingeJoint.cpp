@@ -107,12 +107,7 @@ void HingeJoint::SolveAngular(double dt) {
 
     Vector2 ang_impulse2d = -Solve2x2(vel_error + bias, K_ang);
 
-    Vector3 ang_impulse;
-
-    ang_impulse.x = Vector2(t1.x, t2.x).dot(ang_impulse2d);
-    ang_impulse.y = Vector2(t1.y, t2.y).dot(ang_impulse2d);
-    ang_impulse.z = Vector2(t1.z, t2.z).dot(ang_impulse2d);
-
+    Vector3 ang_impulse = t1 * ang_impulse2d.x + t2 * ang_impulse2d.y;
 
     if (!rbA->IsKinematic()) {
         rbA->angularVelocity -= ang_impulse.MatrixMultiplication(*IinvA);
