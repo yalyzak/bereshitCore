@@ -47,8 +47,8 @@ void Rigidbody::UpdateInertiaWorld() {
 }
 
 void Rigidbody::PositionalCorrection(const Rigidbody &rb1, const Rigidbody &rb2, double penetration, const Vector3 &normal, double inv_eff_mass) {
-    float percent = 0.11;
-    float slop = 0.05;
+    float percent = 0.2;
+    float slop = 0.005;
 
     double correction_mag = std::max(penetration - slop, 0.0) / inv_eff_mass * percent;
     Vector3 correction = normal * correction_mag;
