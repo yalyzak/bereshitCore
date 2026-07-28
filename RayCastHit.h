@@ -11,10 +11,10 @@ class Transform;
 class Rigidbody;
 
 struct RayCastHit {
-    Vector3* point;
-    Vector3* normal;
+    Vector3 point;
+    Vector3 normal;
     float distance = 0;
-    Collider* collider = nullptr;
+    const  Collider* collider = nullptr;
     Transform* transform = nullptr;
     Rigidbody* rigidbody = nullptr;
     RayCastHit() = default;

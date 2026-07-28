@@ -16,7 +16,9 @@ HingeJoint::HingeJoint(GameObject* bodyB, Vector3 axis, Vector3* anchor, double 
 }
 
 HingeJoint * HingeJoint::Copy() const {
-    return new HingeJoint(bodyB, axisLocal ,worldAnchor, beta);
+    HingeJoint* hinge_joint = new HingeJoint(bodyB,axisLocal, nullptr, beta);
+    hinge_joint->CastAnchor(worldAnchor);
+    return hinge_joint;
 }
 
 Vector3 HingeJoint::perp(Vector3 & axis) {

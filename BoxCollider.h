@@ -7,10 +7,12 @@
 
 #include "Collider.h"
 #include <limits>
+#include "array"
 
 class BoxCollider : public Collider {
     private:
-
+    RayCastHit RayObbIntersection(const Vector3& rayOrigin, const Vector3& rayDirection, const Vector3& boxCenter,const std::array<std::array<double, 3>, 3>& rotationMatrix, const Vector3& halfSize) const;
+    RayCastHit RayBoxIntersection(const Vector3& rayOrigin, const Vector3& rayDirection,const Vector3& box_min,const Vector3& box_max) const;
     static std::array<Vector3, 3> GetAxes(const Quaternion&, Cache&);
     static std::array<Vector3, 3> GetAxes(const Quaternion&);
     static bool OverlapOnAxis(std::array<double, 2> p1, std::array<double, 2> p2){
@@ -32,6 +34,8 @@ class BoxCollider : public Collider {
     std::optional<SatResult> Sat(const Collider* otherCollider) const override;
 
     ContactPoints GenerateContacts(SatResult &) const override;
+
+    RayCastHit RayCast(const Vector3 &origin, const Vector3 &direction, double maxDistance) const override;
 
     void attach(GameObject &obj) override;
 

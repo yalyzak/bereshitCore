@@ -14,7 +14,7 @@ RayCastHit Physics::RayCast(const Vector3 &origin, const Vector3 &direction, con
             float dis = std::numeric_limits<float>::max();
             for (auto& collider : Physics::world->GetAllColliders()) {
                RayCastHit tempHit = collider->RayCast(origin, direction, maxDistance);
-               if (tempHit.point != nullptr && tempHit.distance < dis) {
+               if (tempHit.collider != nullptr && tempHit.distance < dis) {
                    dis = tempHit.distance;
                    hit = tempHit;
                }

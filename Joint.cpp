@@ -240,16 +240,22 @@ Vector2 Joint::Solve2x2(const Vector2 &beta, Vector2(&K)[2]) {
 
 
 void Joint::CastAnchorDefault() {
-    worldAnchor = &transformB->position;
+    worldAnchor = transformB->position;
 }
 
 Joint* Joint::Copy() const
 {
-    return new Joint(bodyB, worldAnchor, beta);
+    Joint* joint = new Joint(bodyB, nullptr, beta);
+    joint->CastAnchor(worldAnchor);
+    return joint;
+
 }
 
 
-Joint::Joint(GameObject *bodyB, Vector3* anchor, double beta) : bodyB(bodyB), worldAnchor(anchor), beta(beta) {
+Joint::Joint(GameObject* bodyB, Vector3* anchor, double beta): bodyB(bodyB), worldAnchor(anchor ? *anchor : Vector3()),
+                                                                beta(beta), hasWorldAnchor(anchor != nullptr)
+{
+
 }
 
 
@@ -261,30 +267,36 @@ void Joint::attach(GameObject &obj) {
     transformA = &bodyA->transform;
     transformB = &bodyB->transform;
 
-    if (worldAnchor == nullptr) {
+    if (!hasWorldAnchor) {
         CastAnchor();
+        hasWorldAnchor = true;
     }
 
 
 }
 
 void Joint::CastAnchor() {
-    Vector3* hit = Physics::RayCast(transformA->position, (transformB->position - transformA->position), bodyB->GetComponent<Collider>()).point;
+    auto hit = Physics::RayCast(transformA->position, (transformB->position - transformA->position), bodyB->GetComponent<Collider>());
 
-    if (hit != nullptr) {
-        worldAnchor = hit;
+    if (hit.collider != nullptr) {
+        worldAnchor = hit.point;
 
     }else {
         CastAnchorDefault();
 
         initialRelativeRotation = (bodyA->transform.quaternion.Inverse() * transformB->quaternion);
 
-        localAnchorA = transformA->quaternion.RotateConjugated(*worldAnchor - transformA->position);
-        localAnchorB = transformB->quaternion.RotateConjugated(*worldAnchor - transformB->position);
+        localAnchorA = transformA->quaternion.RotateConjugated(worldAnchor - transformA->position);
+        localAnchorB = transformB->quaternion.RotateConjugated(worldAnchor - transformB->position);
     }
 
 
 
+}
+
+void Joint::CastAnchor(Vector3 anchor) {
+    worldAnchor = anchor;
+    hasWorldAnchor = true;
 }
 
 void Joint::Solve(double dt) {

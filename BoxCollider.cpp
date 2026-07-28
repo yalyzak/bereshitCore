@@ -207,6 +207,75 @@ std::optional<Collider::SatResult> BoxCollider::Sat(const Collider* otherCollide
 
 }
 
+std::array<std::array<double, 3>, 3> Transpose(const std::array<std::array<double, 3>, 3>& R) {
+    std::array<std::array<double, 3>, 3> Rt{};
+
+    for (int i = 0; i < 3; ++i)
+        for (int j = 0; j < 3; ++j)
+            Rt[i][j] = R[j][i];
+
+    return Rt;
+}
+
+
+
+RayCastHit BoxCollider::RayObbIntersection(const Vector3 &rayOrigin, const Vector3 &rayDirection,
+    const Vector3 &boxCenter,const std::array<std::array<double, 3>, 3>& rotationMatrix, const Vector3 &halfSize) const {
+
+    auto invRot = Transpose(rotationMatrix);
+
+    Vector3 localOrigin = (rayOrigin - boxCenter).MatrixMultiplication(invRot);
+
+    Vector3 local_dir = rayDirection.MatrixMultiplication(invRot);
+
+    Vector3 box_min = -halfSize;
+    Vector3 box_max = halfSize;
+
+    return RayBoxIntersection(localOrigin, local_dir, box_min, box_max);
+
+}
+
+RayCastHit BoxCollider::RayBoxIntersection(const Vector3 &rayOrigin, const Vector3 &rayDirection,
+    const Vector3 &box_min, const Vector3 &box_max) const {
+    double tmin = std::numeric_limits<double>::lowest();
+    double tmax = std::numeric_limits<double>::max();
+    double origin;
+    double direction;
+    double bmin;
+    double bmax;
+    for (int i =0; i<3;i++) {
+        origin = rayOrigin[i];
+        direction = rayDirection[i];
+        bmin = box_min[i];
+        bmax = box_max[i];
+        if (std::abs(direction) < 1e-8) {
+            if (origin < bmin || origin > bmax) {
+                return {};
+            }
+        }
+        else{
+            double t1 = (bmin - origin) / direction;
+            double t2 = (bmax - origin) / direction;
+            double t_near = std::min(t1, t2);
+            double t_far = std::max(t1, t2);
+            if (tmin > tmax)
+                return {};
+        }
+    }
+    // don't ray cast object behind the object
+    if (tmax < 0) {
+        return {};
+    }
+    double t_hit = tmin >= 0 ? tmin : tmax;
+    Vector3 hit_point(rayOrigin.x + rayDirection.x * t_hit,
+            rayOrigin.y + rayDirection.y * t_hit,
+            rayOrigin.z + rayDirection.z * t_hit);
+    RayCastHit hit;
+    hit.point = hit_point + GetPosition();
+    hit.collider = this;
+    return hit;
+}
+
 std::array<Vector3, 3> BoxCollider::GetAxes(const Quaternion &quaternion, Cache &cache) {
     auto R = quaternion.ToMatrix3(&cache);
     return {
@@ -411,6 +480,13 @@ ContactPoints BoxCollider::GenerateContacts(SatResult &sat_result) const {
     }
 
     return ContactPoints(contacts, sat_result.normal, depths);
+
+}
+
+RayCastHit BoxCollider::RayCast(const Vector3 &origin, const Vector3 &direction, double maxDistance) const {
+    return Collider::RayCast(origin, direction, maxDistance);
+
+    return RayObbIntersection(origin, direction, GetPosition(), GetQuaternion().ToMatrix3(&GetParent()->cache), GetSize() * 0.5);
 
 }
 

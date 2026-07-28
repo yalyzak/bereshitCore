@@ -19,6 +19,7 @@ class Transform;
 
 class Joint : public Component{
     protected:
+        bool hasWorldAnchor = false;
         void RemapReferences(const GameObjectMap& objectMap) override;
 
         Transform* transformA;
@@ -30,7 +31,7 @@ class Joint : public Component{
         Vector3 localAnchorB;
         Vector3 localAnchorA;
         Quaternion initialRelativeRotation;
-        Vector3* worldAnchor;
+        Vector3 worldAnchor;
         double beta;
         double invMassArray[3];
         Vector3 angularImpulse;
@@ -75,6 +76,7 @@ class Joint : public Component{
 
         void attach(GameObject &obj) override;
         void CastAnchor();
+        void CastAnchor(Vector3 anchor);
 
 
     virtual void Solve(double dt);
