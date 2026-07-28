@@ -245,6 +245,8 @@ void Rigidbody::ForceIntegrate(double dt) {
 }
 
 void Rigidbody::SolveImpulse(Rigidbody &rb1, Rigidbody &rb2, const Vector3& contact_point, const Vector3& normal, double penetration, double dt) {
+        Rigidbody::SolveFrictionImpulse(rb1, rb2, contact_point, normal, dt);
+
         auto result = FindImpulse(rb1, rb2, contact_point, normal, dt);
         if (!result) {
             return;
@@ -256,7 +258,6 @@ void Rigidbody::SolveImpulse(Rigidbody &rb1, Rigidbody &rb2, const Vector3& cont
 
         ApplyImpulsePair(rb1, rb2, normal * J, r1, r2);
 
-        // Rigidbody::SolveFrictionImpulse(rb1, rb2, contact_point, normal, dt);
 }
 
 double Rigidbody::FindRestitution(const Rigidbody &rb1, const Rigidbody &rb2, double normalVelocity) {
