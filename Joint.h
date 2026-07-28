@@ -77,6 +77,9 @@ class Joint : public Component{
         void attach(GameObject &obj) override;
         void CastAnchor();
         void CastAnchor(Vector3 anchor);
+        Vector3 GetAnchor() {
+            return worldAnchor;
+        }
 
 
     virtual void Solve(double dt);

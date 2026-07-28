@@ -486,6 +486,7 @@ ContactPoints BoxCollider::GenerateContacts(SatResult &sat_result) const {
 }
 
 RayCastHit BoxCollider::RayCast(const Vector3 &origin, const Vector3 &direction, double maxDistance) const {
+    // return Collider::RayCast(origin, direction, maxDistance);
     return RayObbIntersection(origin, direction, GetPosition(), GetQuaternion().ToMatrix3(&GetParent()->cache), GetSize() * 0.5);
 
 }

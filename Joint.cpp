@@ -280,15 +280,15 @@ void Joint::CastAnchor() {
 
     if (hit.collider != nullptr) {
         worldAnchor = hit.point;
+        hasWorldAnchor = true;
 
     }else {
         CastAnchorDefault();
-
-        initialRelativeRotation = (bodyA->transform.quaternion.Inverse() * transformB->quaternion);
-
-        localAnchorA = transformA->quaternion.RotateConjugated(worldAnchor - transformA->position);
-        localAnchorB = transformB->quaternion.RotateConjugated(worldAnchor - transformB->position);
     }
+    initialRelativeRotation = (bodyA->transform.quaternion.Inverse() * transformB->quaternion);
+
+    localAnchorA = transformA->quaternion.RotateConjugated(worldAnchor - transformA->position);
+    localAnchorB = transformB->quaternion.RotateConjugated(worldAnchor - transformB->position);
 
 
 
