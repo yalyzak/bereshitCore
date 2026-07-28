@@ -252,11 +252,11 @@ void Rigidbody::SolveImpulse(Rigidbody &rb1, Rigidbody &rb2, const Vector3& cont
 
         auto& [J, r1, r2, relative_vel, inverseMass] = *result;
 
-        PositionalCorrection(rb1, rb2, penetration, normal, inverseMass);
+        // PositionalCorrection(rb1, rb2, penetration, normal, inverseMass);
 
         ApplyImpulsePair(rb1, rb2, normal * J, r1, r2);
 
-        Rigidbody::SolveFrictionImpulse(rb1, rb2, contact_point, normal, dt);
+        // Rigidbody::SolveFrictionImpulse(rb1, rb2, contact_point, normal, dt);
 }
 
 double Rigidbody::FindRestitution(const Rigidbody &rb1, const Rigidbody &rb2, double normalVelocity) {
