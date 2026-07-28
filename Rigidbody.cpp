@@ -47,7 +47,7 @@ void Rigidbody::UpdateInertiaWorld() {
 }
 
 void Rigidbody::PositionalCorrection(const Rigidbody &rb1, const Rigidbody &rb2, double penetration, const Vector3 &normal, double inv_eff_mass) {
-    float percent = 0.2;
+    float percent = 0.02;
     float slop = 0.005;
 
     double correction_mag = std::max(penetration - slop, 0.0) / inv_eff_mass * percent;
@@ -252,7 +252,7 @@ void Rigidbody::SolveImpulse(Rigidbody &rb1, Rigidbody &rb2, const Vector3& cont
 
         auto& [J, r1, r2, relative_vel, inverseMass] = *result;
 
-        // PositionalCorrection(rb1, rb2, penetration, normal, inverseMass);
+        PositionalCorrection(rb1, rb2, penetration, normal, inverseMass);
 
         ApplyImpulsePair(rb1, rb2, normal * J, r1, r2);
 
