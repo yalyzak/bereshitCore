@@ -53,11 +53,12 @@ void Rigidbody::PositionalCorrection(const Rigidbody &rb1, const Rigidbody &rb2,
     double correction_mag = std::max(penetration - slop, 0.0) / inv_eff_mass * percent;
     Vector3 correction = normal * correction_mag;
 
-    if (!rb1.isKinematic){
+    if (!rb1.isKinematic) {
         rb1.transform->position -= correction * rb1.invMass;
     }
-    if (!rb2.isKinematic){
-        rb2.transform->position -= correction * rb2.invMass;
+
+    if (!rb2.isKinematic) {
+        rb2.transform->position += correction * rb2.invMass;
     }
 }
 
