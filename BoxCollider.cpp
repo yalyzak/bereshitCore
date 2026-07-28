@@ -239,15 +239,15 @@ RayCastHit BoxCollider::RayBoxIntersection(const Vector3 &rayOrigin, const Vecto
     const Vector3 &box_min, const Vector3 &box_max) const {
     double tmin = std::numeric_limits<double>::lowest();
     double tmax = std::numeric_limits<double>::max();
-    double origin;
-    double direction;
-    double bmin;
-    double bmax;
+    // double origin;
+    // double direction;
+    // double bmin;
+    // double bmax;
     for (int i =0; i<3;i++) {
-        origin = rayOrigin[i];
-        direction = rayDirection[i];
-        bmin = box_min[i];
-        bmax = box_max[i];
+        double origin = rayOrigin[i];
+        double direction = rayDirection[i];
+        double bmin = box_min[i];
+        double bmax = box_max[i];
         if (std::abs(direction) < 1e-8) {
             if (origin < bmin || origin > bmax) {
                 return {};
@@ -258,6 +258,8 @@ RayCastHit BoxCollider::RayBoxIntersection(const Vector3 &rayOrigin, const Vecto
             double t2 = (bmax - origin) / direction;
             double t_near = std::min(t1, t2);
             double t_far = std::max(t1, t2);
+            tmin = std::max(tmin, t_near);
+            tmax = std::min(tmax, t_far);
             if (tmin > tmax)
                 return {};
         }
@@ -484,8 +486,6 @@ ContactPoints BoxCollider::GenerateContacts(SatResult &sat_result) const {
 }
 
 RayCastHit BoxCollider::RayCast(const Vector3 &origin, const Vector3 &direction, double maxDistance) const {
-    return Collider::RayCast(origin, direction, maxDistance);
-
     return RayObbIntersection(origin, direction, GetPosition(), GetQuaternion().ToMatrix3(&GetParent()->cache), GetSize() * 0.5);
 
 }
