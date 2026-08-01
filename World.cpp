@@ -280,9 +280,9 @@ void World::Update(bool updateComponen) {
     auto collections = SolveCollectionsFirstIteration(GetAllColliders(), tick);
 
     for (int i =0; i < physics_epochs + 1; i++) {
+        CallChildrenUpdate(PhysicsChildren, tick, &Component::PhysicsUpdate);
         SolveCollections(collections, tick);
         SolveJoints(GetAllJoints(), tick);
-        CallChildrenUpdate(PhysicsChildren, tick, &Component::PhysicsUpdate);
     }
 
     IntegrateAll(tick);
