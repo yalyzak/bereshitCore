@@ -271,8 +271,6 @@ void World::Update(bool updateComponen) {
     }
     const auto& PhysicsChildren = GetAllChildrenPhysics();
 
-    CallChildrenUpdate(PhysicsChildren, tick, &Component::PhysicsUpdate);
-
     ApplyGravityToAll(gravity);
 
     auto collections = SolveCollectionsFirstIteration(GetAllColliders(), tick);
@@ -280,6 +278,7 @@ void World::Update(bool updateComponen) {
     for (int i =0; i < physics_epochs + 1; i++) {
         SolveCollections(collections, tick);
         SolveJoints(GetAllJoints(), tick);
+        CallChildrenUpdate(PhysicsChildren, tick, &Component::PhysicsUpdate);
     }
     IntegrateAll(tick);
 }
