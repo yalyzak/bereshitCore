@@ -148,6 +148,9 @@ GameObject* GameObject::CopyHierarchy(const GameObject* original,GameObjectMap& 
     objectMap.emplace(original, copied);
 
     for (Component* component : original->components) {
+        if (component->IsPythonComponent()) {
+            continue;
+        }
         Component* copiedComponent = component->Copy();
 
         copied->components.push_back(copiedComponent);

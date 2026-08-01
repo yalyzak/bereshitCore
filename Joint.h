@@ -72,6 +72,8 @@ class Joint : public Component{
         virtual Joint* Copy() const override;
         Joint(GameObject* bodyB, Vector3* anchor = nullptr, double beta = 0.2);
 
+        virtual GameObject* GetOther();
+
 
         void attach(GameObject &obj) override;
         void CastAnchor();

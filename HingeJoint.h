@@ -11,13 +11,13 @@ class GameObject;
 
 class HingeJoint : public Joint {
     public:
+        void attach(GameObject &obj) override;
         Vector3 GetWorldAxis();
 
         HingeJoint(GameObject* bodyB, Vector3 axis, Vector3* anchor = nullptr, double beta = 0.2);
         HingeJoint *Copy() const override;
     private:
         Vector3 axisLocal;
-        static Vector3 perp(Vector3&);
         void SolveLinear(double dt) override;
         void SolveAngular(double dt) override;
 

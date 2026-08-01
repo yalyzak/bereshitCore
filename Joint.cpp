@@ -252,9 +252,13 @@ Joint* Joint::Copy() const
 Joint::Joint(GameObject *bodyB, Vector3* anchor, double beta) : bodyB(bodyB), worldAnchor(anchor), beta(beta) {
 }
 
+GameObject* Joint::GetOther() {
+    return bodyB;
+}
 
 
 void Joint::attach(GameObject &obj) {
+    SetName("Joint");
     bodyA = &obj;
     rbA = bodyA->GetComponent<Rigidbody>();
     rbB = bodyB->GetComponent<Rigidbody>();
