@@ -71,6 +71,10 @@ class GameObject {
     std::vector<GameObject*> GetChildren() {
         return children;
     };
+    
+    const std::vector<GameObject*>& GetChildren() const {
+        return children;
+    }
     void GetAllChildren(std::vector<GameObject*>&);
     std::vector<GameObject*> GetAllChildren();
     std::vector<GameObject*> SearchByComponent(const std::string& name);
