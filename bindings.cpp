@@ -85,6 +85,7 @@ PYBIND11_MODULE(bereshitCore, m) {
         .def("magnitude", &Vector3::magnitude)
         .def("normalized", &Vector3::normalized)
         .def("dot", &Vector3::dot)
+        .def("cross", &Vector3::cross)
          .def("__str__", &Vector3::toString)
         .def("__repr__", &Vector3::toString)
         .def("to_np", [](const Vector3& v) {
@@ -156,9 +157,10 @@ PYBIND11_MODULE(bereshitCore, m) {
     .def_property("parent", &GameObject::GetParent, &GameObject::SetParent)
     .def(py::init<Vector3, Vector3, Vector3, std::vector<GameObject*>, std::string>(),
     py::arg("position") = Vector3(), py::arg("rotation") = Vector3(), py::arg("size") = Vector3(1, 1, 1),
-     py::arg("children") = std::vector<GameObject*>{}, py::arg("name") = "" )
+     py::arg("children") = std::vector<GameObject*>{}, py::arg("name") = "", py::keep_alive<1, 5>() )
+
     .def("search_by_component", &GameObject::SearchByComponent)
-    .def_property_readonly("children",&GameObject::GetChildren, py::return_value_policy::reference_internal)
+    .def_property_readonly("children",static_cast<const std::vector<GameObject*>& (GameObject::*)() const>(&GameObject::GetChildren),py::return_value_policy::reference_internal)
     .def("get_component",static_cast<Component* (GameObject::*)(const std::string&)>(&GameObject::GetComponent),py::return_value_policy::reference)
     .def("add_component", &GameObject::AddComponent,py::return_value_policy::reference_internal, py::keep_alive<1, 2>())
     .def_property("World", &GameObject::GetWorld, &GameObject::setWorld)
@@ -238,6 +240,7 @@ PYBIND11_MODULE(bereshitCore, m) {
 
     .def_readwrite("Freeze_Rotation", &Rigidbody::freezeRotation)
     .def_readwrite("velocity", &Rigidbody::velocity)
+    .def_readwrite("force", &Rigidbody::force)
     .def_readwrite("angular_velocity", &Rigidbody::angularVelocity)
     .def(
     py::init<
