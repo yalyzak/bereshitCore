@@ -274,13 +274,13 @@ void World::Update(bool updateComponen) {
         CallChildrenUpdate(getAllChildren(), tick, &Component::Update);
     }
     const auto& PhysicsChildren = GetAllChildrenPhysics();
+    CallChildrenUpdate(PhysicsChildren, tick, &Component::PhysicsUpdate);
 
     ApplyGravityToAll(gravity);
 
     auto collections = SolveCollectionsFirstIteration(GetAllColliders(), tick);
 
     for (int i =0; i < physics_epochs + 1; i++) {
-        CallChildrenUpdate(PhysicsChildren, tick, &Component::PhysicsUpdate);
         SolveCollections(collections, tick);
         SolveJoints(GetAllJoints(), tick);
     }
