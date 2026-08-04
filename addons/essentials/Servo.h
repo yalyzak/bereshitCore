@@ -20,8 +20,9 @@ class Servo : public Component{
 
 
     public:
-        Servo(GameObject* mount, Vector3 axis, double maxRotation = 90, double minRotation = -90, double speed = 1, double maxSpeed = 1, double torque =1);
+        Servo(GameObject* mount, Vector3 axis, double maxRotation = 90, double minRotation = -90, double speed = 60, double maxSpeed = 1, double torque =0.1);
         void attach(GameObject &obj) override;
+
 };
 
 

@@ -11,19 +11,21 @@ class GameObject;
 
 class ServoController : public Component {
     private:
-        double targetAngle;
+        double targetAngle = 0.0;
         GameObject* mount;
         HingeJoint* joint;
         Rigidbody* rigidbody;
         double maxRotation;
         double minRotation;
-        double speed;
+        double inputSpeed;
         double maxSpeed;
         double maxTorque;
 
     public:
+        ServoController(GameObject* mount, HingeJoint* joint, double maxRotation, double minRotation, double inputSpeed, double maxSpeed, double maxTorque);
         void attach(GameObject &obj) override;
         void Fix(double dt);
+        void PhysicsUpdate(double dt) override;
         void TurnTo(double degrees, double dt);
         void ResetToDefault() override;
         [[nodiscard]] double GetTargetAngle() const {

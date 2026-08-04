@@ -7,6 +7,7 @@
 #include "../../../Rigidbody.h"
 #include "../../../World.h"
 #include "../../../FixedJoint.h"
+#include "../../../addons//essentials/Servo.h"
 
 namespace TestFixedJoint {
     void Main() {
@@ -28,13 +29,12 @@ namespace TestFixedJoint {
         GameObject obj2(Vector3(2,5,0));
         Rigidbody rb3(1, false, Vector3(), Vector3(0,1000,0),false);
         BoxCollider box_collider3;
-        FixedJoint fixed_joint(&obj);
+        Servo servo(&obj, Vector3(0,1,0));
         FixedJoint fixed_joint2(&floor);
 
         obj2.AddComponent(&rb3);
         obj2.AddComponent(&box_collider3);
         obj2.AddComponent(&fixed_joint2);
-        obj2.AddComponent(&fixed_joint);
 
         auto list = obj2.GetComponents<Joint>();
 

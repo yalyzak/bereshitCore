@@ -3,12 +3,22 @@
 //
 
 #include "ServoController.h"
-
 #include "../../GameObject.h"
 
 
+
+
+ServoController::ServoController(GameObject *mount, HingeJoint *joint, double maxRotation, double minRotation,
+    double inputSpeed, double maxSpeed, double maxTorque) : mount(mount), joint(joint), rigidbody(nullptr),
+                                                            maxRotation(maxRotation),
+                                                            minRotation(minRotation),
+                                                            inputSpeed(inputSpeed), maxSpeed(maxSpeed),
+                                                            maxTorque(maxTorque) {
+}
+
 void ServoController::attach(GameObject &obj) {
     rigidbody = obj.GetComponent<Rigidbody>();
+    joint = obj.GetComponent<HingeJoint>();
 }
 
 void ServoController::Fix(double dt) {
@@ -42,9 +52,13 @@ void ServoController::Fix(double dt) {
     rigidbody->ApplyAngularImpulse(axis * torque * dt);
 }
 
+void ServoController::PhysicsUpdate(double dt) {
+    Fix(dt);
+}
+
 void ServoController::TurnTo(double degrees, double dt) {
-
-
+        targetAngle += degrees * inputSpeed * dt;
+        targetAngle = std::max(std::min(targetAngle, maxRotation),minRotation);
 }
 
 void ServoController::ResetToDefault() {
