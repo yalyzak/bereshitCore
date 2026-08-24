@@ -47,4 +47,8 @@ add_executable(bereshitCore main.cpp
         test/BoxCollider/Debug.h
         test/RigidBody/diffrent_masses.cpp
         test/Joint/FixedJoint/angularVelocity.cpp
+        addons/essentials/Servo.cpp
+        addons/essentials/Servo.h
+        addons/essentials/ServoController.cpp
+        addons/essentials/ServoController.h
 )
