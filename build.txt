@@ -1,3 +1,5 @@
 cmake -S . -B build -Dpybind11_DIR="C:\Users\yaly\AppData\Local\Programs\Python\Python310\lib\site-packages\pybind11\share\cmake\pybind11"
 
 cmake --build build --config Release
+
+for /f "delims=" %i in ('python -m pybind11 --cmakedir') do cmake -S . -B build -Dpybind11_DIR="%i" && cmake --build build --config Release
