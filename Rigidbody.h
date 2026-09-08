@@ -52,6 +52,9 @@ public:
     [[nodiscard]] double GetRestitution() const {
         return restitution;
     }
+    [[nodiscard]] double GetFrictionCoefficient() const {
+        return frictionCoefficient;
+    }
     [[nodiscard]] bool IsKinematic() const {
         return isKinematic;
     }
