@@ -9,8 +9,8 @@
 #include "Vector3.h"
 
 
-double Rigidbody::GetFrictionCoefficient(const Rigidbody &, const Rigidbody &) {
-    return 0.6;
+double Rigidbody::GetFrictionCoefficient(const Rigidbody& rb1, const Rigidbody& rb2) {
+    return std::min(rb1.GetFrictionCoefficient(), rb2.GetFrictionCoefficient());
 }
 
 void Rigidbody::UpdateInertiaWorld() {
