@@ -136,9 +136,6 @@ std::optional<std::tuple<double, Vector3, Vector3, Vector3, double>> Rigidbody::
     }
 
     double restitution = FindRestitution(rb1, rb2, v_norm);
-    if (rb1.isKinematic) {
-
-    }
     double kLinear =  (rb1.isKinematic ? 0.0 : rb1.invMass) + (rb2.isKinematic ? 0.0 : rb2.invMass);
     double kAngular = normal.dot(term1 + term2);
     double inverseMass = kLinear + kAngular;
@@ -258,9 +255,9 @@ void Rigidbody::SolveImpulse(Rigidbody &rb1, Rigidbody &rb2, const Vector3& cont
 }
 
 double Rigidbody::FindRestitution(const Rigidbody &rb1, const Rigidbody &rb2, double normalVelocity) {
-    if (normalVelocity > -1){
-        return 0.0;
-    }
+    // if (normalVelocity > -0.2){
+    //     return 0.0;
+    // }
     return std::min(rb1.GetRestitution(), rb2.GetRestitution());
 }
 
