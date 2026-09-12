@@ -195,8 +195,8 @@ std::vector<GameObject*> World::search_by_component(std::string name) const {
 
 void World::SolveCollections(const std::vector<Contact> &contacts, double dt) {
     for (const auto& contact : contacts) {
-        // Rigidbody::SolveImpulse(contact.rb1, contact.rb2, contact.contact_point, contact.normal, contact.penetration, dt);
-        Rigidbody::SolveFrictionImpulse(contact.rb1, contact.rb2, contact.contact_point, contact.normal, dt);
+        Rigidbody::SolveImpulse(contact.rb1, contact.rb2, contact.contact_point, contact.normal, contact.penetration, dt);
+        // Rigidbody::SolveFrictionImpulse(contact.rb1, contact.rb2, contact.contact_point, contact.normal, dt);
 
     }
 }
@@ -258,7 +258,7 @@ std::vector<Contact> World::SolveCollectionsFirstIteration(const std::vector<Col
             const Vector3& contact_point = result.contact_points[i];
             double depth = result.depth[i];
 
-            // Rigidbody::SolveFrictionImpulse(*rb1, *rb2, contact_point, normal, dt);
+            Rigidbody::SolveFrictionImpulse(*rb1, *rb2, contact_point, normal, dt);
             contacts.push_back({*rb1, *rb2, normal, depth, contact_point});
         }
 
