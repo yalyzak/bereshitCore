@@ -476,8 +476,6 @@ ContactPoints BoxCollider::GenerateContacts(SatResult &sat_result) const {
         Vector3 averagePoint = Vector3::Average(contacts);
         double averageDepth = std::accumulate(depths.begin(), depths.end(), 0.0)
              / depths.size();
-            contacts.clear();
-            depths.clear();
             contacts.insert(contacts.begin(), averagePoint);
             depths.insert(depths.begin(), averageDepth);
     }
