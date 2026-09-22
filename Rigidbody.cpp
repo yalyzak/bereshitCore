@@ -249,7 +249,7 @@ void Rigidbody::SolveImpulse(Rigidbody &rb1, Rigidbody &rb2, const Vector3& cont
 
         auto& [J, r1, r2, relative_vel, inverseMass] = *result;
 
-        // PositionalCorrection(rb1, rb2, penetration, normal, inverseMass);
+        PositionalCorrection(rb1, rb2, penetration, normal, inverseMass);
 
         ApplyImpulsePair(rb1, rb2, normal * J, r1, r2);
         // Updated velocities at the contact point.
