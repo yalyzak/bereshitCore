@@ -260,7 +260,7 @@ void Rigidbody::SolveImpulse(Rigidbody &rb1, Rigidbody &rb2, const Vector3& cont
             rb2.velocity + rb2.angularVelocity.cross(r2);
 
         // Use the same relative-velocity convention as FindImpulse().
-        const Vector3 updated_relative_vel = v2 - v1;
+        const Vector3 updated_relative_vel = v1 - v2;
         ApplyFrictionImpulse(rb1, rb2, updated_relative_vel, normal, J, r1, r2);
 }
 
