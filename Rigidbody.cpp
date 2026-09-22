@@ -254,13 +254,13 @@ void Rigidbody::SolveImpulse(Rigidbody &rb1, Rigidbody &rb2, const Vector3& cont
         ApplyImpulsePair(rb1, rb2, normal * J, r1, r2);
         // Updated velocities at the contact point.
         const Vector3 v1 =
-            rb1.velocity + rb1.angularVelocity.cross(r1);
+            rb1.velocity - rb1.angularVelocity.cross(r1);
 
         const Vector3 v2 =
-            rb2.velocity + rb2.angularVelocity.cross(r2);
+            rb2.velocity - rb2.angularVelocity.cross(r2);
 
         // Use the same relative-velocity convention as FindImpulse().
-        const Vector3 updated_relative_vel = v1 - v2;
+        const Vector3 updated_relative_vel = v2 - v1;
         ApplyFrictionImpulse(rb1, rb2, updated_relative_vel, normal, J, r1, r2);
 }
 
