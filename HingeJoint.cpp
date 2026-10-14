@@ -70,7 +70,7 @@ void HingeJoint::SolveAngular(double dt) {
     auto IinvA = rbA->GetInvertWorld();
     auto IinvB = rbB->GetInvertWorld();
 
-    Vector3 axis_world = transformA->quaternion.Rotate(axisLocal).normalized();
+    Vector3 axis_world = transformA->quaternion.RotateConjugated(axisLocal).normalized();
 
     Vector3 t1 = perp(axis_world);
     Vector3 t2 = axis_world.cross(t1).normalized();
